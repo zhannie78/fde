@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 context gathered
-last_updated: "2026-07-19T17:10:46.421Z"
-last_activity: 2026-07-19 -- Phase 01 planning complete
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-07-19T17:55:17.649Z"
+last_activity: 2026-07-19
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 6
-  completed_plans: 0
+  completed_plans: 1
   percent: 0
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-19)
 
 **Core value:** A skeptical, non-technical SMB owner lands on the site, tries a demo or completes the free workflow audit, and comes away convinced enough to book an engagement.
-**Current focus:** Phase 1 - Marketing Foundation
+**Current focus:** Phase 01 — marketing-foundation
 
 ## Current Position
 
-Phase: 1 of 4 (Marketing Foundation)
-Plan: 0 of TBD in current phase
+Phase: 01 (marketing-foundation) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-07-19 -- Phase 01 planning complete
+Last activity: 2026-07-19
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 17%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-marketing-foundation P01 | 6min | 2 tasks | 31 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 
 - [Roadmap]: Reconciled research's 6-phase suggestion down to 4 phases to match "coarse" granularity — merged Claude infrastructure into the demo phase (Phase 2) rather than a standalone infra phase, and folded compliance content directly into vertical-page requirements (Phase 4) rather than a separate compliance pass.
 - [Roadmap]: SITE-01 (homepage with embedded demo) assigned to Phase 2, not Phase 1, since the requirement is only fully satisfiable once the demo exists.
+- [Phase 01-marketing-foundation]: Used corrected shadcn CLI (init -b radix -p nova) per RESEARCH Critical Pitfall #1 instead of UI-SPEC's stale -b neutral -s new-york command — produces radix-nova style + neutral baseColor, matching UI-SPEC intent under the current CLI shape
+- [Phase 01-marketing-foundation]: Scaffolded create-next-app in a temp dir and rsync'd generated files into the existing repo, excluding .git/node_modules/.next/generated CLAUDE.md — avoids clobbering the project's real CLAUDE.md and .planning/ directory since create-next-app refuses to run in a non-empty directory
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T16:15:25.383Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-marketing-foundation/01-CONTEXT.md
+Last session: 2026-07-19T17:55:17.640Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None

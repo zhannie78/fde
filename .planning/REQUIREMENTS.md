@@ -13,8 +13,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SITE-02**: Visitor can read an About page telling the founder's FDE story as the credibility layer ("I embedded with enterprise clients; now I embed AI in your business")
 - [ ] **SITE-03**: Visitor can read a Services page explaining the white-glove engagement model plainly (free audit → fixed-scope project → monthly retainer)
 - [ ] **SITE-04**: Visitor can book a call via a persistent scheduling CTA (Calendly/Cal.com embed) present on every page
-- [ ] **SITE-05**: Site is mobile-responsive, fast-loading, and served over HTTPS with real founder identity (name, photo, region, matching email domain)
-- [ ] **SITE-06**: Site has a distinctive, intentional visual design that does not read as AI-generated or templated — custom typography and color system, deliberate art direction, polished micro-interactions; passes the "would a design-savvy visitor believe a human designer made this?" test
+- [x] **SITE-05**: Site is mobile-responsive, fast-loading, and served over HTTPS with real founder identity (name, photo, region, matching email domain)
+- [x] **SITE-06**: Site has a distinctive, intentional visual design that does not read as AI-generated or templated — custom typography and color system, deliberate art direction, polished micro-interactions; passes the "would a design-savvy visitor believe a human designer made this?" test
 
 ### Demo
 
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SITE-02 | Phase 1 | Pending |
 | SITE-03 | Phase 1 | Pending |
 | SITE-04 | Phase 1 | Pending |
-| SITE-05 | Phase 1 | Pending |
-| SITE-06 | Phase 1 | Pending |
+| SITE-05 | Phase 1 | Complete |
+| SITE-06 | Phase 1 | Complete |
 | DEMO-01 | Phase 2 | Pending |
 | DEMO-02 | Phase 2 | Pending |
 | AUDIT-01 | Phase 3 | Pending |
