@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480" role="img" aria-labelledby="title desc">
+  <title id="title">Founder photo placeholder</title>
+  <desc id="desc">Temporary placeholder — replace with a real photo of the founder before launch.</desc>
+  <rect width="480" height="480" fill="#D9D9D4"/>
+  <rect x="8" y="8" width="464" height="464" fill="none" stroke="#8A8A82" stroke-width="4" stroke-dasharray="12 8"/>
+  <text x="240" y="220" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="700" fill="#4A4A44">FOUNDER PHOTO</text>
+  <text x="240" y="260" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#4A4A44">REPLACE BEFORE LAUNCH</text>
+  <text x="240" y="300" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#6A6A62">NEEDS-FOUNDER (D-07) — obviously temporary</text>
+</svg>
