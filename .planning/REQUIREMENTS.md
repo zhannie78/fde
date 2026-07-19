@@ -78,13 +78,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| SITE-01 | Phase 2 | Pending |
+| SITE-02 | Phase 1 | Pending |
+| SITE-03 | Phase 1 | Pending |
+| SITE-04 | Phase 1 | Pending |
+| SITE-05 | Phase 1 | Pending |
+| SITE-06 | Phase 1 | Pending |
+| DEMO-01 | Phase 2 | Pending |
+| DEMO-02 | Phase 2 | Pending |
+| AUDIT-01 | Phase 3 | Pending |
+| AUDIT-02 | Phase 3 | Pending |
+| AUDIT-03 | Phase 3 | Pending |
+| AUDIT-04 | Phase 3 | Pending |
+| AUDIT-05 | Phase 3 | Pending |
+| VERT-01 | Phase 4 | Pending |
+| VERT-02 | Phase 4 | Pending |
+| VERT-03 | Phase 4 | Pending |
+| VERT-04 | Phase 4 | Pending |
+| INFRA-01 | Phase 2 | Pending |
+| INFRA-02 | Phase 2 | Pending |
+| INFRA-03 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20 ⚠️
+- Mapped to phases: 20
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-19*
-*Last updated: 2026-07-19 after initial definition*
+*Last updated: 2026-07-19 after roadmap creation (all 20 v1 requirements mapped to 4 phases)*
