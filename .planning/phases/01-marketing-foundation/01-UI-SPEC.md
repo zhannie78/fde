@@ -1,7 +1,8 @@
 ---
 phase: 1
 slug: marketing-foundation
-status: draft
+status: approved
+reviewed_at: 2026-07-19
 shadcn_initialized: false
 preset: "new-york style / neutral base color / CSS variables on (planned — repo not yet scaffolded, see Design System notes)"
 created: 2026-07-19
@@ -20,7 +21,7 @@ created: 2026-07-19
 | Tool | shadcn (planned — no `components.json` or Next.js project exists yet; see note below) |
 | Preset | `npx shadcn@latest init -b neutral -s new-york` — neutral base color, New York style, CSS variables enabled. Run this during the Phase 1 scaffolding task, immediately after `create-next-app`, before any page is built. All color tokens below then override the generated neutral palette in `globals.css` / `app/theme` — do not hand-theme individual components. |
 | Component library | Radix primitives (via shadcn/ui) |
-| Icon library | `lucide-react` — use sparingly, functional only (nav toggle, chevرons, checkmarks). No decorative icon-per-feature grids, no emoji-as-icon anywhere (explicit SITE-06 anti-pattern). |
+| Icon library | `lucide-react` — use sparingly, functional only (nav toggle, chevrons, checkmarks). No decorative icon-per-feature grids, no emoji-as-icon anywhere (explicit SITE-06 anti-pattern). |
 | Font | **Fraunces** (display/headings, upright — not italic) + **IBM Plex Sans** (body, UI, labels, buttons). Both loaded via `next/font/google`, self-hosted — no external font CDN calls, no FOUT. |
 
 **Why this pairing, not the default:** Inter + a purple gradient + Geist-style everything is the single most-flagged "this looks AI-generated" signal in current design criticism. Fraunces is a characterful, structured serif with real personality that reads as *deliberately chosen*, not a template default — used upright and restrained (not the oversized-italic-serif-on-cream treatment, which has itself become a recognizable "anti-SaaS AI" cliché to avoid). IBM Plex Sans carries an engineering pedigree (IBM) that quietly reinforces the founder's forward-deployed-engineer background without being a jargon word on the page.
@@ -54,7 +55,7 @@ Declared values (must be multiples of 4):
 | 3xl | 64px | Page-level spacing (hero top padding, dark-band section padding) |
 
 Exceptions:
-- Mobile nav toggle and sticky mobile CTA bar button: 44px minimum touch target (accessibility floor), overriding the 4px grid for that one dimension only.
+- Mobile nav toggle and sticky mobile CTA bar button: 44px minimum touch target per WCAG 2.5.5 (Target Size, 44×44px), overriding the 4px grid for that one dimension only — a deliberate accessibility citation, not an ad hoc override.
 - Sticky mobile CTA bar height: 56px (14 × 4, stays on-grid).
 
 ---
@@ -108,9 +109,9 @@ Note for executor: the founder-email fallback string contains a literal placehol
 Components this phase actually needs (guides planner task-breakdown and shadcn block selection):
 
 - Site header / nav bar (dark, sticky) with logo, page links, and Primary CTA button
-- Mobile nav: `sheet` (slide-out) triggered by a 44px hamburger toggle
+- Mobile nav: `sheet` (slide-out) triggered by a 44px hamburger toggle — icon-only control, MUST carry `aria-label="Open menu"` (and `aria-label="Close menu"` on the dismiss control)
 - Sticky mobile CTA bar (bottom-anchored, 56px, Primary CTA only)
-- Hero section (Display headline, sub-copy, Primary CTA, and the demo placeholder slot as an `Empty state` card)
+- Hero section (Display headline, sub-copy, Primary CTA, and the demo placeholder slot as an `Empty state` card). **Homepage focal point (explicit):** the hero headline + demo placeholder card pair is THE primary visual anchor of the homepage — every other element on the page is visually subordinate to it; nothing else may compete at Display size or with accent-color weight.
 - Founder credibility block (About page): real photo, name, region, FDE story copy, `avatar` or custom photo treatment — not a generic bio-card template
 - Services model sequence (audit → project → retainer): a numbered/sequential horizontal flow, NOT a 3-card uniform grid — each step differentiated by content weight (step 1 "free" gets the most visual space) rather than by icon
 - Footer: real contact info, region, matching-domain email, Primary CTA repeat, page links
