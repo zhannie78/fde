@@ -495,19 +495,22 @@ Options:
 
 **If this table is empty:** N/A — see entries above; all are LOW-MEDIUM risk with a clear verification step already identified.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **What is the exact, current-as-of-account-creation `getCalApi`/`Cal` component config surface?**
+   - **RESOLVED:** Operationally addressed by plan 01-06 Task 3 (checkpoint step 2) — the founder pulls the current instance-specific snippet from Cal.com's in-app Embed Snippet Generator when creating the "Free Audit Call" event type; 01-03's Pattern 1 code is the starting scaffold, buildable against the placeholder `calLink`.
    - What we know: The package (`@calcom/embed-react@1.5.3`) exists, is actively maintained, supports React 19, and the general `getCalApi()` → `cal("ui", {...})` + `<Cal calLink={...} config={...} />` pattern is consistently reported.
    - What's unclear: The exhaustive, currently-valid set of config keys (official docs pages for this specific topic returned thin or 404 content during this research session).
    - Recommendation: Once the founder creates the actual Cal.com account and "Free Audit Call" event type, use Cal.com's in-app Embed Snippet Generator to pull the current, instance-specific snippet rather than relying solely on this research's pattern — treat Pattern 1's code as a strong starting scaffold, not a verbatim final answer.
 
 2. **Will the "Nova" preset's visual defaults (button shape, shadow treatment) require heavy override, or would starting from "Custom"/manual `components.json` authoring be net-faster?**
+   - **RESOLVED:** LOW risk per Assumptions Log A2 — moot because 01-01 Task 2 fully overrides all CLI-generated colors, fonts, and radius regardless of preset. Plan selects "Nova" in 01-01 Task 1 and treats its output as a throwaway starting point; no spike needed.
    - What we know: Nova ships a specific button aesthetic (rounded-lg, OKLCH neutral grays, `h-8`/`h-7`/`h-9` sizing scale) that will need overriding regardless of preset choice, since UI-SPEC's colors/radius/fonts are all bespoke.
    - What's unclear: Whether "Custom" preset's interactive flow produces a genuinely bare starting point (less to override) or essentially the same base with different defaults — this session did not complete a full interactive "Custom" walkthrough due to the non-interactive testing constraints of this environment.
    - Recommendation: The planner should include a short spike/verification step at the start of the scaffolding task — run `shadcn init -b radix` interactively once, try "Custom" specifically, and inspect the diff against "Nova" before committing to a specific preset choice in the task plan.
 
 3. **Founder-identity placeholders (name-as-presented, region, bio beats, email, domain, Cal.com link) — all NEEDS-FOUNDER per CONTEXT.md.**
+   - **RESOLVED:** Tracked via NEEDS-FOUNDER launch blockers in 01-06 (LAUNCH-CHECKLIST.md + the checkpoint:human-verify that resolves every `siteConfig` placeholder before launch); placeholders defined as flagged values in 01-01 Task 2.
    - What we know: These must live in `src/config/site.ts` (D-06) as typed placeholders, and are explicit launch-checklist blockers (D-04, D-05, D-07, D-13), not silently-shipped defaults.
    - What's unclear: N/A — this is correctly scoped as founder input, not a research gap.
    - Recommendation: Planner should generate explicit `checkpoint:human-verify`-style tasks (or equivalent launch-checklist items) for each NEEDS-FOUNDER item rather than letting placeholder values ship unflagged.
