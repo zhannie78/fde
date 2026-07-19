@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-07-19T18:01:53.686Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-07-19T18:06:56.422Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 6
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-07-19)
 ## Current Position
 
 Phase: 01 (marketing-foundation) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-07-19
 
-Progress: [███░░░░░░░] 33%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [███░░░░░░░] 33%
 *Updated after each plan completion*
 | Phase 01-marketing-foundation P01 | 6min | 2 tasks | 31 files |
 | Phase 01 P02 | 4min | 2 tasks | 8 files |
+| Phase 01 P03 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,7 @@ Recent decisions affecting current work:
 - [Phase 01-marketing-foundation]: Scaffolded create-next-app in a temp dir and rsync'd generated files into the existing repo, excluding .git/node_modules/.next/generated CLAUDE.md — avoids clobbering the project's real CLAUDE.md and .planning/ directory since create-next-app refuses to run in a non-empty directory
 - [Phase 01]: Styled header/footer dark chrome using Plan 01's --secondary/--secondary-foreground design tokens rather than new hex literals
 - [Phase 01]: MobileNav renders its own close button with aria-label="Close menu" instead of the shadcn Sheet default, since the primitive's default close control has no aria-label attribute
+- [Phase 01-marketing-foundation]: Sized /book H1 at UI-SPEC Heading scale (28px), not Display (44px), to honor UI-SPEC's constraint that Display is reserved for the hero headline only
 
 ### Pending Todos
 
@@ -88,6 +90,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T18:01:53.666Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-07-19T18:06:56.414Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
