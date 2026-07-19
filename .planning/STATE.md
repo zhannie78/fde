@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-07-19T18:06:56.422Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-07-19T18:14:04.839Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 6
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-07-19)
 ## Current Position
 
 Phase: 01 (marketing-foundation) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-07-19
 
-Progress: [█████░░░░░] 50%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01-marketing-foundation P01 | 6min | 2 tasks | 31 files |
 | Phase 01 P02 | 4min | 2 tasks | 8 files |
 | Phase 01 P03 | 3min | 2 tasks | 2 files |
+| Phase 01-marketing-foundation P04 | 8min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Styled header/footer dark chrome using Plan 01's --secondary/--secondary-foreground design tokens rather than new hex literals
 - [Phase 01]: MobileNav renders its own close button with aria-label="Close menu" instead of the shadcn Sheet default, since the primitive's default close control has no aria-label attribute
 - [Phase 01-marketing-foundation]: Sized /book H1 at UI-SPEC Heading scale (28px), not Display (44px), to honor UI-SPEC's constraint that Display is reserved for the hero headline only
+- [Phase 01-marketing-foundation]: Used inline clamp() style on the hero Display headline instead of a Tailwind arbitrary-value class — Tailwind cannot cleanly express a mixed-unit three-argument clamp(), and the plan's grep-based verification checks for the literal clamp(32px, 8vw, 44px) string
+- [Phase 01-marketing-foundation]: Kept Outcomes lead-stat typography at 30px/36px, under the 44px Display size — Preserves the hero as the homepage's only Display-scale element per the SITE-06 focal-point constraint
+- [Phase 01-marketing-foundation]: FounderStrip's bracketed biographical placeholders wrap the existing siteConfig.region NEEDS-FOUNDER value — Keeps D-13's no-invented-biography constraint centralized in one file rather than introducing new placeholder text
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T18:06:56.414Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-07-19T18:14:04.830Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
