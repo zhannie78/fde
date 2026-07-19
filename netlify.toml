@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Pin explicitly — Next.js 16 requires 20.9+, but Netlify's default build
+  # image version may not match local (v24.18.0). Do not rely on either
+  # environment's default matching (RESEARCH: Environment Availability).
+  NODE_VERSION = "20"
+
+# Do NOT pin @netlify/plugin-nextjs here — Netlify's Next.js Runtime v5
+# (OpenNext-based) is zero-config and Netlify advises tracking latest,
+# not locking a version (RESEARCH Alternatives Considered).
