@@ -1,4 +1,4 @@
-# Requirements: Deployed AI
+# Requirements: AI Deployed
 
 **Defined:** 2026-07-19
 **Core Value:** A skeptical, non-technical SMB owner lands on the site, tries a demo or completes the free workflow audit, and comes away convinced enough to book an engagement.

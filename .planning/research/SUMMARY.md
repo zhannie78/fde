@@ -1,13 +1,13 @@
 # Project Research Summary
 
-**Project:** Deployed AI
+**Project:** AI Deployed
 **Domain:** Solo AI-transformation consultancy — marketing/lead-gen website with public Claude-powered interactive demos and a self-serve, AI-drafted/human-reviewed workflow-audit funnel
 **Researched:** 2026-07-19
 **Confidence:** MEDIUM-HIGH
 
 ## Executive Summary
 
-Deployed AI is a well-trodden 2026 architecture pattern wearing a novel go-to-market wedge. The technical shape — a Next.js marketing site with serverless Route Handlers proxying Claude API calls, a lightweight Postgres store for one stateful workflow, and a transactional email provider — is standard, low-risk, and fully buildable on free-tier infrastructure by a solo founder. What's differentiated is the product bet: ungated, try-it-yourself interactive demos plus a self-serve questionnaire that produces an AI-drafted, founder-reviewed audit report. Research confirms no surveyed competitor (Ciela AI, Arkeo AI, Execution Point, Layer3 Labs, Fleece AI, MannVenture) combines a live experiential demo with a personalized self-serve AI report — this pairing is the real wedge, not any single technology choice.
+AI Deployed is a well-trodden 2026 architecture pattern wearing a novel go-to-market wedge. The technical shape — a Next.js marketing site with serverless Route Handlers proxying Claude API calls, a lightweight Postgres store for one stateful workflow, and a transactional email provider — is standard, low-risk, and fully buildable on free-tier infrastructure by a solo founder. What's differentiated is the product bet: ungated, try-it-yourself interactive demos plus a self-serve questionnaire that produces an AI-drafted, founder-reviewed audit report. Research confirms no surveyed competitor (Ciela AI, Arkeo AI, Execution Point, Layer3 Labs, Fleece AI, MannVenture) combines a live experiential demo with a personalized self-serve AI report — this pairing is the real wedge, not any single technology choice.
 
 The recommended approach: Next.js 16 (App Router) + TypeScript + Tailwind, deployed to **Netlify Free** rather than Vercel (Vercel Hobby's terms explicitly prohibit the commercial use this site constitutes), with Claude Haiku 4.5 powering the cheap/high-volume public demos and Claude Sonnet powering the higher-stakes audit report draft. Every Claude call is server-side only, sits behind Upstash-backed per-IP rate limiting plus a Console-level spend cap, and the audit report always passes through a human review gate before it reaches a prospect — never fully automated. Persistence is a single Supabase/Postgres table tracking submission → draft → reviewed → sent, with a shared-secret-gated `/admin` page in place of a full auth system, since there is exactly one reviewer.
 

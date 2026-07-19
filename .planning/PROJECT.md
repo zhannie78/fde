@@ -1,8 +1,8 @@
-# Deployed AI
+# AI Deployed
 
 ## What This Is
 
-A marketing and lead-generation website for **Deployed AI** — a solo AI-transformation consultancy run by a former forward-deployed engineer (FDE). The business offers free workflow audits to small/medium businesses, then builds custom white-glove AI solutions (powered by Claude) for the pain points the audit uncovers. The site is both the storefront and the first proof of capability: interactive demos and an AI-drafted audit report let prospects experience the product before ever talking to a human.
+A marketing and lead-generation website for **AI Deployed** — a solo AI-transformation consultancy run by a former forward-deployed engineer (FDE). The business offers free workflow audits to small/medium businesses, then builds custom white-glove AI solutions (powered by Claude) for the pain points the audit uncovers. The site is both the storefront and the first proof of capability: interactive demos and an AI-drafted audit report let prospects experience the product before ever talking to a human.
 
 ## Core Value
 
@@ -53,12 +53,12 @@ A skeptical, non-technical SMB owner lands on the site, tries a demo or complete
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Working name "Deployed AI" | FDE lineage + doubles as the pitch ("AI, deployed directly into your business, not bolted on") | — Pending (domain TBD) |
+| Working name "AI Deployed" | FDE lineage + doubles as the pitch ("AI, deployed directly into your business, not bolted on") | — Pending (domain TBD) |
 | Target 4 verticals, one shared wedge | Home services, medical/dental, small law, real estate all share the same pain (missed inquiry = lost revenue), so demos and pitch reuse across all four | — Pending |
 | Missed-call recovery + intake triage as flagship demos | Less saturated than voice receptionists; directly demonstrate the ROI wedge | — Pending |
 | Audit = self-serve questionnaire → AI draft + human review | Scales without losing quality control while trust is being built; the audit itself demos the capability | — Pending |
 | Project + retainer engagement model | Scoped build proves value fast; retainer creates recurring revenue and embeds long-term | — Pending |
-| Company-first brand, founder story prominent | "Deployed AI" is the brand; FDE background is the credibility layer, not the whole identity | — Pending |
+| Company-first brand, founder story prominent | "AI Deployed" is the brand; FDE background is the credibility layer, not the whole identity | — Pending |
 | ROI-first messaging | SMB owners respond to dollars/hours, not technology; copy leads with time saved, profit recovered, expenses cut | — Pending |
 
 ## Evolution

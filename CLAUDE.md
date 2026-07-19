@@ -1,9 +1,9 @@
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project
 
-**Deployed AI**
+**AI Deployed**
 
-A marketing and lead-generation website for **Deployed AI** — a solo AI-transformation consultancy run by a former forward-deployed engineer (FDE). The business offers free workflow audits to small/medium businesses, then builds custom white-glove AI solutions (powered by Claude) for the pain points the audit uncovers. The site is both the storefront and the first proof of capability: interactive demos and an AI-drafted audit report let prospects experience the product before ever talking to a human.
+A marketing and lead-generation website for **AI Deployed** — a solo AI-transformation consultancy run by a former forward-deployed engineer (FDE). The business offers free workflow audits to small/medium businesses, then builds custom white-glove AI solutions (powered by Claude) for the pain points the audit uncovers. The site is both the storefront and the first proof of capability: interactive demos and an AI-drafted audit report let prospects experience the product before ever talking to a human.
 
 **Core Value:** A skeptical, non-technical SMB owner lands on the site, tries a demo or completes the free workflow audit, and comes away convinced this person can recover real money and time for their business — convinced enough to book an engagement.
 
