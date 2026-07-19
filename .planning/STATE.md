@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-07-19T18:19:22.660Z"
+stopped_at: "01-06 Task 3 checkpoint:human-verify pending (LAUNCH-CHECKLIST.md created, cloudflare-dns decision recorded)"
+last_updated: "2026-07-19T18:32:24.380Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 4
@@ -78,6 +78,7 @@ Recent decisions affecting current work:
 - [Phase 01-marketing-foundation]: FounderBlock renders on a full-bleed ink-navy band with an asymmetric two-column layout (photo ~42%, narrative ~58%) rather than a centered avatar bio-card — Satisfies UI-SPEC's explicit requirement that the founder credibility block not be a generic bio-card template
 - [Phase 01-marketing-foundation]: ServiceSequence uses an asymmetric md:grid-cols-[1.6fr_1fr_1fr] layout, not grid-cols-3, so step 1 (Free Audit) gets the widest column and most copy — Matches RESEARCH Pattern 3 and the SITE-06 anti-pattern gate against a uniform 3-card grid
 - [Phase 01-marketing-foundation]: FDE biographical narrative in FounderBlock ships as full sentences with inline bracketed NEEDS-FOUNDER placeholders for every unverifiable specific, rather than omitting the narrative — Keeps the About page shippable now while making clear which facts still need founder confirmation per D-13
+- [Phase 01-marketing-foundation]: DNS ownership decided: cloudflare-dns — DNS stays hosted at Cloudflare, records point at Netlify (A/CNAME + www CNAME); free Cloudflare Email Routing serves as the D-05 founder-email path
 
 ### Pending Todos
 
@@ -87,6 +88,7 @@ None yet.
 
 - [Phase 2]: Research flags Netlify's Next.js Runtime v5 Server Actions/streaming support as MEDIUM confidence — verify early in Phase 2 planning before deep build-out.
 - [Phase 4]: Vertical compliance language (HIPAA-adjacent for medical/dental, state-bar AI-disclosure for legal) needs a targeted research pass before content ships — current sourcing is general-pattern level, not jurisdiction-specific.
+- [Phase 01-06] checkpoint:human-verify pending — founder must: create Netlify site + connect repo, create Cal.com Free Audit Call event + update calLink, purchase production domain + connect DNS at Cloudflare per cloudflare-dns decision + verify HTTPS, set up Cloudflare Email Routing + update founderEmail, replace founder-placeholder.svg + update founderName/region/domain, review copy on all 4 pages. See .planning/phases/01-marketing-foundation/LAUNCH-CHECKLIST.md
 
 ## Deferred Items
 
@@ -98,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T18:19:22.652Z
-Stopped at: Completed 01-05-PLAN.md
-Resume file: None
+Last session: 2026-07-19T18:32:24.372Z
+Stopped at: 01-06 Task 3 checkpoint:human-verify pending (LAUNCH-CHECKLIST.md created, cloudflare-dns decision recorded)
+Resume file: 01-06-PLAN.md
