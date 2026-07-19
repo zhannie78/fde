@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-02-PLAN.md — Shared layout shell: header, accessible mobile nav, sticky CTA bar, footer, sitemap/robots
 - [x] 01-03-PLAN.md — /book route + Cal.com inline embed with founder-email error fallback (SITE-04)
 - [x] 01-04-PLAN.md — Homepage: focal hero + demo-placeholder slot + D-09 sections (SITE-06 design gate)
-- [ ] 01-05-PLAN.md — About (FDE story) + Services (audit→project→retainer sequence) pages (SITE-02, SITE-03)
+- [x] 01-05-PLAN.md — About (FDE story) + Services (audit→project→retainer sequence) pages (SITE-02, SITE-03)
 - [ ] 01-06-PLAN.md — Netlify deploy, HTTPS/domain, DNS-vs-email decision, founder launch checklist (SITE-05)
 **UI hint**: yes
 
@@ -87,7 +87,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Marketing Foundation | 4/6 | In Progress|  |
+| 1. Marketing Foundation | 5/6 | In Progress|  |
 | 2. Missed-Call Demo & Secure AI Infrastructure | 0/TBD | Not started | - |
 | 3. Workflow Audit Funnel | 0/TBD | Not started | - |
 | 4. Vertical-Aware Landing Pages | 0/TBD | Not started | - |

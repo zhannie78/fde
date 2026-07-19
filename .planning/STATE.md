@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-07-19T18:14:04.839Z"
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-07-19T18:19:22.660Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-07-19)
 ## Current Position
 
 Phase: 01 (marketing-foundation) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-07-19
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [███████░░░] 67%
 | Phase 01 P02 | 4min | 2 tasks | 8 files |
 | Phase 01 P03 | 3min | 2 tasks | 2 files |
 | Phase 01-marketing-foundation P04 | 8min | 2 tasks | 8 files |
+| Phase 01 P05 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 01-marketing-foundation]: Used inline clamp() style on the hero Display headline instead of a Tailwind arbitrary-value class — Tailwind cannot cleanly express a mixed-unit three-argument clamp(), and the plan's grep-based verification checks for the literal clamp(32px, 8vw, 44px) string
 - [Phase 01-marketing-foundation]: Kept Outcomes lead-stat typography at 30px/36px, under the 44px Display size — Preserves the hero as the homepage's only Display-scale element per the SITE-06 focal-point constraint
 - [Phase 01-marketing-foundation]: FounderStrip's bracketed biographical placeholders wrap the existing siteConfig.region NEEDS-FOUNDER value — Keeps D-13's no-invented-biography constraint centralized in one file rather than introducing new placeholder text
+- [Phase 01-marketing-foundation]: FounderBlock renders on a full-bleed ink-navy band with an asymmetric two-column layout (photo ~42%, narrative ~58%) rather than a centered avatar bio-card — Satisfies UI-SPEC's explicit requirement that the founder credibility block not be a generic bio-card template
+- [Phase 01-marketing-foundation]: ServiceSequence uses an asymmetric md:grid-cols-[1.6fr_1fr_1fr] layout, not grid-cols-3, so step 1 (Free Audit) gets the widest column and most copy — Matches RESEARCH Pattern 3 and the SITE-06 anti-pattern gate against a uniform 3-card grid
+- [Phase 01-marketing-foundation]: FDE biographical narrative in FounderBlock ships as full sentences with inline bracketed NEEDS-FOUNDER placeholders for every unverifiable specific, rather than omitting the narrative — Keeps the About page shippable now while making clear which facts still need founder confirmation per D-13
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T18:14:04.830Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-07-19T18:19:22.652Z
+Stopped at: Completed 01-05-PLAN.md
 Resume file: None
