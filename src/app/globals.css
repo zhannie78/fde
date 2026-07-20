@@ -145,6 +145,214 @@
   }
 }
 
+/* ---------------------------------------------------------------------
+ * Sketch-findings reusable component classes (sketch-findings-fde skill).
+ * Copied verbatim from references/visual-system-and-motion.md and
+ * references/bio-portfolio-page.md; var(--space-N)/var(--text-N) tokens
+ * not defined in this project's Tailwind v4 setup are substituted with
+ * concrete pixel/rem values matching the UI-SPEC spacing/type scale.
+ * --------------------------------------------------------------------- */
+
+/* Two-layer hover-backlight glow-box (stat/offer/process/portfolio cards) */
+.glow-box {
+  position: relative;
+  border-radius: 14px;
+  height: 100%;
+}
+.glow-box::before {
+  content: "";
+  position: absolute;
+  inset: -11px;
+  border-radius: 14px;
+  z-index: 0;
+  background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+  filter: blur(14px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.glow-box:hover::before {
+  opacity: 0.6;
+  animation: glow-box-blob 4.5s ease-in-out infinite;
+}
+@keyframes glow-box-blob {
+  0% {
+    transform: rotate(0deg);
+    border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
+  }
+  25% {
+    transform: rotate(90deg);
+    border-radius: 62% 38% 30% 70% / 60% 65% 35% 40%;
+  }
+  50% {
+    transform: rotate(180deg);
+    border-radius: 35% 65% 58% 42% / 40% 55% 45% 60%;
+  }
+  75% {
+    transform: rotate(270deg);
+    border-radius: 68% 32% 45% 55% / 55% 35% 65% 45%;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
+  }
+}
+.glow-box-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: inherit;
+  transition: background 0.25s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.glow-box:hover .glow-box-inner {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+/* Elevated final-CTA — static dual-glow + periodic shine sweep */
+.glow-wrap-final {
+  position: relative;
+  display: inline-block;
+  margin-top: 32px; /* var(--space-8) */
+}
+.glow-wrap-final::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 15px;
+  z-index: -1;
+  background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+  filter: blur(16px);
+  opacity: 0.7; /* static — no rotation animation */
+}
+.glow-wrap-final::after {
+  content: "";
+  position: absolute;
+  inset: -26px;
+  border-radius: 26px;
+  z-index: -2;
+  background: radial-gradient(circle, rgba(53, 82, 255, 0.4), transparent 72%);
+  filter: blur(28px);
+  opacity: 0.7; /* static ambient halo, always present */
+}
+.glow-wrap-final:hover::before {
+  opacity: 0.95;
+  filter: blur(20px);
+}
+.btn-final {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 40px;
+  font-size: 1.125rem; /* var(--text-lg) */
+  border-radius: 12px;
+  box-shadow: 0 6px 20px -4px rgba(12, 12, 13, 0.25);
+}
+.btn-final::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: shine-sweep 3s ease-in-out infinite;
+}
+@keyframes shine-sweep {
+  0% {
+    left: -60%;
+  }
+  40% {
+    left: 130%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+.btn-final:hover {
+  background: var(--accent);
+  box-shadow: 0 16px 34px -8px rgba(53, 82, 255, 0.55);
+}
+.btn-final .arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  margin-left: 2px;
+}
+.btn-final:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* About-page avatar framing */
+.avatar-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px -12px rgba(12, 12, 13, 0.18);
+}
+.avatar-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), inset 0 -20px 30px -10px rgba(53, 82, 255, 0.08);
+  pointer-events: none;
+}
+.avatar-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-soft), #fff);
+  color: var(--accent);
+  font-size: 64px;
+  font-weight: 700;
+}
+
+/* Credential pill (About page) */
+.credential-pill {
+  font-size: 0.75rem; /* var(--text-xs) */
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+
+/* Demo card badge (About page) */
+.demo-badge {
+  font-size: 0.75rem; /* var(--text-xs) */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* Portfolio case-card result block (About page) */
+.case-result {
+  border-left: 2px solid var(--lime);
+  padding-left: 16px; /* var(--space-4) */
+  margin-top: 8px; /* var(--space-2) */
+}
+.case-result p {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
