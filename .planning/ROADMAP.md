@@ -94,7 +94,7 @@ Plans:
 
 - [x] 06-02-PLAN.md — Upper sections restyle + GSAP hooks (Hero + Annie/about link, TheFix, Outcomes count-up, RoiCalculator)
 - [x] 06-03-PLAN.md — Lower sections restyle + GSAP hooks (Offer glow-box cards, ProcessTransparency dark band, FinalCta elevated panel)
-- [ ] 06-04-PLAN.md — Chrome restyle + CTA rename + About nav link (header, mobile nav, footer, sticky bar, book-cta)
+- [x] 06-04-PLAN.md — Chrome restyle + CTA rename + About nav link (header, mobile nav, footer, sticky bar, book-cta)
 - [ ] 06-05-PLAN.md — About/bio & portfolio page (Avatar fallback, credentials, honest demos, disclosed composites, sitemap)
 
 **Wave 3** *(blocked on Wave 2)*
@@ -130,7 +130,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1)*
 
 - [x] 06-02-PLAN.md — Upper sections restyle + GSAP hooks (Hero + Annie/about link, TheFix, Outcomes count-up, RoiCalculator)
-- [ ] 06-03-PLAN.md — Lower sections restyle + GSAP hooks (Offer glow-box cards, ProcessTransparency dark band, FinalCta elevated panel)
+- [x] 06-03-PLAN.md — Lower sections restyle + GSAP hooks (Offer glow-box cards, ProcessTransparency dark band, FinalCta elevated panel)
 - [ ] 06-04-PLAN.md — Chrome restyle + CTA rename + About nav link (header, mobile nav, footer, sticky bar, book-cta)
 - [ ] 06-05-PLAN.md — About/bio & portfolio page (Avatar fallback, credentials, honest demos, disclosed composites, sitemap)
 
@@ -170,7 +170,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
 | 5. FDE Landing Page | v2.0 | 6/6 | Complete   | 2026-07-20 |
-| 6. Visual Redesign | v2.0 | 3/7 | In Progress|  |
+| 6. Visual Redesign | v2.0 | 4/7 | In Progress|  |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |
 </content>
