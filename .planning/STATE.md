@@ -4,13 +4,13 @@ milestone: v2.0
 milestone_name: FDE Pivot
 status: executing
 stopped_at: Completed 06-04-PLAN.md
-last_updated: "2026-07-20T20:47:14.693Z"
+last_updated: "2026-07-20T20:54:14.620Z"
 last_activity: 2026-07-20
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 13
-  completed_plans: 10
+  completed_plans: 11
   percent: 25
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 ## Current Position
 
 Phase: 06 (visual-redesign) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 Status: Ready to execute
 Last activity: 2026-07-20
 
-Progress: [████████░░] 77%
+Progress: [█████████░] 85%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [████████░░] 77%
 | Phase 06 P02 | 10min | 2 tasks | 4 files |
 | Phase 06 P03 | 12min | 3 tasks | 3 files |
 | Phase 06 P04 | 1min | 3 tasks | 4 files |
+| Phase 06 P05 | 12min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 06]: GlowBox content wrapping pattern reconfirmed for Offer cards — className only reaches the outer .glow-box wrapper, so card content/gap/padding lives in an inner p-8 div, matching 06-02's the-fix.tsx precedent.
 - [Phase 06]: process-progress-line implemented as a single provider-scaled element (thin var(--border) line) rather than a line+fill-child pair, per the plan's explicit either-option allowance.
 - [Phase 06]: sticky-cta-bar.tsx required no edits in 06-04 Task 3 -- already free of font-semibold/font-medium and already retains its 44px touch target via BookCta's sticky variant
+- [Phase 06]: annie-photo.jpg was untracked at repo root, so used mv + git add instead of git mv for the public/ relocation (same end result).
+- [Phase 06]: /about's Demos/Portfolio eyebrow labels and case-block Problem/Solution/Result labels reuse the existing homepage Tailwind eyebrow-label convention (text-sm font-bold tracking-[0.02em] text-primary uppercase) since 06-01 did not port a dedicated .section-label/.label CSS class into globals.css.
 
 ### Pending Todos
 
@@ -95,7 +98,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-20T20:47:14.682Z
+Last session: 2026-07-20T20:54:14.612Z
 Stopped at: Completed 06-04-PLAN.md
 Resume file: None
 </content>
