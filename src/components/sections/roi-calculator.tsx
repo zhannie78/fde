@@ -14,6 +14,11 @@ const WEEKS_PER_YEAR = 50;
  * two numeric inputs, plain-arithmetic derivation, zero network calls, zero
  * persistence. Keeps the same small-client-boundary discipline as
  * `CalEmbed` (the only other Client Component in the codebase).
+ *
+ * `roi-calculator-section` on the root is the stable GSAP selector hook the
+ * scroll-story provider (plan 06) uses for a one-shot container fade/scale-in
+ * — no logic changes, no count-up tween on the reactive result numerals
+ * (those are keystroke-driven, a tween would fight React state).
  */
 export function RoiCalculator() {
   const [hoursPerWeek, setHoursPerWeek] = useState(10);
@@ -25,12 +30,12 @@ export function RoiCalculator() {
   return (
     <section
       id="calculator"
-      className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
+      className="roi-calculator-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
     >
-      <p className="text-sm font-semibold tracking-[0.02em] text-primary uppercase">
+      <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
         See it for yourself
       </p>
-      <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-semibold text-foreground sm:text-3xl">
+      <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-3xl">
         What&apos;s manual work actually costing you?
       </h2>
 
@@ -38,7 +43,7 @@ export function RoiCalculator() {
         <div>
           <label
             htmlFor="hours-per-week"
-            className="text-sm font-semibold tracking-[0.02em] text-foreground uppercase"
+            className="text-sm font-bold tracking-[0.02em] text-foreground uppercase"
           >
             Hours/week lost to manual work
           </label>
@@ -56,7 +61,7 @@ export function RoiCalculator() {
         <div>
           <label
             htmlFor="hourly-cost"
-            className="text-sm font-semibold tracking-[0.02em] text-foreground uppercase"
+            className="text-sm font-bold tracking-[0.02em] text-foreground uppercase"
           >
             Your team&apos;s hourly cost
           </label>
@@ -76,17 +81,17 @@ export function RoiCalculator() {
       <div className="mt-8">
         {hoursPerWeek === 0 ? (
           <div>
-            <p className="font-heading text-xl leading-[1.2] font-semibold text-foreground">
+            <p className="font-heading text-xl leading-[1.2] font-bold text-foreground">
               See what you&apos;re leaving on the table
             </p>
-            <p className="mt-2 max-w-xl text-base leading-[1.6] text-foreground">
+            <p className="mt-2 max-w-xl text-base leading-[1.75] text-foreground">
               Enter your team&apos;s hours and hourly cost above — we&apos;ll
               show you the time and money a forward-deployed engineer could
               recover.
             </p>
           </div>
         ) : (
-          <p className="max-w-xl text-base leading-[1.6] text-foreground">
+          <p className="max-w-xl text-base leading-[1.75] text-foreground">
             That&apos;s{" "}
             <strong className="text-primary">
               {annualHours.toLocaleString()} hours/year
