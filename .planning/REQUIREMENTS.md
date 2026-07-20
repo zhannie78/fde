@@ -22,6 +22,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **DSGN-02**: The landing page's 5-part narrative is choreographed as a scroll-driven story (GSAP ScrollTrigger)
 - [ ] **DSGN-03**: All scroll/motion effects respect `prefers-reduced-motion` with a fully readable static fallback
 - [ ] **DSGN-04**: Redesigned pages meet Core Web Vitals on mobile despite the animation layer
+- [ ] **DSGN-05**: Visitor can view the founder's name, photo, and bio on a new `/about` page (reverses the v1/Phase 5 anonymity constraint — validated via Phase 6 sketch findings, confirmed by user 2026-07-20)
 
 ### Blog / Content Engine
 
@@ -68,6 +69,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Gated blog content / email capture walls | Kills the SEO and credibility value that is the entire point of the content engine |
 | Named founder bio/headshot | Conflicts with the anonymity constraint ("an experienced FDE," no name or photo) |
 | Full case-study library at launch | Zero completed engagements exist; an empty-looking library damages credibility |
+| ~~Named founder bio/headshot~~ *(reversed 2026-07-20, see DSGN-05)* | Superseded — Phase 6 sketch findings validated a named-founder direction as part of the visual redesign; user confirmed the reversal during `/gsd:ui-phase 6` |
 | Email nurture / marketing automation | Solo maintainer; single conversion path (book the audit) is the deliberate design |
 | Site-wide scroll-jacking / heavy animation everywhere | Scrollytelling is scoped to the landing narrative; pervasive animation hurts CWV, accessibility, and solo maintainability |
 
@@ -89,6 +91,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-02 | Phase 6 | Pending |
 | DSGN-03 | Phase 6 | Pending |
 | DSGN-04 | Phase 6 | Pending |
+| DSGN-05 | Phase 6 | Pending |
 | BLOG-01 | Phase 7 | Pending |
 | BLOG-02 | Phase 7 | Pending |
 | BLOG-03 | Phase 7 | Pending |
@@ -100,11 +103,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-04 | Phase 8 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 21 total
-- Mapped to phases: 21
+- v2.0 requirements: 22 total
+- Mapped to phases: 22
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-20*
-*Last updated: 2026-07-20 after v2.0 roadmap creation (Phases 5-8)*
+*Last updated: 2026-07-20 — added DSGN-05 (anonymity-constraint reversal) during `/gsd:ui-phase 6`, superseding the "Named founder bio/headshot" Out of Scope entry*
 </content>

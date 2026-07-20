@@ -74,13 +74,14 @@ Plans:
 
 **Goal**: The site carries a new, distinctive design direction that is itself proof of craft — the landing page's 5-part narrative is choreographed as a scroll-driven story, motion respects accessibility preferences, and performance holds up on mobile.
 **Depends on**: Phase 5 (restyles locked copy/IA rather than content that's about to change)
-**Requirements**: DSGN-01, DSGN-02, DSGN-03, DSGN-04
+**Requirements**: DSGN-01, DSGN-02, DSGN-03, DSGN-04, DSGN-05
 **Success Criteria** (what must be TRUE):
 
   1. Visitor sees a new, distinctive design direction (tokens, typography, layout) applied consistently across the landing page and blog templates, replacing the v1 visual system
   2. Visitor scrolling the landing page experiences the 5-part narrative choreographed as a scroll-driven story (GSAP ScrollTrigger effects tied to scroll position)
   3. Visitor with `prefers-reduced-motion` enabled sees a fully readable static version of the page with no scroll/motion effects
   4. Visitor on mobile experiences the redesigned pages meeting Core Web Vitals budgets (LCP <2.5s, CLS <0.1, INP <200ms) despite the animation layer
+  5. Visitor can view the founder's name, photo, and bio on a new `/about` page (DSGN-05 — reverses the Phase 5 anonymity constraint per validated sketch findings, confirmed by user 2026-07-20)
 
 **Plans**: TBD
 **UI hint**: yes
