@@ -11,8 +11,8 @@ import {
 import { siteConfig } from "@/config/site";
 
 const navLinks = [
-  { href: "/services", label: "Services" },
-  { href: "/about", label: "About" },
+  { href: "/#offer", label: "Pricing" },
+  { href: "/#process", label: "How It Works" },
 ];
 
 /**
