@@ -13,6 +13,7 @@ import { siteConfig } from "@/config/site";
 const navLinks = [
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "How It Works" },
+  { href: "/about", label: "About" },
 ];
 
 /**
@@ -26,7 +27,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
         <Link
           href="/"
-          className="font-heading text-lg font-semibold text-secondary-foreground"
+          className="font-heading text-lg font-bold text-secondary-foreground"
         >
           {siteConfig.name}
         </Link>

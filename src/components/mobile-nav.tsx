@@ -17,6 +17,7 @@ import {
 const navLinks = [
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "How It Works" },
+  { href: "/about", label: "About" },
 ];
 
 /**
@@ -60,7 +61,7 @@ export function MobileNav() {
             <SheetClose asChild key={link.href}>
               <Link
                 href={link.href}
-                className="text-base font-medium text-foreground hover:text-primary"
+                className="text-base font-normal text-foreground hover:text-primary"
               >
                 {link.label}
               </Link>
