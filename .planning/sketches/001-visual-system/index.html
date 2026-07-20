@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch 001 — Visual System</title>
+<link rel="stylesheet" href="../themes/default.css">
+<style>
+  /* ============ SHARED VARIANT SCAFFOLDING ============ */
+  body { padding-top: 48px; }
+
+  #variant-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9998;
+    background: #16181d; border-bottom: 1px solid #2a2d34;
+    padding: 8px 16px; display: flex; gap: 8px; align-items: center;
+    font-family: var(--font-mono); font-size: 12px;
+  }
+  #variant-nav .label { color: #7d8590; margin-right: 8px; }
+  .variant-tab {
+    background: transparent; border: 1px solid #2a2d34; color: #c9d1d9;
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono);
+    font-size: 12px; transition: all 0.15s ease;
+  }
+  .variant-tab:hover { border-color: #58a6ff; color: #58a6ff; }
+  .variant-tab.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+  .variant { display: none; }
+  .variant.active { display: block; }
+
+  section { padding: var(--space-24) var(--space-8); }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  /* generic reset for headings inside variants */
+  h1, h2, h3, p { margin: 0; }
+
+  #sketch-tools {
+    position: fixed; bottom: 12px; right: 12px; z-index: 9999;
+    font-family: system-ui; font-size: 12px; background: rgba(0,0,0,0.75);
+    color: white; padding: 8px 12px; border-radius: 8px; opacity: 0.35;
+    transition: opacity 0.2s; display: flex; gap: 10px; align-items: center;
+  }
+  #sketch-tools:hover { opacity: 1; }
+  #sketch-tools button { background: #333; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+  #sketch-tools button:hover { background: #555; }
+  #viewport-wrap { max-width: 100%; margin: 0 auto; transition: max-width 0.2s ease; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-weight: 600; cursor: pointer;
+    border: none; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+
+  /* ============================================================ */
+  /* VARIANT A — TERMINAL // CRT                                  */
+  /* ============================================================ */
+  .variant-a {
+    --bg: #0a0d0a;
+    --panel: #0f1410;
+    --text: #cdf7d8;
+    --text-dim: #6f8f78;
+    --primary: #39ff88;
+    --amber: #ffb454;
+    --border: #1f3327;
+    background: var(--bg); color: var(--text); font-family: var(--font-mono);
+    position: relative; overflow: hidden;
+  }
+  .variant-a::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 5;
+    background: repeating-linear-gradient(
+      to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,255,140,0.03) 3px, rgba(0,0,0,0) 4px
+    );
+    mix-blend-mode: overlay;
+  }
+  .variant-a::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 4;
+    box-shadow: inset 0 0 180px rgba(0,0,0,0.85);
+  }
+  .variant-a .term-bar {
+    display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+  }
+  .variant-a .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .variant-a .dot.r { background: #ff5f57; }
+  .variant-a .dot.y { background: #ffbd2e; }
+  .variant-a .dot.g { background: #28c840; }
+  .variant-a .term-title { margin-left: 12px; color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-a .prompt { color: var(--text-dim); font-size: var(--text-sm); margin-bottom: var(--space-3); }
+  .variant-a .prompt::before { content: "annie@fde:~$ "; color: var(--primary); }
+  .variant-a .hero-title {
+    font-size: var(--text-display); line-height: 1.05; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--text);
+  }
+  .variant-a .hero-title .hi { color: var(--text-dim); font-weight: 400; font-size: 0.4em; display: block; margin-bottom: var(--space-2); }
+  .variant-a .hero-title .accent { color: var(--primary); }
+  .variant-a .cursor {
+    display: inline-block; width: 0.5em; height: 0.85em; background: var(--primary);
+    animation: blink 1s steps(1) infinite; vertical-align: -0.1em; margin-left: 4px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .variant-a .lede { color: var(--text-dim); font-size: var(--text-lg); margin-top: var(--space-6); max-width: 640px; line-height: 1.6; }
+  .variant-a .divider { border: none; border-top: 1px dashed var(--border); margin: 0; }
+  .variant-a .btn-primary {
+    background: var(--primary); color: #04170c; padding: 14px 28px; border-radius: 2px;
+    font-size: var(--text-base);
+  }
+  .variant-a .btn-primary:hover { box-shadow: 0 0 24px rgba(57,255,136,0.5); }
+  .variant-a .btn-ghost {
+    background: transparent; color: var(--primary); border: 1px solid var(--primary);
+    padding: 13px 27px; border-radius: 2px;
+  }
+  .variant-a .section-label { color: var(--amber); font-size: var(--text-sm); letter-spacing: 0.08em; margin-bottom: var(--space-4); }
+  .variant-a .section-label::before { content: "// "; }
+  .variant-a h2 { font-size: var(--text-3xl); font-weight: 700; color: var(--text); max-width: 780px; line-height: 1.3; }
+  .variant-a .body-text { color: var(--text-dim); font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; }
+  .variant-a .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-8); margin-top: var(--space-12); }
+  .variant-a .stat-card { border: 1px solid var(--border); background: var(--panel); padding: var(--space-8); border-radius: 4px; }
+  .variant-a .stat-num { font-size: var(--text-3xl); color: var(--primary); font-weight: 700; }
+  .variant-a .stat-label { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-2); letter-spacing: 0.05em; }
+  .variant-a .worst-case { margin-top: var(--space-8); color: var(--amber); font-size: var(--text-base); }
+  .variant-a .worst-case::before { content: "> "; }
+  .variant-a .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-a .offer-card { border: 1px solid var(--border); background: var(--panel); padding: var(--space-6); border-radius: 4px; }
+  .variant-a .offer-card .n { color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-a .offer-card .price { font-size: var(--text-2xl); color: var(--primary); font-weight: 700; margin-top: var(--space-2); }
+  .variant-a .offer-card .desc { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; }
+  .variant-a .process-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: 0; }
+  .variant-a .process-item { display: flex; gap: var(--space-6); padding: var(--space-6) 0; border-top: 1px dashed var(--border); }
+  .variant-a .process-item:last-child { border-bottom: 1px dashed var(--border); }
+  .variant-a .process-num { color: var(--primary); font-size: var(--text-xl); font-weight: 700; width: 48px; }
+  .variant-a .process-body h3 { color: var(--text); font-size: var(--text-lg); }
+  .variant-a .process-body p { color: var(--text-dim); margin-top: var(--space-2); font-size: var(--text-sm); }
+  .variant-a .final-cta { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: var(--space-16); text-align: center; }
+  .variant-a .final-cta h2 { margin: 0 auto; text-align: center; }
+  .variant-a footer { text-align: center; color: var(--text-dim); font-size: var(--text-xs); padding: var(--space-8); }
+
+  /* ============================================================ */
+  /* VARIANT B — PIXEL-GRID BRUTALIST                              */
+  /* ============================================================ */
+  .variant-b {
+    --bg: #f4f3ee;
+    --ink: #101010;
+    --accent: #2b52ff;
+    --accent-2: #d4ff2b;
+    background: var(--bg); color: var(--ink); font-family: var(--font-mono);
+    background-image:
+      linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .variant-b .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-4) var(--space-8); border-bottom: 3px solid var(--ink);
+    background: var(--bg);
+  }
+  .variant-b .brand { font-weight: 700; letter-spacing: -0.02em; font-size: var(--text-lg); text-transform: uppercase; }
+  .variant-b .brand .dot { color: var(--accent); }
+  .variant-b .hero { padding-top: var(--space-24); }
+  .variant-b .pixel-tag {
+    display: inline-block; background: var(--ink); color: var(--accent-2);
+    font-size: var(--text-xs); padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .variant-b .hero-title {
+    font-size: var(--text-display); line-height: 0.98; font-weight: 700; text-transform: uppercase;
+    letter-spacing: -0.03em; margin-top: var(--space-6);
+  }
+  .variant-b .hero-title .hi { display: block; font-size: 0.32em; text-transform: none; font-weight: 500; color: #4a4a4a; margin-bottom: var(--space-3); }
+  .variant-b .hero-title .accent { color: var(--accent); -webkit-text-stroke: 0; }
+  .variant-b .lede { font-size: var(--text-lg); margin-top: var(--space-8); max-width: 620px; line-height: 1.6; color: #2a2a2a; }
+  .variant-b .btn-primary {
+    background: var(--ink); color: var(--accent-2); padding: 16px 32px;
+    border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--accent); font-size: var(--text-base);
+  }
+  .variant-b .btn-primary:hover { box-shadow: 3px 3px 0 var(--accent); transform: translate(3px,3px); }
+  .variant-b .btn-ghost {
+    background: var(--bg); color: var(--ink); padding: 15px 31px;
+    border: 3px solid var(--ink);
+  }
+  .variant-b .section-label {
+    display: inline-block; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: var(--space-4); border-bottom: 3px solid var(--accent-2); padding-bottom: 4px;
+  }
+  .variant-b h2 { font-size: var(--text-3xl); font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; max-width: 820px; line-height: 1.2; }
+  .variant-b .body-text { font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; color: #2a2a2a; }
+  .variant-b .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); margin-top: var(--space-12); }
+  .variant-b .stat-card { background: #fff; border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); padding: var(--space-8); position: relative; }
+  .variant-b .stat-card::before {
+    content: ""; position: absolute; top: -3px; right: -3px; width: 14px; height: 14px;
+    background: var(--accent-2); border: 3px solid var(--ink); border-right: none; border-top: none;
+  }
+  .variant-b .stat-num { font-size: var(--text-3xl); color: var(--accent); font-weight: 700; }
+  .variant-b .stat-label { font-size: var(--text-sm); margin-top: var(--space-2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+  .variant-b .worst-case {
+    margin-top: var(--space-8); background: var(--ink); color: var(--accent-2); padding: var(--space-4) var(--space-6);
+    display: inline-block; font-size: var(--text-base);
+  }
+  .variant-b .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-b .offer-card { background: #fff; border: 3px solid var(--ink); padding: var(--space-6); box-shadow: 6px 6px 0 var(--accent); }
+  .variant-b .offer-card .n { font-size: var(--text-sm); font-weight: 700; text-transform: uppercase; }
+  .variant-b .offer-card .price { font-size: var(--text-2xl); color: var(--accent); font-weight: 700; margin-top: var(--space-2); }
+  .variant-b .offer-card .desc { font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; color: #333; }
+  .variant-b .process-list { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); }
+  .variant-b .process-item { background: #fff; border: 3px solid var(--ink); padding: var(--space-6); }
+  .variant-b .process-num { font-size: var(--text-2xl); font-weight: 700; color: var(--accent-2); -webkit-text-stroke: 1.5px var(--ink); }
+  .variant-b .process-body h3 { font-size: var(--text-lg); margin-top: var(--space-3); text-transform: uppercase; }
+  .variant-b .process-body p { margin-top: var(--space-2); font-size: var(--text-sm); color: #333; }
+  .variant-b .final-cta { background: var(--ink); color: #fff; padding: var(--space-16); text-align: center; }
+  .variant-b .final-cta h2 { color: #fff; margin: 0 auto; text-align: center; }
+  .variant-b .final-cta .btn-primary { margin-top: var(--space-8); box-shadow: 6px 6px 0 var(--accent-2); }
+  .variant-b footer { text-align: center; font-size: var(--text-xs); padding: var(--space-8); color: #666; border-top: 3px solid var(--ink); }
+
+  /* ============================================================ */
+  /* VARIANT C — DARK NEON IDE                                     */
+  /* ============================================================ */
+  .variant-c {
+    --bg: #0d1117;
+    --panel: rgba(255,255,255,0.04);
+    --panel-border: rgba(255,255,255,0.08);
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --violet: #c792ea;
+    --cyan: #89ddff;
+    --pink: #ff6ac1;
+    background: radial-gradient(circle at 20% 0%, rgba(199,146,234,0.08), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(137,221,255,0.07), transparent 40%),
+                var(--bg);
+    color: var(--text); font-family: var(--font-mono); position: relative;
+  }
+  .variant-c::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0.4;
+    background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .variant-c .editor-tabs { display: flex; gap: 2px; padding: 0 var(--space-6); background: #010409; border-bottom: 1px solid var(--panel-border); }
+  .variant-c .tab {
+    padding: 10px 18px; font-size: var(--text-sm); color: var(--text-dim);
+    border-right: 1px solid var(--panel-border); display: flex; align-items: center; gap: 6px;
+  }
+  .variant-c .tab.active { color: var(--text); background: var(--bg); border-top: 2px solid var(--cyan); }
+  .variant-c .tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); }
+  .variant-c .hero { display: grid; grid-template-columns: 40px 1fr; }
+  .variant-c .gutter {
+    color: #3d4451; font-size: var(--text-sm); text-align: right; padding-right: var(--space-3);
+    line-height: 2.2; user-select: none;
+  }
+  .variant-c .hero-title { font-size: var(--text-display); line-height: 1.08; font-weight: 700; letter-spacing: -0.02em; }
+  .variant-c .hero-title .hi { display: block; font-size: 0.36em; color: var(--text-dim); font-weight: 400; margin-bottom: var(--space-2); }
+  .variant-c .hero-title .accent {
+    background: linear-gradient(90deg, var(--violet), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .variant-c .lede { color: var(--text-dim); font-size: var(--text-lg); margin-top: var(--space-6); max-width: 640px; line-height: 1.6; }
+  .variant-c .btn-primary {
+    background: linear-gradient(90deg, var(--violet), var(--pink)); color: #14001a; padding: 14px 28px;
+    border-radius: 6px; font-size: var(--text-base); font-weight: 700;
+  }
+  .variant-c .btn-primary:hover { box-shadow: 0 0 30px rgba(199,146,234,0.45); }
+  .variant-c .btn-ghost {
+    background: var(--panel); color: var(--text); border: 1px solid var(--panel-border);
+    padding: 13px 27px; border-radius: 6px; backdrop-filter: blur(6px);
+  }
+  .variant-c .section-label { color: var(--cyan); font-size: var(--text-sm); letter-spacing: 0.06em; margin-bottom: var(--space-4); }
+  .variant-c .section-label::before { content: "<"; color: var(--text-dim); }
+  .variant-c .section-label::after { content: "/>"; color: var(--text-dim); }
+  .variant-c h2 { font-size: var(--text-3xl); font-weight: 700; max-width: 780px; line-height: 1.3; }
+  .variant-c .body-text { color: var(--text-dim); font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; }
+  .variant-c .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-8); margin-top: var(--space-12); }
+  .variant-c .stat-card {
+    background: var(--panel); border: 1px solid var(--panel-border); backdrop-filter: blur(10px);
+    padding: var(--space-8); border-radius: 12px;
+  }
+  .variant-c .stat-card:nth-child(1) .stat-num { color: var(--violet); }
+  .variant-c .stat-card:nth-child(2) .stat-num { color: var(--cyan); }
+  .variant-c .stat-card:nth-child(3) .stat-num { color: var(--pink); }
+  .variant-c .stat-num { font-size: var(--text-3xl); font-weight: 700; }
+  .variant-c .stat-label { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-2); }
+  .variant-c .worst-case { margin-top: var(--space-8); color: var(--text-dim); font-size: var(--text-base); border-left: 2px solid var(--violet); padding-left: var(--space-4); }
+  .variant-c .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-c .offer-card { background: var(--panel); border: 1px solid var(--panel-border); padding: var(--space-6); border-radius: 12px; backdrop-filter: blur(10px); }
+  .variant-c .offer-card .n { color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-c .offer-card .price { font-size: var(--text-2xl); font-weight: 700; margin-top: var(--space-2); background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .variant-c .offer-card .desc { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; }
+  .variant-c .process-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); }
+  .variant-c .process-item { display: flex; gap: var(--space-6); padding: var(--space-6); background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; }
+  .variant-c .process-num { color: var(--cyan); font-size: var(--text-xl); font-weight: 700; width: 48px; }
+  .variant-c .process-body h3 { color: var(--text); font-size: var(--text-lg); }
+  .variant-c .process-body p { color: var(--text-dim); margin-top: var(--space-2); font-size: var(--text-sm); }
+  .variant-c .final-cta { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 16px; padding: var(--space-16); text-align: center; backdrop-filter: blur(10px); }
+  .variant-c .final-cta h2 { margin: 0 auto; text-align: center; }
+  .variant-c footer { text-align: center; color: var(--text-dim); font-size: var(--text-xs); padding: var(--space-8); }
+
+  @media (max-width: 720px) {
+    .variant-a .offer-grid, .variant-b .offer-grid, .variant-c .offer-grid { grid-template-columns: 1fr; }
+    .variant-a .stat-row, .variant-b .stat-row, .variant-c .stat-row { grid-template-columns: 1fr; }
+    .variant-b .process-list { grid-template-columns: 1fr; }
+    .variant-c .hero { grid-template-columns: 1fr; }
+    .variant-c .gutter { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="variant-nav">
+  <span class="label">SKETCH 001 — VISUAL SYSTEM</span>
+  <button class="variant-tab active" onclick="showVariant('a', event)">A: Terminal // CRT</button>
+  <button class="variant-tab" onclick="showVariant('b', event)">B: Pixel-Grid Brutalist</button>
+  <button class="variant-tab" onclick="showVariant('c', event)">C: Dark Neon IDE</button>
+</div>
+
+<!-- ============ VARIANT A ============ -->
+<div id="variant-a" class="variant active variant-a">
+  <div class="term-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="term-title">annie — zsh — 120x40</span>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="prompt">whoami</div>
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        a <span class="accent">forward deployed engineer</span> &amp; AI consultant<span class="cursor"></span>
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">./book-free-audit.sh</button>
+        <button class="btn btn-ghost" onclick="toast(this)">cat process.md</button>
+      </div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">the fix</div>
+      <h2>Off-the-shelf tools don't fit your workflow. Forward-deployed engineering does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">TIME RECOVERED / WEEK</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">EFFICIENCY GAIN</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">PROFIT RECOVERED / MO</div></div>
+      </div>
+      <div class="worst-case">even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">the offer</div>
+      <h2>Transparent pricing. No enterprise markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — FREE AUDIT</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — SETUP</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — RETAINER</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">how it works</div>
+      <h2>Three steps. No black box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready to close your AI gap?</h2>
+      <p class="body-text" style="margin: var(--space-4) auto 0; text-align:center;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-8);" onclick="toast(this)">./book-free-audit.sh</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant A</footer>
+</div>
+
+<!-- ============ VARIANT B ============ -->
+<div id="variant-b" class="variant variant-b">
+  <div class="topbar">
+    <div class="brand">ANNIE<span class="dot">.</span>DEV</div>
+    <button class="btn btn-ghost" style="padding: 10px 18px; font-size: 13px;" onclick="toast(this)">Book Audit</button>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="pixel-tag">AI-NATIVE // FORWARD DEPLOYED</span>
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">Book Free Audit →</button>
+        <button class="btn btn-ghost" onclick="toast(this)">See Process</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">The Fix</span>
+      <h2>Off-The-Shelf Tools Don't Fit Your Workflow.<br>Forward-Deployed Engineering Does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">Time Recovered / Week</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">Efficiency Gain</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">Profit Recovered / Mo</div></div>
+      </div>
+      <div class="worst-case">Even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">The Offer</span>
+      <h2>Transparent Pricing. No Enterprise Markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — Free Audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — Setup</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — Retainer</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">How It Works</span>
+      <h2>Three Steps. No Black Box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready To Close Your AI Gap?</h2>
+      <p style="margin: var(--space-4) auto 0; text-align:center; color:#ccc;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" onclick="toast(this)">Book Free Audit →</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant B</footer>
+</div>
+
+<!-- ============ VARIANT C ============ -->
+<div id="variant-c" class="variant variant-c">
+  <div class="editor-tabs">
+    <div class="tab active"><span class="dot"></span>hero.tsx</div>
+    <div class="tab">outcomes.tsx</div>
+    <div class="tab">offer.tsx</div>
+  </div>
+
+  <section class="hero">
+    <div class="gutter">01<br>02<br>03<br>04<br>05<br>06</div>
+    <div class="wrap" style="max-width: 1060px;">
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        a <span class="accent">forward deployed engineer</span> &amp; AI consultant
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">Book Free Audit</button>
+        <button class="btn btn-ghost" onclick="toast(this)">View Process</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">theFix</div>
+      <h2>Off-the-shelf tools don't fit your workflow. Forward-deployed engineering does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">time recovered / week</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">efficiency gain</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">profit recovered / mo</div></div>
+      </div>
+      <div class="worst-case">// even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">theOffer</div>
+      <h2>Transparent pricing. No enterprise markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — free audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — setup</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — retainer</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">process</div>
+      <h2>Three steps. No black box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready to close your AI gap?</h2>
+      <p class="body-text" style="margin: var(--space-4) auto 0; text-align:center;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-8);" onclick="toast(this)">Book Free Audit</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant C</footer>
+</div>
+
+<div id="sketch-tools">
+  <span>viewport:</span>
+  <button onclick="setViewport('375px')">📱</button>
+  <button onclick="setViewport('768px')">📟</button>
+  <button onclick="setViewport('100%')">🖥️</button>
+</div>
+
+<div id="toast" style="position:fixed; bottom: 60px; left: 50%; transform: translateX(-50%) translateY(20px); background:#1f6feb; color:#fff; padding:10px 18px; border-radius:6px; font-family: var(--font-mono); font-size: 13px; opacity:0; pointer-events:none; transition: all 0.25s ease; z-index: 10000;">Booking flow → /book (not wired in sketch)</div>
+
+<script>
+function showVariant(id, evt) {
+  document.querySelectorAll('.variant').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('variant-' + id).classList.add('active');
+  if (evt) evt.target.classList.add('active');
+  window.scrollTo(0,0);
+}
+function setViewport(w) {
+  document.body.style.maxWidth = w === '100%' ? 'none' : w;
+  document.body.style.margin = w === '100%' ? '0' : '0 auto';
+  document.body.style.border = w === '100%' ? 'none' : '1px solid #333';
+}
+function toast(btn) {
+  const t = document.getElementById('toast');
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 1800);
+}
+</script>
+
+</body>
+</html>
