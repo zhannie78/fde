@@ -55,10 +55,10 @@ Old missed-call-recovery / vertical-strategy positioning. Phase 1 (Marketing Fou
 Plans:
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Hero (gap) + TheFix (fix) sections
-- [ ] 05-02-PLAN.md — Outcomes (TIME/EFFICIENCY/PROFIT + worst-case) + Offer (scope-qualified pricing)
-- [ ] 05-03-PLAN.md — Client-side ROI calculator (PROOF-02/03)
-- [ ] 05-04-PLAN.md — ProcessTransparency + FinalCta (dark-band, bottom CTA)
+- [x] 05-01-PLAN.md — Hero (gap) + TheFix (fix) sections
+- [x] 05-02-PLAN.md — Outcomes (TIME/EFFICIENCY/PROFIT + worst-case) + Offer (scope-qualified pricing)
+- [x] 05-03-PLAN.md — Client-side ROI calculator (PROOF-02/03)
+- [x] 05-04-PLAN.md — ProcessTransparency + FinalCta (dark-band, bottom CTA)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -126,7 +126,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Missed-Call Demo & Secure AI Infrastructure | v1.0 | 0/TBD | Superseded | - |
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
-| 5. FDE Landing Page | v2.0 | 0/6 | Not started | - |
+| 5. FDE Landing Page | v2.0 | 4/6 | In Progress|  |
 | 6. Visual Redesign | v2.0 | 0/TBD | Not started | - |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |

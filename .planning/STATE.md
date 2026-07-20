@@ -4,8 +4,8 @@ milestone: v2.0
 milestone_name: FDE Pivot
 status: executing
 stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-07-20T04:26:17.413Z"
-last_activity: 2026-07-20 -- Phase 5 planning complete
+last_updated: "2026-07-20T04:27:03.167Z"
+last_activity: 2026-07-20 -- Phase 05 execution started
 progress:
   total_phases: 4
   completed_phases: 0
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-20)
 
 **Core value:** A skeptical SMB owner-operator lands on the site, immediately understands the gap (95% of AI projects fail to deliver ROI), the fix (forward-deployed engineering, embedded in *their* workflows), and the outcomes (TIME, EFFICIENCY, PROFIT) — and is convinced enough to book the free audit.
-**Current focus:** Phase 5 — FDE Landing Page
+**Current focus:** Phase 05 — fde-landing-page
 
 ## Current Position
 
-Phase: 5 of 8 (FDE Landing Page) — first phase of v2.0
-Plan: Not yet planned
-Status: Ready to execute
-Last activity: 2026-07-20 -- Phase 5 planning complete
+Phase: 05 (fde-landing-page) — EXECUTING
+Plan: 1 of 6
+Status: Executing Phase 05
+Last activity: 2026-07-20 -- Phase 05 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
