@@ -13,4 +13,4 @@ Complete visual system replacement for the AI Deployed landing page. Moving away
 
 | # | Name | Design Question | Winner | Tags |
 |---|------|----------------|--------|------|
-| 001 | visual-system | What should the full redesigned landing page look and feel like? | B — Pixel-Grid Brutalist | typography, color, texture, layout, hero |
+| 001 | visual-system | What should the full redesigned landing page look and feel like? | B2 — Polished & Refined (brutalist DNA + award-portfolio restraint) | typography, color, texture, layout, hero, polish |

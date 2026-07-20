@@ -22,11 +22,21 @@ open .planning/sketches/001-visual-system/index.html
 
 ## Winner
 
-**B — Pixel-Grid Brutalist.** Confirmed by user 2026-07-20.
+**B2 — Polished & Refined.** Confirmed direction 2026-07-20 (refinement round on top of the originally-selected B).
 
-Post-selection refinements applied directly to variant B:
+### Round 1 — content refinements on B
 - Added a new "The Access Gap" full-bleed dark band between Hero and The Fix — explicit enterprise-vs-SMB market framing ("Enterprises pay a premium to embed AI-native engineers like this. Now small businesses can too."), pulled from PIVOT-BRIEF's market thesis but not previously surfaced as on-page copy.
 - Pricing revised: setup **under $5k** (was $10k) with an hourly-rate alternative mentioned; retainer **under $1,000/mo** (was $2k/mo). PIVOT-BRIEF.md updated to match — these are now the locked figures.
+
+### Round 2 — B2: polish pass (award-portfolio inspiration)
+User asked for a more "polished and professional" feel, inspiring from Awwwards freelance-portfolio-tier sites. Kept B's brutalist DNA (mono type, blocky headlines, one precise accent) but refined toward restraint and craft:
+- **Type:** larger, tighter-tracked hero display (`clamp(2.75rem,6.4vw,5rem)`), consistent scale, more line-height on body copy (1.75) for readability.
+- **Color:** single precise accent (`#3552ff` indigo-blue) instead of two competing accents; lime demoted to a rare detail accent (worst-case border, ticker separators) instead of a full color block; near-black ink softened slightly warm; light neutral background instead of the raw pixel-grid texture.
+- **Cards:** one consistent language — thin 1px borders, soft shadow-on-hover lift, 12px radius — replacing the mixed hard-shadow/thick-border treatment.
+- **Whitespace:** larger section rhythm, sticky translucent nav with blur, more breathing room overall.
+- **Signature polish devices:** "available for work" status pill with pulsing dot; scrolling skill ticker (`WORKFLOW AUTOMATION · AI AGENTS · CLAUDE-NATIVE BUILDS · AI-NATIVE TRANSFORMATION`) as a section divider; scroll-reveal fade-ins (IntersectionObserver); magnetic-hover primary CTA buttons; footer signature line ("// built solo, deployed forward").
+
+Original B kept intact under its own tab for comparison — not deleted.
 
 ## What to Look For
 
