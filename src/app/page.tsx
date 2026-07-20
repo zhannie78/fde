@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ScrollStoryProvider } from "@/components/scroll-story-provider";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { Offer } from "@/components/sections/offer";
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
  */
 export default function Home() {
   return (
-    <>
+    <ScrollStoryProvider>
       <Hero />
       <TheFix />
       <Outcomes />
@@ -30,6 +31,6 @@ export default function Home() {
       <Offer />
       <ProcessTransparency />
       <FinalCta />
-    </>
+    </ScrollStoryProvider>
   );
 }
