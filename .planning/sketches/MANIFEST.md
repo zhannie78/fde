@@ -14,3 +14,4 @@ Complete visual system replacement for the AI Deployed landing page. Moving away
 | # | Name | Design Question | Winner | Tags |
 |---|------|----------------|--------|------|
 | 001 | visual-system | What should the full redesigned landing page look and feel like? | B2 — Polished & Refined (brutalist DNA + award-portfolio restraint) | typography, color, texture, layout, hero, polish |
+| 002 | about-page | What does Annie's bio/credentials/portfolio page look like, extending B2? | Single direction, reuses B2 tokens directly | bio, credentials, portfolio, photo, demos |

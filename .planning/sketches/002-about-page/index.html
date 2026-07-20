@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch 002 — About / Portfolio Page</title>
+<link rel="stylesheet" href="../themes/default.css">
+<style>
+  /* Reuses the B2 (Polished & Refined) design tokens and component patterns
+     established in sketch 001, so this page reads as the same site. */
+  :root {
+    --bg: #fbfaf7; --ink: #0c0c0d; --ink-soft: #46484c;
+    --accent: #3552ff; --accent-soft: #eef1ff; --lime: #c8ff4d; --border: #e4e2db;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-mono); letter-spacing: -0.005em; }
+  img, svg { display: block; max-width: 100%; }
+  section { padding: var(--space-24) var(--space-8); }
+  .wrap { max-width: 1140px; margin: 0 auto; }
+  h1, h2, h3, p { margin: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-weight: 600; cursor: pointer;
+    border: none; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+  .btn-primary { background: var(--ink); color: #fff; padding: 15px 30px; border-radius: 8px; font-size: var(--text-base); box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(53,82,255,0.45); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--border); padding: 14px 29px; border-radius: 8px; }
+  .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+  .glow-wrap { position: relative; display: inline-block; }
+  .glow-wrap::before {
+    content: ""; position: absolute; inset: -3px; border-radius: 11px; z-index: -1;
+    background: conic-gradient(from 0deg, var(--accent), #8f6fff, var(--accent) 60%, #8f6fff 100%);
+    filter: blur(14px); opacity: 0.55;
+    animation: glow-breathe 4.5s ease-in-out infinite;
+  }
+  .glow-wrap:hover::before { opacity: 0.85; filter: blur(18px); }
+  @keyframes glow-breathe { 0%, 100% { transform: scale(1); opacity: 0.45; } 50% { transform: scale(1.08); opacity: 0.65; } }
+  .nav-glow::before { inset: -2px; filter: blur(8px); opacity: 0.5; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-4) var(--space-8); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: rgba(251,250,247,0.85); backdrop-filter: blur(10px); z-index: 50;
+  }
+  .brand { font-weight: 700; letter-spacing: -0.02em; font-size: var(--text-base); }
+  .brand .dot { color: var(--accent); }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); text-decoration: none; font-size: var(--text-sm); transition: color 0.2s ease; }
+  .back-link:hover { color: var(--accent); }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-xs); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: var(--space-4);
+  }
+  .section-label::before { content: ""; width: 16px; height: 1px; background: var(--accent); }
+  h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  .body-text { font-size: var(--text-base); line-height: 1.75; margin-top: var(--space-4); color: var(--ink-soft); }
+
+  /* ---- Bio header ---- */
+  .bio-header {
+    display: grid; grid-template-columns: 220px 1fr; gap: var(--space-12);
+    padding-top: var(--space-24); align-items: start;
+  }
+  .avatar-wrap {
+    position: relative; width: 200px; height: 200px; border-radius: 50%;
+    overflow: hidden; border: 1px solid var(--border);
+    box-shadow: 0 12px 32px -12px rgba(12,12,13,0.18);
+  }
+  .avatar-wrap::after {
+    /* soft ring so the photo blends into the page rather than sitting on top of it */
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6), inset 0 -20px 30px -10px rgba(53,82,255,0.08);
+    pointer-events: none;
+  }
+  .avatar-photo { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-placeholder {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent-soft), #fff);
+    color: var(--accent); font-size: 64px; font-weight: 700;
+  }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-xs);
+    color: var(--ink-soft); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: var(--space-4);
+  }
+  .status-pill .ping { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; position: relative; }
+  .status-pill .ping::after {
+    content: ""; position: absolute; inset: -4px; border-radius: 50%; background: #2ecc71;
+    opacity: 0.5; animation: pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2.2); opacity: 0; } }
+  .bio-name { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; letter-spacing: -0.03em; }
+  .bio-title { font-size: var(--text-lg); color: var(--accent); font-weight: 600; margin-top: var(--space-2); }
+  .credential-row { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+  .credential-pill {
+    font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.03em;
+    background: var(--accent-soft); color: var(--accent); border-radius: 999px;
+    padding: 7px 14px;
+  }
+  .vertical-pill {
+    font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.03em;
+    background: #fff; border: 1px solid var(--border); color: var(--ink-soft); border-radius: 999px;
+    padding: 7px 14px;
+  }
+  .bio-copy { max-width: 640px; }
+
+  /* ---- Backlight-glow box (matches sketch 001's Fix/Offer/Process treatment) ---- */
+  .glow-box { position: relative; border-radius: 14px; height: 100%; }
+  .glow-box::before {
+    content: ""; position: absolute; inset: -11px; border-radius: 14px; z-index: 0;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(14px); opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .glow-box:hover::before { opacity: 0.6; animation: glow-box-blob 4.5s ease-in-out infinite; }
+  @keyframes glow-box-blob {
+    0%   { transform: rotate(0deg);   border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+    25%  { transform: rotate(90deg);  border-radius: 62% 38% 30% 70% / 60% 65% 35% 40%; }
+    50%  { transform: rotate(180deg); border-radius: 35% 65% 58% 42% / 40% 55% 45% 60%; }
+    75%  { transform: rotate(270deg); border-radius: 68% 32% 45% 55% / 55% 35% 65% 45%; }
+    100% { transform: rotate(360deg); border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+  }
+  .glow-box-inner {
+    position: relative; z-index: 1; height: 100%; box-sizing: border-box;
+    background: #fff; border: 1px solid var(--border); border-radius: inherit;
+    transition: background 0.25s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .glow-box:hover .glow-box-inner { transform: translateY(-3px); border-color: var(--accent); }
+
+  /* ---- Demos ---- */
+  .demo-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--space-4); margin-top: var(--space-8); }
+  .demo-card .glow-box-inner { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
+  .demo-badge {
+    align-self: flex-start; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 999px;
+  }
+  .demo-card h3 { font-size: var(--text-lg); font-weight: 700; }
+  .demo-card p { font-size: var(--text-sm); color: var(--ink-soft); line-height: 1.6; }
+  .demo-card .btn-ghost { align-self: flex-start; padding: 9px 18px; font-size: var(--text-sm); margin-top: var(--space-2); }
+
+  /* ---- Portfolio ---- */
+  .portfolio-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--space-6); margin-top: var(--space-8); }
+  .case-card .glow-box-inner { padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); }
+  .case-num { font-size: var(--text-xs); font-weight: 700; color: var(--ink-soft); letter-spacing: 0.06em; }
+  .case-card h3 { font-size: var(--text-xl); font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+  .case-block .label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 4px; }
+  .case-block p { font-size: var(--text-sm); color: var(--ink-soft); line-height: 1.65; }
+  .case-result { border-left: 2px solid var(--lime); padding-left: var(--space-4); margin-top: var(--space-2); }
+  .case-result p { color: var(--ink); font-weight: 600; }
+
+  .final-cta { background: var(--accent-soft); border-radius: 20px; padding: var(--space-24); text-align: center; position: relative; }
+  .final-cta h2 { margin: 0 auto; text-align: center; max-width: 640px; }
+  footer { text-align: center; font-size: var(--text-xs); padding: var(--space-8); color: var(--ink-soft); }
+  footer .sig::before { content: "// "; color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .bio-header { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .credential-row { justify-content: center; }
+    .demo-grid, .portfolio-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="../001-visual-system/index.html" class="back-link">← Back to AI Deployed</a>
+  <div class="brand">ANNIE<span class="dot">.</span>DEV</div>
+  <span class="glow-wrap nav-glow">
+    <button class="btn btn-primary" style="padding: 9px 20px; font-size: 13px; border-radius: 8px;" onclick="toast(this)">Book a Free Call Now</button>
+  </span>
+</div>
+
+<section>
+  <div class="wrap bio-header">
+    <div class="avatar-wrap">
+      <!-- Drop your photo in at ./annie-photo.jpg (any name works, just update src) —
+           it will render circular with a soft ring/shadow automatically. Falls back
+           to a placeholder monogram until then. -->
+      <img src="annie-photo.jpg" alt="Annie" class="avatar-photo"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="avatar-placeholder" style="display:none;">A</div>
+    </div>
+    <div>
+      <span class="status-pill"><span class="ping"></span> Available for new engagements</span>
+      <h1 class="bio-name">Annie</h1>
+      <div class="bio-title">Forward Deployed Engineer &amp; AI-Native Consultant</div>
+      <div class="credential-row">
+        <span class="credential-pill">M.S., Georgia Tech — 4.0 GPA</span>
+        <span class="vertical-pill">Supply Chain</span>
+        <span class="vertical-pill">Finance</span>
+        <span class="vertical-pill">Healthcare</span>
+      </div>
+      <p class="body-text bio-copy">I'm an AI-native forward-deployed engineer with a Master's degree from Georgia Tech. I've embedded inside businesses across supply chain, finance, and healthcare — modernizing how they actually work with AI built around their real workflows, not bolted on top of them. Every engagement is judged the same way: time recovered, workflows that run themselves, and profit that shows up on the books.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="section-label">Demos</span>
+    <h2>See it in action.</h2>
+    <div class="demo-grid">
+      <div class="demo-card glow-box">
+        <div class="glow-box-inner">
+          <span class="demo-badge">Live</span>
+          <h3>ROI Calculator</h3>
+          <p>Enter your team's hours and hourly cost, see exactly how much time and profit AI-native automation could recover for your business.</p>
+          <a href="../001-visual-system/index.html#offer" class="btn btn-ghost">Try it →</a>
+        </div>
+      </div>
+      <div class="demo-card glow-box">
+        <div class="glow-box-inner">
+          <span class="demo-badge">Preview</span>
+          <h3>AI Intake &amp; Triage Assistant</h3>
+          <p>A live walkthrough of an inbound-lead triage agent — scoring, routing, and drafting a first response in under a minute.</p>
+          <button class="btn btn-ghost" onclick="toast(this)">Request a walkthrough →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="wrap">
+    <span class="section-label">Portfolio</span>
+    <h2>Selected builds.</h2>
+    <p class="body-text" style="max-width: 640px;">Representative examples of the kind of systems I build — illustrative composites based on the patterns I deploy most often, not client-identifying case studies.</p>
+
+    <div class="portfolio-grid">
+      <div class="case-card glow-box">
+        <div class="glow-box-inner">
+          <div class="case-num">01</div>
+          <h3>The Autonomous Invoice &amp; Financial Reconciliation Engine</h3>
+          <div class="case-block"><div class="label">The Problem</div><p>SMBs spend hours every month manually downloading invoices, matching them against bank lines, and categorizing expenses inside QuickBooks or Xero.</p></div>
+          <div class="case-block"><div class="label">The Solution</div><p>A structured pipeline pulls attachments from a dedicated invoices inbox, extracts vendor, line items, tax, and totals via an OCR/vision-capable model, and logs everything directly into the client's accounting software.</p></div>
+          <div class="case-result"><p>Cut monthly bookkeeping admin hours by 80% and eliminated manual data-entry errors.</p></div>
+        </div>
+      </div>
+
+      <div class="case-card glow-box">
+        <div class="glow-box-inner">
+          <div class="case-num">02</div>
+          <h3>Hyper-Personalized Lead Response &amp; Outreach</h3>
+          <div class="case-block"><div class="label">The Problem</div><p>Inbound leads go cold waiting hours for a reply, while outbound reps burn half their day researching prospects before a single cold email goes out.</p></div>
+          <div class="case-block"><div class="label">The Solution</div><p>Inbound leads are enriched, scored against the ideal customer profile, logged to the CRM, and a personalized reply is drafted for human review within minutes. Outbound targets get research-backed intro lines pulled from their recent activity.</p></div>
+          <div class="case-result"><p>Doubled the meeting-booked rate by cutting response time to under 3 minutes with fully researched messaging.</p></div>
+        </div>
+      </div>
+
+      <div class="case-card glow-box">
+        <div class="glow-box-inner">
+          <div class="case-num">03</div>
+          <h3>Multi-Channel Content Repurposing Engine</h3>
+          <div class="case-block"><div class="label">The Problem</div><p>Businesses know they need a content presence but don't have time to turn one podcast or webinar into a month of social content.</p></div>
+          <div class="case-block"><div class="label">The Solution</div><p>One raw recording dropped into a folder triggers transcription, a brand-voice-matched rewrite, and delivery of a blog post, five LinkedIn posts, a newsletter draft, and short-form video hooks — automatically.</p></div>
+          <div class="case-result"><p>Turns 1 hour of raw content into a 30-day cross-platform campaign, saving $2,000+/month versus an agency retainer.</p></div>
+        </div>
+      </div>
+
+      <div class="case-card glow-box">
+        <div class="glow-box-inner">
+          <div class="case-num">04</div>
+          <h3>Automated SEO &amp; GEO Content Pipeline</h3>
+          <div class="case-block"><div class="label">The Problem</div><p>SMBs want organic traffic but can't afford an SEO agency — and now need to rank inside AI search engines like Perplexity, Gemini, and ChatGPT, not just Google.</p></div>
+          <div class="case-block"><div class="label">The Solution</div><p>A pipeline monitors competitor rankings, finds high-intent content gaps, and drafts authoritative, search-intent-matched articles delivered straight to the client's CMS as ready-to-review drafts.</p></div>
+          <div class="case-result"><p>A self-sustaining content engine that gets the brand cited by AI search engines and ranked on Google, for a fraction of an agency's cost.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap final-cta">
+    <h2>Want to see what this looks like for your business?</h2>
+    <p style="margin: var(--space-4) auto 0; text-align:center; color: var(--ink-soft);">Book a free audit. No commitment, no cost.</p>
+    <span class="glow-wrap" style="margin-top: var(--space-8); display: inline-block;">
+      <button class="btn btn-primary" onclick="toast(this)">Book a Free Call Now →</button>
+    </span>
+  </div>
+</section>
+<footer><span class="sig">built solo, deployed forward</span> — SKETCH, NOT PRODUCTION — about/portfolio page</footer>
+
+<div id="toast" style="position:fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background:#1f6feb; color:#fff; padding:10px 18px; border-radius:6px; font-family: var(--font-mono); font-size: 13px; opacity:0; pointer-events:none; transition: all 0.25s ease; z-index: 10000;">Booking flow → /book (not wired in sketch)</div>
+
+<script>
+function toast(btn) {
+  const t = document.getElementById('toast');
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 1800);
+}
+</script>
+
+</body>
+</html>

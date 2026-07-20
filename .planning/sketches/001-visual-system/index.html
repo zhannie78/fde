@@ -294,6 +294,16 @@
     animation: glow-breathe 4.5s ease-in-out infinite;
   }
   .variant-b2 .glow-wrap:hover::before { opacity: 0.85; filter: blur(18px); }
+  /* Nav CTA: smaller, tighter glow so it doesn't overwhelm the topbar. */
+  .variant-b2 .nav-glow::before { inset: -2px; blur: 8px; filter: blur(8px); opacity: 0.5; }
+
+  .variant-b2 .annie-link {
+    color: inherit; text-decoration: none; position: relative;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 1px;
+    transition: background-size 0.25s ease, color 0.25s ease;
+  }
+  .variant-b2 .annie-link:hover { color: var(--accent); background-size: 100% 2px; }
   @keyframes glow-breathe {
     0%, 100% { transform: scale(1); opacity: 0.45; }
     50% { transform: scale(1.08); opacity: 0.65; }
@@ -779,17 +789,19 @@
       <a href="#offer" onclick="return false">Pricing</a>
       <a href="#process" onclick="return false">Process</a>
     </div>
-    <button class="btn btn-ghost" style="padding: 9px 18px; font-size: 13px; border-radius: 8px;" onclick="toast(this)">Book Audit</button>
+    <span class="glow-wrap nav-glow">
+      <button class="btn btn-primary" style="padding: 9px 20px; font-size: 13px; border-radius: 8px;" onclick="toast(this)">Book a Free Call Now</button>
+    </span>
   </div>
 
   <section class="hero">
     <div class="wrap">
       <span class="status-pill reveal in"><span class="ping"></span> Available for new engagements</span>
       <h1 class="hero-title reveal in">
-        <span class="hi">Hello, I'm Annie —</span>
+        <span class="hi">Hello, I'm <a href="../002-about-page/index.html" class="annie-link">Annie</a> —</span>
         A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
       </h1>
-      <p class="lede reveal in">95% of enterprise AI pilots fail to show measurable ROI, a failure rate rooted not in flawed models but in poor integration. I close that gap — workflow-first, white-glove implementation to <strong class="lede-highlight">save time</strong> and <strong class="lede-highlight">increase profit</strong>.</p>
+      <p class="lede reveal in">95% of enterprise AI pilots fail to show measurable ROI, a failure rate rooted not in flawed models but in poor integration. I help close that gap for small businesses — workflow-first, white-glove implementation to <strong class="lede-highlight">save time</strong> and <strong class="lede-highlight">increase profit</strong>.</p>
       <div class="reveal in" style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
         <span class="glow-wrap">
           <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
