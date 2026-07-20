@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 Phase: 6
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-07-20
+Last activity: 2026-07-20 - Completed quick task 260720-op6: Integrate animated glow-effect CTA button
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -74,6 +74,12 @@ None yet.
 - [Phase 5]: Carried from v1 Phase 01-06 (unfinished, superseded) — founder still needs to: create/confirm Netlify site + connect repo, create Cal.com Free Audit Call event + set calLink, decide on domain/DNS-vs-email path, set up brand email routing. Revisit as part of Phase 5 or a launch-checklist pass since the FDE landing page depends on a working Cal.com CTA.
 - [Phase 6]: Research flags Motion vs. GSAP+ScrollTrigger as a taste call requiring design judgment during planning, not a resolved technical decision — confirm choice when Phase 6 is planned.
 - [Phase 8]: SEO phase depends on both Phase 5 and Phase 7 being content-complete before it can meaningfully cover buyer-vocabulary placement and structured data — do not plan Phase 8 until Phase 7 lands.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260720-op6 | Integrate animated glow-effect CTA button (GlowButton, rotate mode) into BookCta, applied at Hero + FinalCta | 2026-07-20 | b21b7f7 | [260720-op6-integrate-an-animated-glow-effect-cta-bu](./quick/260720-op6-integrate-an-animated-glow-effect-cta-bu/) |
 
 ## Deferred Items
 
