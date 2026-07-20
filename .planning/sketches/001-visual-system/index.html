@@ -267,6 +267,15 @@
   .variant-b2 .hero-title .hi { display: block; font-size: 0.34em; font-weight: 500; color: var(--ink-soft); letter-spacing: -0.01em; margin-bottom: var(--space-3); }
   .variant-b2 .hero-title .accent { color: var(--accent); }
   .variant-b2 .lede { font-size: var(--text-lg); margin-top: var(--space-8); max-width: 580px; line-height: 1.7; color: var(--ink-soft); }
+  /* Weight + the single brand accent color (not a new hue) + a low-opacity
+     underline rule — reads as a deliberate callout, not just "bold text",
+     while staying inside B2's one-accent-color discipline. */
+  .variant-b2 .lede-highlight {
+    color: var(--ink); font-weight: 700;
+    background: linear-gradient(transparent 72%, var(--accent-soft) 72%);
+    box-shadow: inset 0 -2px 0 0 var(--accent);
+    padding-bottom: 1px;
+  }
 
   .variant-b2 .btn-primary {
     background: var(--ink); color: #fff; padding: 15px 30px; border-radius: 8px;
@@ -339,13 +348,18 @@
     border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
     padding: var(--space-4) 0; overflow: hidden; white-space: nowrap; position: relative;
   }
+  /* Endless marquee: two identical .ticker-group copies, animated exactly -50%
+     (one group-width) per cycle so it loops seamlessly. Spacing is uniform
+     per-item margin-right (not flex `gap`) so the seam between the end of
+     copy 1 and the start of copy 2 has IDENTICAL rhythm to every other
+     word-to-word gap — no visible pause/whitespace jump at the loop point. */
   .variant-b2 .ticker-track {
-    display: inline-flex; gap: var(--space-8); animation: ticker 28s linear infinite;
+    display: inline-flex; animation: ticker 22s linear infinite;
     font-size: var(--text-sm); color: var(--ink-soft); letter-spacing: 0.03em;
   }
-  .variant-b2 .ticker-track span { display: inline-flex; align-items: center; gap: var(--space-8); }
-  .variant-b2 .ticker-track b { color: var(--ink); font-weight: 600; }
-  .variant-b2 .ticker-track .sep { color: var(--accent); }
+  .variant-b2 .ticker-group { display: inline-flex; flex-shrink: 0; align-items: center; }
+  .variant-b2 .ticker-track b { display: inline-block; margin-right: var(--space-8); color: var(--ink); font-weight: 600; }
+  .variant-b2 .ticker-track .sep { display: inline-block; margin-right: var(--space-8); color: var(--accent); }
   @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   .variant-b2 .section-label {
@@ -775,7 +789,7 @@
         <span class="hi">Hello, I'm Annie —</span>
         A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
       </h1>
-      <p class="lede reveal in">95% of enterprise generative-AI pilots fail to show measurable ROI – a failure rate rooted not in flawed models but in poor integration. I close that gap — workflow-first, white-glove implementation to save time and increase profit.</p>
+      <p class="lede reveal in">95% of enterprise AI pilots fail to show measurable ROI, a failure rate rooted not in flawed models but in poor integration. I close that gap — workflow-first, white-glove implementation to <strong class="lede-highlight">save time</strong> and <strong class="lede-highlight">increase profit</strong>.</p>
       <div class="reveal in" style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
         <span class="glow-wrap">
           <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
@@ -787,8 +801,8 @@
 
   <div class="ticker">
     <div class="ticker-track">
-      <span><b>WORKFLOW AUTOMATION</b> <span class="sep">·</span> <b>AI AGENTS</b> <span class="sep">·</span> <b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b> <span class="sep">·</span> <b>AI-NATIVE TRANSFORMATION</b> <span class="sep">·</span></span>
-      <span><b>WORKFLOW AUTOMATION</b> <span class="sep">·</span> <b>AI AGENTS</b> <span class="sep">·</span> <b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b> <span class="sep">·</span> <b>AI-NATIVE TRANSFORMATION</b> <span class="sep">·</span></span>
+      <span class="ticker-group"><b>WORKFLOW AUTOMATION</b><span class="sep">·</span><b>AI AGENTS</b><span class="sep">·</span><b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b><span class="sep">·</span><b>AI-NATIVE TRANSFORMATION</b><span class="sep">·</span></span>
+      <span class="ticker-group"><b>WORKFLOW AUTOMATION</b><span class="sep">·</span><b>AI AGENTS</b><span class="sep">·</span><b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b><span class="sep">·</span><b>AI-NATIVE TRANSFORMATION</b><span class="sep">·</span></span>
     </div>
   </div>
 
