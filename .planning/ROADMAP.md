@@ -83,7 +83,28 @@ Plans:
   4. Visitor on mobile experiences the redesigned pages meeting Core Web Vitals budgets (LCP <2.5s, CLS <0.1, INP <200ms) despite the animation layer
   5. Visitor can view the founder's name, photo, and bio on a new `/about` page (DSGN-05 — reverses the Phase 5 anonymity constraint per validated sketch findings, confirmed by user 2026-07-20)
 
-**Plans**: TBD
+**Plans**: 7 plans in 4 waves
+Plans:
+
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Design-token & font foundation (globals.css palette/radius/reduced-motion, JetBrains Mono, GlowBox + ElevatedCta primitives)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 06-02-PLAN.md — Upper sections restyle + GSAP hooks (Hero + Annie/about link, TheFix, Outcomes count-up, RoiCalculator)
+- [ ] 06-03-PLAN.md — Lower sections restyle + GSAP hooks (Offer glow-box cards, ProcessTransparency dark band, FinalCta elevated panel)
+- [ ] 06-04-PLAN.md — Chrome restyle + CTA rename + About nav link (header, mobile nav, footer, sticky bar, book-cta)
+- [ ] 06-05-PLAN.md — About/bio & portfolio page (Avatar fallback, credentials, honest demos, disclosed composites, sitemap)
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 06-06-PLAN.md — GSAP install (package-legitimacy gate) + ScrollStoryProvider + page.tsx wiring
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 06-07-PLAN.md — Verification: DSGN-01 v1-removal sweep, DSGN-03 reduced-motion, DSGN-04 mobile CWV
+
 **UI hint**: yes
 
 ### Phase 7: Blog / Content Engine
@@ -99,7 +120,28 @@ Plans:
   4. Visitor reaches a book-the-free-audit CTA at the end of every post, with no content gated behind a form
   5. A defined anonymized case-study template (situation → diagnosis → what was built → measured TIME/EFFICIENCY/PROFIT) exists in the codebase, ready for the first real engagement write-up
 
-**Plans**: TBD
+**Plans**: 7 plans in 4 waves
+Plans:
+
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Design-token & font foundation (globals.css palette/radius/reduced-motion, JetBrains Mono, GlowBox + ElevatedCta primitives)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 06-02-PLAN.md — Upper sections restyle + GSAP hooks (Hero + Annie/about link, TheFix, Outcomes count-up, RoiCalculator)
+- [ ] 06-03-PLAN.md — Lower sections restyle + GSAP hooks (Offer glow-box cards, ProcessTransparency dark band, FinalCta elevated panel)
+- [ ] 06-04-PLAN.md — Chrome restyle + CTA rename + About nav link (header, mobile nav, footer, sticky bar, book-cta)
+- [ ] 06-05-PLAN.md — About/bio & portfolio page (Avatar fallback, credentials, honest demos, disclosed composites, sitemap)
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 06-06-PLAN.md — GSAP install (package-legitimacy gate) + ScrollStoryProvider + page.tsx wiring
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 06-07-PLAN.md — Verification: DSGN-01 v1-removal sweep, DSGN-03 reduced-motion, DSGN-04 mobile CWV
+
 **UI hint**: yes
 
 ### Phase 8: SEO & Metadata Layer
