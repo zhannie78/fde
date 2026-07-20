@@ -1,60 +1,61 @@
-# Requirements: AI Deployed
+# Requirements: AI Deployed — v2.0 FDE Pivot
 
-**Defined:** 2026-07-19
-**Core Value:** A skeptical, non-technical SMB owner lands on the site, tries a demo or completes the free workflow audit, and comes away convinced enough to book an engagement.
+**Defined:** 2026-07-20
+**Core Value:** A skeptical SMB owner-operator lands on the site, immediately understands the gap (95% of AI projects fail to deliver ROI), the fix (forward-deployed engineering, embedded in *their* workflows), and the outcomes (TIME, EFFICIENCY, PROFIT) — and is convinced enough to book the free audit.
 
-## v1 Requirements
+## v2.0 Requirements
 
-Requirements for initial release. Each maps to roadmap phases.
+Requirements for this milestone. Each maps to roadmap phases.
 
-### Core Site
+### Landing Page
 
-- [ ] **SITE-01**: Visitor sees an ROI-first homepage (time saved, profit recovered, expenses cut — no AI jargon) with a demo embedded above the fold
-- [x] **SITE-02**: Visitor can read an About page telling the founder's FDE story as the credibility layer ("I embedded with enterprise clients; now I embed AI in your business")
-- [x] **SITE-03**: Visitor can read a Services page explaining the white-glove engagement model plainly (free audit → fixed-scope project → monthly retainer)
-- [x] **SITE-04**: Visitor can book a call via a persistent scheduling CTA (Calendly/Cal.com embed) present on every page
-- [x] **SITE-05**: Site is mobile-responsive, fast-loading, and served over HTTPS with real founder identity (name, photo, region, matching email domain)
-- [x] **SITE-06**: Site has a distinctive, intentional visual design that does not read as AI-generated or templated — custom typography and color system, deliberate art direction, polished micro-interactions; passes the "would a design-savvy visitor believe a human designer made this?" test
+- [ ] **LAND-01**: Visitor sees a single long-scroll FDE landing page carrying the 5-part hierarchy: the gap (cited 95%-failure stat) → the fix (forward-deployed engineering) → outcomes (TIME/EFFICIENCY/PROFIT) → the offer → CTA
+- [ ] **LAND-02**: Visitor sees transparent pricing on the page — free audit → one-time setup under $10k → retainer under $2k/mo — with scope-qualifying language tied to the free audit
+- [ ] **LAND-03**: Visitor can book the free audit via the Cal.com CTA, repeated at top/mid/bottom scroll depth
+- [ ] **LAND-04**: Visitor sees a process-transparency section ("how the audit and engagement work, step by step") as the trust signal near the CTA
+- [ ] **LAND-05**: Outcomes section includes conservative/worst-case framing ("even in the worst case, you come out ahead")
+- [ ] **LAND-06**: No v1 positioning survives — old missed-call/vertical copy, routes, and metadata are removed or redirected
 
-### Demo
+### Visual Redesign
 
-- [ ] **DEMO-01**: Visitor can try the missed-call recovery demo without providing an email (ungated) — simulate a missed call and watch an instant AI text-back with booking link generated live
-- [ ] **DEMO-02**: Demo responses stream fast enough to feel live (no long spinner that kills the "wow")
+- [ ] **DSGN-01**: Site carries a new, distinctive design direction (tokens, typography, layout) replacing the v1 visual system across landing and blog templates
+- [ ] **DSGN-02**: The landing page's 5-part narrative is choreographed as a scroll-driven story (GSAP ScrollTrigger)
+- [ ] **DSGN-03**: All scroll/motion effects respect `prefers-reduced-motion` with a fully readable static fallback
+- [ ] **DSGN-04**: Redesigned pages meet Core Web Vitals on mobile despite the animation layer
 
-### Audit Funnel
+### Blog / Content Engine
 
-- [ ] **AUDIT-01**: Prospect can complete a self-serve workflow-audit questionnaire with vertical-aware questions (short, staged — low friction)
-- [ ] **AUDIT-02**: Claude drafts a personalized findings report from questionnaire answers (structured output, ROI-framed)
-- [ ] **AUDIT-03**: Founder is notified of new submissions and can review/edit the drafted report in a simple admin view before anything is sent
-- [ ] **AUDIT-04**: Approved report is emailed to the prospect with a "reviewed by [founder]" trust signal and a booking CTA
-- [ ] **AUDIT-05**: Submissions persist through the pending → drafted → sent lifecycle (nothing lost if founder reviews days later)
+- [ ] **BLOG-01**: Blog runs on in-repo MDX with a single content source feeding the index, rendered statically
+- [ ] **BLOG-02**: Visitor can read one pillar post (e.g. "What AI-native transformation means for small businesses")
+- [ ] **BLOG-03**: Visitor can read 3–5 cluster posts, each answering one buyer question (what is an FDE, why off-the-shelf AI fails SMBs, AI agents, automation)
+- [ ] **BLOG-04**: Every post ends with a book-the-free-audit CTA (no gated content)
+- [ ] **BLOG-05**: Anonymized case-study post format is defined (situation → diagnosis → what was built → measured TIME/EFFICIENCY/PROFIT), ready for the first real engagement
 
-### Verticals
+### SEO
 
-- [ ] **VERT-01**: Visitor from home services (HVAC/plumbing/roofing/electrical) can view a dedicated landing page with industry-specific pain examples and framing
-- [ ] **VERT-02**: Visitor from a medical/dental practice can view a dedicated landing page (with compliance-aware copy — no PHI in demos, synthetic data disclosure)
-- [ ] **VERT-03**: Visitor from a small/solo law firm can view a dedicated landing page (with AI-disclosure-aware copy per state bar guidance)
-- [ ] **VERT-04**: Visitor from a real estate team can view a dedicated landing page with lead-response-speed framing
+- [ ] **SEO-01**: Buyer vocabulary (AI agents, automation, AI-native transformation, forward-deployed engineer) appears in H1/H2s, meta titles/descriptions, and body copy across landing and blog
+- [ ] **SEO-02**: Sitemap, robots, and RSS feed are generated from the same content source as the blog index
+- [ ] **SEO-03**: JSON-LD structured data (Organization + Article) ships on landing and posts
+- [ ] **SEO-04**: Landing page and posts have OG/social-share metadata and images
 
-### Infrastructure
+### Interactive Proof
 
-- [ ] **INFRA-01**: All Claude API calls go through server-side routes — API key never reaches the client
-- [ ] **INFRA-02**: Public demo endpoints are rate-limited per visitor with bot protection, and a hard spend cap is set in the Claude Console
-- [ ] **INFRA-03**: Demo endpoints resist prompt injection (guided inputs over free-text where possible; adversarial inputs produce safe, on-brand responses)
+- [ ] **PROOF-02**: Visitor can use a client-side ROI calculator (hours/week × hourly cost → annual hours and dollars recovered) with no signup and no API cost
+- [ ] **PROOF-03**: Calculator output speaks TIME/EFFICIENCY/PROFIT vocabulary and routes to the free-audit CTA
 
-## v2 Requirements
+## Future Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+Deferred to a later milestone. Tracked but not in current roadmap.
 
-### Demo
+### Interactive Proof
 
-- **DEMO-03**: Visitor can try the intake triage agent demo (classifies/summarizes inquiries, drafts responses) — add once missed-call demo validates the demo thesis
-- **DEMO-04**: Visitor can use a per-vertical ROI calculator ("a missed call costs your HVAC business ~$X/month") — needs validated benchmark data per vertical
-- **DEMO-05**: Additional demo library — end-of-day owner digest, review autoresponder, conversational lead qualifier
+- **DEMO-06**: Visitor can run the bounded "mini-audit" demo — describe one repetitive task, receive a structured TIME/EFFICIENCY/PROFIT mini-diagnosis (Claude Haiku, Turnstile + rate limiting + spend cap required before public link)
+- **PROOF-04**: Worst-case/conservative toggle on the ROI calculator output
 
-### Proof
+### Blog / Content Engine
 
-- **PROOF-01**: Real testimonials/case-study section — triggered by first client willing to be referenced
+- **BLOG-06**: First real anonymized case study published using the BLOG-05 format (requires a completed engagement)
+- **BLOG-07**: Additional cluster posts driven by early search-performance data
 
 ## Out of Scope
 
@@ -62,15 +63,13 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Voice-bot / AI phone receptionist demo | Saturated, commoditized market (Podium, Bland, et al.); missed-call recovery is fresher and cheaper to demo |
-| Generic on-site AI chatbot widget | Research shows unsupervised AI agents are trust-destroyers for SMB buyers; support burden for solo founder |
-| Gating demos behind email capture | Kills the conversion advantage the whole strategy is built on; capture happens at the audit questionnaire |
-| Fully-automated report sending (no human review) | Hallucination risk on the exact artifact meant to build trust; founder review is structural |
-| Fake testimonials / stock "trusted by" logos | Unverifiable social proof increases skepticism — worse than none |
-| Payment processing on site | Engagements are custom proposals closed via conversation |
-| Client portal / logged-in dashboard | No clients yet; premature complexity |
-| Enterprise lead-scoring / CRM routing | Target buyer is a single-owner decision-maker; one inbox suffices |
-| Mobile app | Web-first |
+| Open-ended "ask me anything" AI chatbot | Unbounded cost/abuse surface; doesn't demonstrate FDE-specific value — the exact trap that got v1's demos scrapped |
+| Vertical-specific landing pages (home services, medical/dental, legal, real estate) | v2 sells FDE horizontally to SMBs; rebuilding vertical pages recreates scope the pivot deliberately cut |
+| Gated blog content / email capture walls | Kills the SEO and credibility value that is the entire point of the content engine |
+| Named founder bio/headshot | Conflicts with the anonymity constraint ("an experienced FDE," no name or photo) |
+| Full case-study library at launch | Zero completed engagements exist; an empty-looking library damages credibility |
+| Email nurture / marketing automation | Solo maintainer; single conversion path (book the audit) is the deliberate design |
+| Site-wide scroll-jacking / heavy animation everywhere | Scrollytelling is scoped to the landing narrative; pervasive animation hurts CWV, accessibility, and solo maintainability |
 
 ## Traceability
 
@@ -78,32 +77,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SITE-01 | Phase 2 | Pending |
-| SITE-02 | Phase 1 | Complete |
-| SITE-03 | Phase 1 | Complete |
-| SITE-04 | Phase 1 | Complete |
-| SITE-05 | Phase 1 | Complete |
-| SITE-06 | Phase 1 | Complete |
-| DEMO-01 | Phase 2 | Pending |
-| DEMO-02 | Phase 2 | Pending |
-| AUDIT-01 | Phase 3 | Pending |
-| AUDIT-02 | Phase 3 | Pending |
-| AUDIT-03 | Phase 3 | Pending |
-| AUDIT-04 | Phase 3 | Pending |
-| AUDIT-05 | Phase 3 | Pending |
-| VERT-01 | Phase 4 | Pending |
-| VERT-02 | Phase 4 | Pending |
-| VERT-03 | Phase 4 | Pending |
-| VERT-04 | Phase 4 | Pending |
-| INFRA-01 | Phase 2 | Pending |
-| INFRA-02 | Phase 2 | Pending |
-| INFRA-03 | Phase 2 | Pending |
+| — | — | — |
 
 **Coverage:**
-- v1 requirements: 20 total
-- Mapped to phases: 20
-- Unmapped: 0 ✓
+- v2.0 requirements: 21 total
+- Mapped to phases: 0
+- Unmapped: 21 ⚠️ (roadmap pending)
 
 ---
-*Requirements defined: 2026-07-19*
-*Last updated: 2026-07-19 after roadmap creation (all 20 v1 requirements mapped to 4 phases)*
+*Requirements defined: 2026-07-20*
+*Last updated: 2026-07-20 after v2.0 scoping*
