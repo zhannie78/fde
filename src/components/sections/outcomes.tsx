@@ -1,32 +1,32 @@
 const outcomes = [
   {
-    label: "Time saved",
+    label: "Time",
     stat: "15+ hrs/week",
-    body: "Missed calls answered instantly, follow-ups sent automatically, and busywork handled before it piles up on your desk.",
+    body: "Manual busywork — the follow-ups, the data entry, the copy-paste between tools — gets handled automatically, giving your team back hours every week to spend on the work only they can do.",
   },
   {
-    label: "Profit recovered",
+    label: "Efficiency",
+    stat: "Workflows that run themselves",
+    body: "The processes that used to depend on someone remembering to do them now run on their own — built around how your business actually operates, not a generic template.",
+  },
+  {
+    label: "Profit",
     stat: "$4k–$12k/mo",
-    body: "Every inquiry that used to go cold gets a same-minute response — turning leads you were already paying to generate into booked jobs.",
-  },
-  {
-    label: "Expenses cut",
-    stat: "No new hires",
-    body: "The work gets done without adding another salary, another desk, or another person to manage.",
+    body: "Money that was leaking out through missed steps, slow handoffs, and dropped follow-ups gets recovered — plus new revenue from work your team now has capacity to take on.",
   },
 ] as const;
 
 /**
  * "Outcomes" (D-09 #1): the three ROI outcomes rendered ASYMMETRICALLY — an
  * explicit SITE-06 anti-pattern gate against a uniform 3-card grid. Time
- * Saved leads with the most visual weight; the other two sit as a secondary
- * stacked pair, differentiated by scale rather than icons.
+ * leads with the most visual weight; Efficiency and Profit sit as a
+ * secondary stacked pair, differentiated by scale rather than icons.
  */
 export function Outcomes() {
   const [lead, ...rest] = outcomes;
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <section id="outcomes" className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-7">
           <p className="text-sm font-semibold tracking-[0.02em] text-primary uppercase">
@@ -56,6 +56,9 @@ export function Outcomes() {
           ))}
         </div>
       </div>
+      <p className="mt-10 text-base leading-[1.6] font-semibold text-foreground">
+        Even in the worst case, you come out ahead.
+      </p>
     </section>
   );
 }
