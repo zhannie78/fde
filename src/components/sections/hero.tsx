@@ -1,38 +1,39 @@
 import { BookCta } from "@/components/book-cta";
-import { DemoPlaceholder } from "@/components/sections/demo-placeholder";
 
 /**
- * Homepage focal point (UI-SPEC "Phase Component Inventory" — Homepage focal
- * point, explicit): the Display headline + demo-placeholder pair is THE
- * primary visual anchor of the page. Every section below is visually
- * subordinate — this is the only Display-size text and the only element
- * pairing with the demo-placeholder's accent weight.
- *
- * Headline is ROI-first, plain language, zero AI jargon (D-12) — dollars and
- * hours, not "AI"/"automation" framing.
+ * Hero — the "gap" half of the 5-part message hierarchy (LAND-01). Carries
+ * the only Display-size text on the page (UI-SPEC Typography: "Display is
+ * reserved for the Hero H1 only... every section below is visually
+ * subordinate"). Single-column: the v1 right-column demo slot is removed —
+ * this phase has no reassigned use for it (the live-demo concept it held
+ * was scrapped by the v2 pivot).
  */
 export function Hero() {
   return (
-    <section className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28 lg:flex-row lg:items-center lg:gap-16">
-      <div className="flex flex-col gap-6 lg:w-1/2">
-        <h1
-          className="font-heading leading-[1.1] font-semibold text-foreground"
-          style={{ fontSize: "clamp(32px, 8vw, 44px)" }}
-        >
-          Stop losing customers to missed calls and slow follow-ups
-        </h1>
-        <p className="max-w-md text-base leading-[1.6] text-foreground">
-          Every missed call, unanswered inquiry, or task left sitting
-          overnight costs your business real hours and real dollars. We build
-          simple, custom tools that catch what&apos;s slipping through — so
-          you recover the time and money without hiring anyone new.
-        </p>
-        <div>
-          <BookCta />
-        </div>
-      </div>
-      <div className="lg:w-1/2">
-        <DemoPlaceholder />
+    <section className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
+      <h1
+        className="font-heading leading-[1.1] font-semibold text-foreground"
+        style={{ fontSize: "clamp(32px, 8vw, 44px)" }}
+      >
+        A powerful AI model is not the same thing as a working system.
+      </h1>
+      <p className="max-w-xl text-base leading-[1.6] text-foreground">
+        Most businesses adopting AI agents and automation never see the
+        payoff — not because the models are weak, but because nobody embeds
+        deep enough in the real workflow to make them stick.
+      </p>
+      <p className="text-sm text-muted-foreground">
+        95% of enterprise generative-AI pilots fail to show measurable ROI
+        (MIT NANDA, 2025).
+      </p>
+      <p className="max-w-xl text-base leading-[1.6] text-foreground">
+        Small and medium businesses face the same brittle-workflow problem —
+        worse, because they can&apos;t afford the forward-deployed
+        engineering enterprises use to close it. That&apos;s the gap this
+        practice exists to close.
+      </p>
+      <div>
+        <BookCta />
       </div>
     </section>
   );
