@@ -49,12 +49,11 @@ export function CalEmbed() {
         role="alert"
         className="rounded-lg border border-destructive p-6 text-destructive"
       >
-        Couldn&apos;t load the booking calendar. Email {siteConfig.founderName}{" "}
-        directly at{" "}
+        Couldn&apos;t load the booking calendar. Email us directly at{" "}
         <a href={`mailto:${siteConfig.founderEmail}`} className="underline">
           {siteConfig.founderEmail}
         </a>{" "}
-        and she&apos;ll find a time — usually within one business day.
+        and we&apos;ll find a time — usually within one business day.
       </div>
     );
   }
