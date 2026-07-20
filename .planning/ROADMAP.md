@@ -62,7 +62,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 05-05-PLAN.md — page.tsx integration (locked order) + v1 section teardown
+- [x] 05-05-PLAN.md — page.tsx integration (locked order) + v1 section teardown
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -126,7 +126,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Missed-Call Demo & Secure AI Infrastructure | v1.0 | 0/TBD | Superseded | - |
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
-| 5. FDE Landing Page | v2.0 | 4/6 | In Progress|  |
+| 5. FDE Landing Page | v2.0 | 5/6 | In Progress|  |
 | 6. Visual Redesign | v2.0 | 0/TBD | Not started | - |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |
