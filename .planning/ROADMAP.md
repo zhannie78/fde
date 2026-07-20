@@ -31,7 +31,7 @@ Old missed-call-recovery / vertical-strategy positioning. Phase 1 (Marketing Fou
 
 **Milestone Goal:** Reposition AI Deployed around forward-deployed AI engineering for SMBs — new messaging and IA, a visually impressive redesign, a blog/content engine, and buyer-vocabulary SEO, with a client-side ROI calculator as the interactive proof.
 
-- [ ] **Phase 5: FDE Landing Page** - Visitor understands the gap/fix/outcomes/offer, sees transparent pricing, can book the free audit, and can run the ROI calculator
+- [x] **Phase 5: FDE Landing Page** - Visitor understands the gap/fix/outcomes/offer, sees transparent pricing, can book the free audit, and can run the ROI calculator (completed 2026-07-20)
 - [ ] **Phase 6: Visual Redesign** - Site carries a new, distinctive, high-craft visual system with scroll-driven storytelling that performs and is accessible
 - [ ] **Phase 7: Blog / Content Engine** - Visitor can read pillar/cluster content that builds credibility and funnels back to the audit CTA
 - [ ] **Phase 8: SEO & Metadata Layer** - Site is discoverable and shareable, with buyer-vocabulary reinforced across search/social surfaces
@@ -66,7 +66,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 05-06-PLAN.md — Route/nav/anonymity teardown + LAND-06 grep gate
+- [x] 05-06-PLAN.md — Route/nav/anonymity teardown + LAND-06 grep gate
 
 **UI hint**: yes
 
@@ -126,7 +126,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Missed-Call Demo & Secure AI Infrastructure | v1.0 | 0/TBD | Superseded | - |
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
-| 5. FDE Landing Page | v2.0 | 5/6 | In Progress|  |
+| 5. FDE Landing Page | v2.0 | 6/6 | Complete   | 2026-07-20 |
 | 6. Visual Redesign | v2.0 | 0/TBD | Not started | - |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |
