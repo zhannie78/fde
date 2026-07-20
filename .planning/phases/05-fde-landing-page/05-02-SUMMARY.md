@@ -91,3 +91,12 @@ None - no external service configuration required.
 ---
 *Phase: 05-fde-landing-page*
 *Completed: 2026-07-20*
+
+## Self-Check: PASSED
+
+- FOUND: src/components/sections/outcomes.tsx
+- FOUND: src/components/sections/offer.tsx
+- FOUND: .planning/phases/05-fde-landing-page/05-02-SUMMARY.md
+- FOUND commit: 4b7c21c
+- FOUND commit: 6dcd16c
+- FOUND commit: 84d35f0
