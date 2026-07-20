@@ -104,3 +104,12 @@ None - no external service configuration required.
 ---
 *Phase: 05-fde-landing-page*
 *Completed: 2026-07-20*
+
+## Self-Check: PASSED
+
+- FOUND: src/components/sections/hero.tsx
+- FOUND: src/components/sections/the-fix.tsx
+- FOUND: .planning/phases/05-fde-landing-page/05-01-SUMMARY.md
+- FOUND: 9ca2735 (Task 1 commit)
+- FOUND: ee4a8da (Task 2 commit)
+- FOUND: 9730585 (SUMMARY commit)
