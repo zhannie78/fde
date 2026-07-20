@@ -430,17 +430,15 @@ export function Avatar() {
 | A2 | `display: contents` on the `ScrollStoryProvider` wrapper won't break ScrollTrigger's measurement | Pattern 1 / Pitfall 4 | Low-medium — if wrong, ScrollTrigger effects fire at incorrect scroll positions; easy to detect via `markers: true` during manual QA and easy to fix (drop `contents`, accept the extra DOM node). |
 | A3 | GSAP's "Standard 'no charge' license" fully permits this project's commercial/billed-client use without further action | Package Legitimacy Audit | Low — Webflow's own public announcement confirms unrestricted commercial free use, but this is a non-OSI custom license, not MIT/Apache; worth a founder skim of gsap.com/standard-license before shipping, not a blocker. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Exact Core Web Vitals numbers this phase will actually hit**
+1. **Exact Core Web Vitals numbers this phase will actually hit** — RESOLVED: not resolvable in advance (no build exists yet); resolved instead by treating the mobile-throttled Lighthouse run in 06-07 as the actual gate rather than a predicted number. If a run comes back over budget, the fix is almost always image weight or unnecessarily-broad `will-change` usage (see UI-SPEC's own INP guidance), not an architecture change.
    - What we know: the architectural choices in this research (SSR content + client-only animation layer touching only `transform`/`opacity`, self-hosted font with `display: swap`, explicit image dimensions) are all standard CWV-protective patterns.
    - What's unclear: actual LCP/CLS/INP numbers depend on final bundle size, image weights, and hosting (Netlify) cold-start behavior — none of which exist yet since this phase hasn't been built.
-   - Recommendation: treat the Lighthouse CI run (see below) as the actual gate, not a number predicted in advance; if a run comes back over budget, the fix is almost always image weight or unnecessarily-broad `will-change` usage (see UI-SPEC's own INP guidance), not an architecture change.
 
-2. **Whether `ScrollTrigger.batch()`'s selector-text approach will need `data-*` attributes added to every section, or whether existing className/structure already provides enough hooks**
+2. **Whether `ScrollTrigger.batch()`'s selector-text approach will need `data-*` attributes added to every section, or whether existing className/structure already provides enough hooks** — RESOLVED: 06-02 and 06-03 each include an explicit task step adding stable selector hooks (className/`data-*`) to their section's animated elements during the restyle pass, rather than assuming the palette/type restyle provides them as a side effect.
    - What we know: `Hero`, `TheFix`, etc. were not built with GSAP targeting in mind (Phase 5 predates this phase's motion requirements).
    - What's unclear: whether their existing JSX structure already has sufficiently unique/stable classNames, or whether every targeted element needs a new `data-*` attribute added during the restyle pass.
-   - Recommendation: the planner should treat "add stable selector hooks (className or data-*) to each section's animated elements" as an explicit task step within each section's restyle, not an assumed side effect of the palette/type restyle.
 
 ## Environment Availability
 
