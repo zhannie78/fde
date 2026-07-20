@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch 001 — Visual System</title>
+<link rel="stylesheet" href="../themes/default.css">
+<style>
+  /* ============ SHARED VARIANT SCAFFOLDING ============ */
+  body { padding-top: 48px; }
+
+  #variant-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9998;
+    background: #16181d; border-bottom: 1px solid #2a2d34;
+    padding: 8px 16px; display: flex; gap: 8px; align-items: center;
+    font-family: var(--font-mono); font-size: 12px;
+  }
+  #variant-nav .label { color: #7d8590; margin-right: 8px; }
+  .variant-tab {
+    background: transparent; border: 1px solid #2a2d34; color: #c9d1d9;
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono);
+    font-size: 12px; transition: all 0.15s ease;
+  }
+  .variant-tab:hover { border-color: #58a6ff; color: #58a6ff; }
+  .variant-tab.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+  .variant { display: none; }
+  .variant.active { display: block; }
+
+  section { padding: var(--space-24) var(--space-8); }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  /* generic reset for headings inside variants */
+  h1, h2, h3, p { margin: 0; }
+
+  #sketch-tools {
+    position: fixed; bottom: 12px; right: 12px; z-index: 9999;
+    font-family: system-ui; font-size: 12px; background: rgba(0,0,0,0.75);
+    color: white; padding: 8px 12px; border-radius: 8px; opacity: 0.35;
+    transition: opacity 0.2s; display: flex; gap: 10px; align-items: center;
+  }
+  #sketch-tools:hover { opacity: 1; }
+  #sketch-tools button { background: #333; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+  #sketch-tools button:hover { background: #555; }
+  #viewport-wrap { max-width: 100%; margin: 0 auto; transition: max-width 0.2s ease; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-weight: 600; cursor: pointer;
+    border: none; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+
+  /* ============================================================ */
+  /* VARIANT A — TERMINAL // CRT                                  */
+  /* ============================================================ */
+  .variant-a {
+    --bg: #0a0d0a;
+    --panel: #0f1410;
+    --text: #cdf7d8;
+    --text-dim: #6f8f78;
+    --primary: #39ff88;
+    --amber: #ffb454;
+    --border: #1f3327;
+    background: var(--bg); color: var(--text); font-family: var(--font-mono);
+    position: relative; overflow: hidden;
+  }
+  .variant-a::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 5;
+    background: repeating-linear-gradient(
+      to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,255,140,0.03) 3px, rgba(0,0,0,0) 4px
+    );
+    mix-blend-mode: overlay;
+  }
+  .variant-a::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 4;
+    box-shadow: inset 0 0 180px rgba(0,0,0,0.85);
+  }
+  .variant-a .term-bar {
+    display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+  }
+  .variant-a .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .variant-a .dot.r { background: #ff5f57; }
+  .variant-a .dot.y { background: #ffbd2e; }
+  .variant-a .dot.g { background: #28c840; }
+  .variant-a .term-title { margin-left: 12px; color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-a .prompt { color: var(--text-dim); font-size: var(--text-sm); margin-bottom: var(--space-3); }
+  .variant-a .prompt::before { content: "annie@fde:~$ "; color: var(--primary); }
+  .variant-a .hero-title {
+    font-size: var(--text-display); line-height: 1.05; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--text);
+  }
+  .variant-a .hero-title .hi { color: var(--text-dim); font-weight: 400; font-size: 0.4em; display: block; margin-bottom: var(--space-2); }
+  .variant-a .hero-title .accent { color: var(--primary); }
+  .variant-a .cursor {
+    display: inline-block; width: 0.5em; height: 0.85em; background: var(--primary);
+    animation: blink 1s steps(1) infinite; vertical-align: -0.1em; margin-left: 4px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .variant-a .lede { color: var(--text-dim); font-size: var(--text-lg); margin-top: var(--space-6); max-width: 640px; line-height: 1.6; }
+  .variant-a .divider { border: none; border-top: 1px dashed var(--border); margin: 0; }
+  .variant-a .btn-primary {
+    background: var(--primary); color: #04170c; padding: 14px 28px; border-radius: 2px;
+    font-size: var(--text-base);
+  }
+  .variant-a .btn-primary:hover { box-shadow: 0 0 24px rgba(57,255,136,0.5); }
+  .variant-a .btn-ghost {
+    background: transparent; color: var(--primary); border: 1px solid var(--primary);
+    padding: 13px 27px; border-radius: 2px;
+  }
+  .variant-a .section-label { color: var(--amber); font-size: var(--text-sm); letter-spacing: 0.08em; margin-bottom: var(--space-4); }
+  .variant-a .section-label::before { content: "// "; }
+  .variant-a h2 { font-size: var(--text-3xl); font-weight: 700; color: var(--text); max-width: 780px; line-height: 1.3; }
+  .variant-a .body-text { color: var(--text-dim); font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; }
+  .variant-a .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-8); margin-top: var(--space-12); }
+  .variant-a .stat-card { border: 1px solid var(--border); background: var(--panel); padding: var(--space-8); border-radius: 4px; }
+  .variant-a .stat-num { font-size: var(--text-3xl); color: var(--primary); font-weight: 700; }
+  .variant-a .stat-label { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-2); letter-spacing: 0.05em; }
+  .variant-a .worst-case { margin-top: var(--space-8); color: var(--amber); font-size: var(--text-base); }
+  .variant-a .worst-case::before { content: "> "; }
+  .variant-a .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-a .offer-card { border: 1px solid var(--border); background: var(--panel); padding: var(--space-6); border-radius: 4px; }
+  .variant-a .offer-card .n { color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-a .offer-card .price { font-size: var(--text-2xl); color: var(--primary); font-weight: 700; margin-top: var(--space-2); }
+  .variant-a .offer-card .desc { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; }
+  .variant-a .process-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: 0; }
+  .variant-a .process-item { display: flex; gap: var(--space-6); padding: var(--space-6) 0; border-top: 1px dashed var(--border); }
+  .variant-a .process-item:last-child { border-bottom: 1px dashed var(--border); }
+  .variant-a .process-num { color: var(--primary); font-size: var(--text-xl); font-weight: 700; width: 48px; }
+  .variant-a .process-body h3 { color: var(--text); font-size: var(--text-lg); }
+  .variant-a .process-body p { color: var(--text-dim); margin-top: var(--space-2); font-size: var(--text-sm); }
+  .variant-a .final-cta { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: var(--space-16); text-align: center; }
+  .variant-a .final-cta h2 { margin: 0 auto; text-align: center; }
+  .variant-a footer { text-align: center; color: var(--text-dim); font-size: var(--text-xs); padding: var(--space-8); }
+
+  /* ============================================================ */
+  /* VARIANT B — PIXEL-GRID BRUTALIST                              */
+  /* ============================================================ */
+  .variant-b {
+    --bg: #f4f3ee;
+    --ink: #101010;
+    --accent: #2b52ff;
+    --accent-2: #d4ff2b;
+    background: var(--bg); color: var(--ink); font-family: var(--font-mono);
+    background-image:
+      linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .variant-b .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-4) var(--space-8); border-bottom: 3px solid var(--ink);
+    background: var(--bg);
+  }
+  .variant-b .brand { font-weight: 700; letter-spacing: -0.02em; font-size: var(--text-lg); text-transform: uppercase; }
+  .variant-b .brand .dot { color: var(--accent); }
+  .variant-b .hero { padding-top: var(--space-24); }
+  .variant-b .pixel-tag {
+    display: inline-block; background: var(--ink); color: var(--accent-2);
+    font-size: var(--text-xs); padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .variant-b .hero-title {
+    font-size: var(--text-display); line-height: 0.98; font-weight: 700; text-transform: uppercase;
+    letter-spacing: -0.03em; margin-top: var(--space-6);
+  }
+  .variant-b .hero-title .hi { display: block; font-size: 0.32em; text-transform: none; font-weight: 500; color: #4a4a4a; margin-bottom: var(--space-3); }
+  .variant-b .hero-title .accent { color: var(--accent); -webkit-text-stroke: 0; }
+  .variant-b .lede { font-size: var(--text-lg); margin-top: var(--space-8); max-width: 620px; line-height: 1.6; color: #2a2a2a; }
+  .variant-b .btn-primary {
+    background: var(--ink); color: var(--accent-2); padding: 16px 32px;
+    border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--accent); font-size: var(--text-base);
+  }
+  .variant-b .btn-primary:hover { box-shadow: 3px 3px 0 var(--accent); transform: translate(3px,3px); }
+  .variant-b .btn-ghost {
+    background: var(--bg); color: var(--ink); padding: 15px 31px;
+    border: 3px solid var(--ink);
+  }
+  .variant-b .section-label {
+    display: inline-block; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: var(--space-4); border-bottom: 3px solid var(--accent-2); padding-bottom: 4px;
+  }
+  .variant-b .market-gap-band {
+    background: var(--ink); color: #fff; margin: 0; padding: var(--space-24) var(--space-8);
+  }
+  .variant-b .market-gap-band h2 { color: #fff; }
+  .variant-b .market-gap-band .section-label { color: var(--accent-2); }
+  .variant-b h2 { font-size: var(--text-3xl); font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; max-width: 820px; line-height: 1.2; }
+  .variant-b .body-text { font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; color: #2a2a2a; }
+  .variant-b .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); margin-top: var(--space-12); }
+  .variant-b .stat-card { background: #fff; border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); padding: var(--space-8); position: relative; }
+  .variant-b .stat-card::before {
+    content: ""; position: absolute; top: -3px; right: -3px; width: 14px; height: 14px;
+    background: var(--accent-2); border: 3px solid var(--ink); border-right: none; border-top: none;
+  }
+  .variant-b .stat-num { font-size: var(--text-3xl); color: var(--accent); font-weight: 700; }
+  .variant-b .stat-label { font-size: var(--text-sm); margin-top: var(--space-2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+  .variant-b .worst-case {
+    margin-top: var(--space-8); background: var(--ink); color: var(--accent-2); padding: var(--space-4) var(--space-6);
+    display: inline-block; font-size: var(--text-base);
+  }
+  .variant-b .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-b .offer-card { background: #fff; border: 3px solid var(--ink); padding: var(--space-6); box-shadow: 6px 6px 0 var(--accent); }
+  .variant-b .offer-card .n { font-size: var(--text-sm); font-weight: 700; text-transform: uppercase; }
+  .variant-b .offer-card .price { font-size: var(--text-2xl); color: var(--accent); font-weight: 700; margin-top: var(--space-2); }
+  .variant-b .offer-card .desc { font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; color: #333; }
+  .variant-b .process-list { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); }
+  .variant-b .process-item { background: #fff; border: 3px solid var(--ink); padding: var(--space-6); }
+  .variant-b .process-num { font-size: var(--text-2xl); font-weight: 700; color: var(--accent-2); -webkit-text-stroke: 1.5px var(--ink); }
+  .variant-b .process-body h3 { font-size: var(--text-lg); margin-top: var(--space-3); text-transform: uppercase; }
+  .variant-b .process-body p { margin-top: var(--space-2); font-size: var(--text-sm); color: #333; }
+  .variant-b .final-cta { background: var(--ink); color: #fff; padding: var(--space-16); text-align: center; }
+  .variant-b .final-cta h2 { color: #fff; margin: 0 auto; text-align: center; }
+  .variant-b .final-cta .btn-primary { margin-top: var(--space-8); box-shadow: 6px 6px 0 var(--accent-2); }
+  .variant-b footer { text-align: center; font-size: var(--text-xs); padding: var(--space-8); color: #666; border-top: 3px solid var(--ink); }
+
+  /* ============================================================ */
+  /* VARIANT B2 — POLISHED & REFINED (brutalist DNA, award-tier polish) */
+  /* ============================================================ */
+  .variant-b2 {
+    --bg: #fbfaf7;
+    --ink: #0c0c0d;
+    --ink-soft: #46484c;
+    --accent: #3552ff;
+    --accent-soft: #eef1ff;
+    --lime: #c8ff4d;
+    --border: #e4e2db;
+    background: var(--bg); color: var(--ink); font-family: var(--font-mono);
+    letter-spacing: -0.005em;
+  }
+  .variant-b2 section { padding: var(--space-24) var(--space-8); }
+  .variant-b2 .wrap { max-width: 1140px; }
+
+  /* subtle reveal-on-scroll */
+  .variant-b2 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s cubic-bezier(.16,1,.3,1), transform 0.6s cubic-bezier(.16,1,.3,1); }
+  .variant-b2 .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .variant-b2 .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-4) var(--space-8); border-bottom: 1px solid var(--border);
+    position: sticky; top: 48px; background: rgba(251,250,247,0.85); backdrop-filter: blur(10px); z-index: 50;
+  }
+  .variant-b2 .brand { font-weight: 700; letter-spacing: -0.02em; font-size: var(--text-base); }
+  .variant-b2 .brand .dot { color: var(--accent); }
+  .variant-b2 .nav-links { display: flex; gap: var(--space-6); font-size: var(--text-sm); color: var(--ink-soft); }
+  .variant-b2 .nav-links a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+  .variant-b2 .nav-links a:hover { color: var(--accent); }
+
+  .variant-b2 .hero { padding-top: var(--space-24); padding-bottom: var(--space-16); position: relative; }
+  .variant-b2 .status-pill {
+    display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-xs);
+    color: var(--ink-soft); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .variant-b2 .status-pill .ping { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; position: relative; }
+  .variant-b2 .status-pill .ping::after {
+    content: ""; position: absolute; inset: -4px; border-radius: 50%; background: #2ecc71;
+    opacity: 0.5; animation: pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2.2); opacity: 0; } }
+
+  .variant-b2 .hero-title {
+    font-size: clamp(2.75rem, 6.4vw, 5rem); line-height: 1; font-weight: 700;
+    letter-spacing: -0.035em; margin-top: var(--space-6); max-width: 920px;
+  }
+  .variant-b2 .hero-title .hi { display: block; font-size: 0.34em; font-weight: 500; color: var(--ink-soft); letter-spacing: -0.01em; margin-bottom: var(--space-3); }
+  .variant-b2 .hero-title .accent { color: var(--accent); }
+  .variant-b2 .lede { font-size: var(--text-lg); margin-top: var(--space-8); max-width: 580px; line-height: 1.7; color: var(--ink-soft); }
+  /* Weight + the single brand accent color (not a new hue) + a low-opacity
+     underline rule — reads as a deliberate callout, not just "bold text",
+     while staying inside B2's one-accent-color discipline. */
+  .variant-b2 .lede-highlight {
+    color: var(--ink); font-weight: 700;
+    background: linear-gradient(transparent 72%, var(--accent-soft) 72%);
+    box-shadow: inset 0 -2px 0 0 var(--accent);
+    padding-bottom: 1px;
+  }
+
+  .variant-b2 .btn-primary {
+    background: var(--ink); color: #fff; padding: 15px 30px; border-radius: 8px;
+    font-size: var(--text-base); box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .variant-b2 .btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(53,82,255,0.45); }
+
+  /* Glow-CTA preview — approximates the motion/GlowButton effect for the two highest-impact
+     placements (hero + final CTA). Restrained duotone (indigo/violet), soft "breathe" pulse —
+     not the loud default rainbow "rotate" mode, to match B2's one-accent polish direction. */
+  .variant-b2 .glow-wrap { position: relative; display: inline-block; }
+  .variant-b2 .glow-wrap::before {
+    content: ""; position: absolute; inset: -3px; border-radius: 11px; z-index: -1;
+    background: conic-gradient(from 0deg, #3552ff, #8f6fff, #3552ff 60%, #8f6fff 100%);
+    filter: blur(14px); opacity: 0.55;
+    animation: glow-breathe 4.5s ease-in-out infinite;
+  }
+  .variant-b2 .glow-wrap:hover::before { opacity: 0.85; filter: blur(18px); }
+  /* Nav CTA: smaller, tighter glow so it doesn't overwhelm the topbar. */
+  .variant-b2 .nav-glow::before { inset: -2px; blur: 8px; filter: blur(8px); opacity: 0.5; }
+
+  .variant-b2 .annie-link {
+    color: inherit; text-decoration: none; position: relative;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 1px;
+    transition: background-size 0.25s ease, color 0.25s ease;
+  }
+  .variant-b2 .annie-link:hover { color: var(--accent); background-size: 100% 2px; }
+  @keyframes glow-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.45; }
+    50% { transform: scale(1.08); opacity: 0.65; }
+  }
+
+  /* ============ Elevated final-CTA button — the last conversion moment gets
+     extra visual weight: bigger size, a static tri-color glow ring PLUS a
+     softer ambient halo, both fixed in place (no rotation) and always visible
+     — not hover-gated — plus a periodic shine sweep across the face and an
+     arrow that slides on hover. ============ */
+  .variant-b2 .glow-wrap-final { position: relative; display: inline-block; margin-top: var(--space-8); }
+  .variant-b2 .glow-wrap-final::before {
+    content: ""; position: absolute; inset: -5px; border-radius: 15px; z-index: -1;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(16px); opacity: 0.7;
+  }
+  .variant-b2 .glow-wrap-final::after {
+    content: ""; position: absolute; inset: -26px; border-radius: 26px; z-index: -2;
+    background: radial-gradient(circle, rgba(53,82,255,0.4), transparent 72%);
+    filter: blur(28px); opacity: 0.7;
+  }
+  .variant-b2 .glow-wrap-final:hover::before { opacity: 0.95; filter: blur(20px); }
+
+  .variant-b2 .btn-final {
+    position: relative; overflow: hidden;
+    padding: 20px 40px; font-size: var(--text-lg); border-radius: 12px;
+    box-shadow: 0 6px 20px -4px rgba(12,12,13,0.25);
+  }
+  .variant-b2 .btn-final::after {
+    /* diagonal shine sweep, loops periodically */
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg);
+    animation: shine-sweep 3s ease-in-out infinite;
+  }
+  @keyframes shine-sweep {
+    0% { left: -60%; }
+    40% { left: 130%; }
+    100% { left: 130%; }
+  }
+  .variant-b2 .btn-final:hover { background: var(--accent); box-shadow: 0 16px 34px -8px rgba(53,82,255,0.55); }
+  .variant-b2 .btn-final .arrow { display: inline-block; transition: transform 0.25s ease; margin-left: 2px; }
+  .variant-b2 .btn-final:hover .arrow { transform: translateX(6px); }
+  .variant-b2 .btn-ghost {
+    background: transparent; color: var(--ink); border: 1px solid var(--border);
+    padding: 14px 29px; border-radius: 8px;
+  }
+  .variant-b2 .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+  /* skill ticker divider — signature polish device */
+  .variant-b2 .ticker {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: var(--space-4) 0; overflow: hidden; white-space: nowrap; position: relative;
+  }
+  /* Endless marquee: two identical .ticker-group copies, animated exactly -50%
+     (one group-width) per cycle so it loops seamlessly. Spacing is uniform
+     per-item margin-right (not flex `gap`) so the seam between the end of
+     copy 1 and the start of copy 2 has IDENTICAL rhythm to every other
+     word-to-word gap — no visible pause/whitespace jump at the loop point. */
+  .variant-b2 .ticker-track {
+    display: inline-flex; animation: ticker 22s linear infinite;
+    font-size: var(--text-sm); color: var(--ink-soft); letter-spacing: 0.03em;
+  }
+  .variant-b2 .ticker-group { display: inline-flex; flex-shrink: 0; align-items: center; }
+  .variant-b2 .ticker-track b { display: inline-block; margin-right: var(--space-8); color: var(--ink); font-weight: 600; }
+  .variant-b2 .ticker-track .sep { display: inline-block; margin-right: var(--space-8); color: var(--accent); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .variant-b2 .section-label {
+    display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-xs); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: var(--space-4);
+  }
+  .variant-b2 .section-label::before { content: ""; width: 16px; height: 1px; background: var(--accent); }
+  .variant-b2 h2 { font-size: clamp(1.75rem, 3.2vw, 2.75rem); font-weight: 700; letter-spacing: -0.02em; max-width: 760px; line-height: 1.2; }
+  .variant-b2 .body-text { font-size: var(--text-base); line-height: 1.75; margin-top: var(--space-4); max-width: 600px; color: var(--ink-soft); }
+
+  /* Backlight-glow box — used by stat-card, offer-card, and process-item.
+     Structure: outer .glow-box (transparent, positioned, holds the blurred glow
+     in ::before) > inner .glow-box-inner (the ACTUAL opaque card face — background,
+     border, padding all live here so the glow never paints over the readable
+     content, only peeks out around the edges). Glow is invisible at rest and only
+     fades in + starts rotating on hover — not a constant idle animation. */
+  .variant-b2 .glow-box { position: relative; border-radius: 14px; height: 100%; }
+  .variant-b2 .glow-box::before {
+    /* Larger bleed (-11px vs the card's own -2.5px edge) gives the organic
+       border-radius morph room to visibly bulge/recede as it animates —
+       tight insets just look like a rotating rectangle silhouette. */
+    content: ""; position: absolute; inset: -11px; border-radius: 14px; z-index: 0;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(14px); opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .variant-b2 .glow-box:hover::before {
+    opacity: 0.6;
+    animation: glow-box-blob 4.5s ease-in-out infinite;
+  }
+  /* Rotates AND morphs border-radius through asymmetric blob shapes each quarter-turn —
+     "gradually changes shape as it rotates" instead of a rigid spinning rectangle. */
+  @keyframes glow-box-blob {
+    0%   { transform: rotate(0deg);   border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+    25%  { transform: rotate(90deg);  border-radius: 62% 38% 30% 70% / 60% 65% 35% 40%; }
+    50%  { transform: rotate(180deg); border-radius: 35% 65% 58% 42% / 40% 55% 45% 60%; }
+    75%  { transform: rotate(270deg); border-radius: 68% 32% 45% 55% / 55% 35% 65% 45%; }
+    100% { transform: rotate(360deg); border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+  }
+  .variant-b2 .glow-box-inner {
+    position: relative; z-index: 1; height: 100%; box-sizing: border-box;
+    background: #fff; border: 1px solid var(--border); border-radius: inherit;
+    transition: background 0.25s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .variant-b2 .glow-box:hover .glow-box-inner { transform: translateY(-3px); border-color: var(--accent); }
+
+  .variant-b2 .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-4); margin-top: var(--space-12); }
+  .variant-b2 .stat-card .glow-box-inner { padding: var(--space-8); }
+  .variant-b2 .stat-card:hover .glow-box-inner { background: var(--accent-soft); }
+  .variant-b2 .stat-num { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; }
+  .variant-b2 .stat-label { color: var(--ink-soft); font-size: var(--text-sm); margin-top: var(--space-2); }
+  .variant-b2 .worst-case { margin-top: var(--space-8); color: var(--ink-soft); font-size: var(--text-base); padding-left: var(--space-4); border-left: 2px solid var(--lime); }
+
+  .variant-b2 .market-gap-band { background: var(--ink); color: #f4f3ee; margin: 0; padding: var(--space-24) var(--space-8); position: relative; overflow: hidden; }
+  .variant-b2 .market-gap-band::before {
+    content: ""; position: absolute; top: -40%; right: -10%; width: 480px; height: 480px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(53,82,255,0.35), transparent 70%); filter: blur(20px);
+  }
+  .variant-b2 .market-gap-band .section-label { color: var(--lime); }
+  .variant-b2 .market-gap-band .section-label::before { background: var(--lime); }
+  .variant-b2 .market-gap-band h2 { color: #fff; position: relative; }
+  .variant-b2 .market-gap-band .body-text { color: #b8bac2; position: relative; }
+
+  .variant-b2 .offer-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-4); margin-top: var(--space-8); }
+  .variant-b2 .offer-card .glow-box-inner { padding: var(--space-6); box-shadow: 0 1px 2px rgba(12,12,13,0.04); }
+  .variant-b2 .offer-card:hover .glow-box-inner { box-shadow: 0 16px 32px -12px rgba(12,12,13,0.12); }
+  .variant-b2 .offer-card .n { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+  .variant-b2 .offer-card .price { font-size: var(--text-2xl); font-weight: 700; margin-top: var(--space-3); letter-spacing: -0.02em; }
+  .variant-b2 .offer-card .desc { font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.65; color: var(--ink-soft); }
+
+  .variant-b2 .process-list { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-4); }
+  .variant-b2 .process-item .glow-box-inner { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); }
+  .variant-b2 .process-num { font-size: var(--text-2xl); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+  .variant-b2 .process-body h3 { font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.01em; }
+  .variant-b2 .process-body p { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--ink-soft); }
+
+  .variant-b2 .final-cta { background: var(--accent-soft); border-radius: 20px; padding: var(--space-24); text-align: center; position: relative; }
+  .variant-b2 .final-cta h2 { margin: 0 auto; text-align: center; max-width: 640px; }
+  .variant-b2 footer { text-align: center; font-size: var(--text-xs); padding: var(--space-8); color: var(--ink-soft); }
+  .variant-b2 footer .sig::before { content: "// "; color: var(--accent); }
+
+  /* magnetic button micro-interaction */
+  .variant-b2 .magnetic { display: inline-block; }
+
+  /* ============================================================ */
+  /* VARIANT C — DARK NEON IDE                                     */
+  /* ============================================================ */
+  .variant-c {
+    --bg: #0d1117;
+    --panel: rgba(255,255,255,0.04);
+    --panel-border: rgba(255,255,255,0.08);
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --violet: #c792ea;
+    --cyan: #89ddff;
+    --pink: #ff6ac1;
+    background: radial-gradient(circle at 20% 0%, rgba(199,146,234,0.08), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(137,221,255,0.07), transparent 40%),
+                var(--bg);
+    color: var(--text); font-family: var(--font-mono); position: relative;
+  }
+  .variant-c::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0.4;
+    background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .variant-c .editor-tabs { display: flex; gap: 2px; padding: 0 var(--space-6); background: #010409; border-bottom: 1px solid var(--panel-border); }
+  .variant-c .tab {
+    padding: 10px 18px; font-size: var(--text-sm); color: var(--text-dim);
+    border-right: 1px solid var(--panel-border); display: flex; align-items: center; gap: 6px;
+  }
+  .variant-c .tab.active { color: var(--text); background: var(--bg); border-top: 2px solid var(--cyan); }
+  .variant-c .tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); }
+  .variant-c .hero { display: grid; grid-template-columns: 40px 1fr; }
+  .variant-c .gutter {
+    color: #3d4451; font-size: var(--text-sm); text-align: right; padding-right: var(--space-3);
+    line-height: 2.2; user-select: none;
+  }
+  .variant-c .hero-title { font-size: var(--text-display); line-height: 1.08; font-weight: 700; letter-spacing: -0.02em; }
+  .variant-c .hero-title .hi { display: block; font-size: 0.36em; color: var(--text-dim); font-weight: 400; margin-bottom: var(--space-2); }
+  .variant-c .hero-title .accent {
+    background: linear-gradient(90deg, var(--violet), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .variant-c .lede { color: var(--text-dim); font-size: var(--text-lg); margin-top: var(--space-6); max-width: 640px; line-height: 1.6; }
+  .variant-c .btn-primary {
+    background: linear-gradient(90deg, var(--violet), var(--pink)); color: #14001a; padding: 14px 28px;
+    border-radius: 6px; font-size: var(--text-base); font-weight: 700;
+  }
+  .variant-c .btn-primary:hover { box-shadow: 0 0 30px rgba(199,146,234,0.45); }
+  .variant-c .btn-ghost {
+    background: var(--panel); color: var(--text); border: 1px solid var(--panel-border);
+    padding: 13px 27px; border-radius: 6px; backdrop-filter: blur(6px);
+  }
+  .variant-c .section-label { color: var(--cyan); font-size: var(--text-sm); letter-spacing: 0.06em; margin-bottom: var(--space-4); }
+  .variant-c .section-label::before { content: "<"; color: var(--text-dim); }
+  .variant-c .section-label::after { content: "/>"; color: var(--text-dim); }
+  .variant-c h2 { font-size: var(--text-3xl); font-weight: 700; max-width: 780px; line-height: 1.3; }
+  .variant-c .body-text { color: var(--text-dim); font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; }
+  .variant-c .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-8); margin-top: var(--space-12); }
+  .variant-c .stat-card {
+    background: var(--panel); border: 1px solid var(--panel-border); backdrop-filter: blur(10px);
+    padding: var(--space-8); border-radius: 12px;
+  }
+  .variant-c .stat-card:nth-child(1) .stat-num { color: var(--violet); }
+  .variant-c .stat-card:nth-child(2) .stat-num { color: var(--cyan); }
+  .variant-c .stat-card:nth-child(3) .stat-num { color: var(--pink); }
+  .variant-c .stat-num { font-size: var(--text-3xl); font-weight: 700; }
+  .variant-c .stat-label { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-2); }
+  .variant-c .worst-case { margin-top: var(--space-8); color: var(--text-dim); font-size: var(--text-base); border-left: 2px solid var(--violet); padding-left: var(--space-4); }
+  .variant-c .offer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+  .variant-c .offer-card { background: var(--panel); border: 1px solid var(--panel-border); padding: var(--space-6); border-radius: 12px; backdrop-filter: blur(10px); }
+  .variant-c .offer-card .n { color: var(--text-dim); font-size: var(--text-sm); }
+  .variant-c .offer-card .price { font-size: var(--text-2xl); font-weight: 700; margin-top: var(--space-2); background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .variant-c .offer-card .desc { color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--space-3); line-height: 1.6; }
+  .variant-c .process-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); }
+  .variant-c .process-item { display: flex; gap: var(--space-6); padding: var(--space-6); background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px; }
+  .variant-c .process-num { color: var(--cyan); font-size: var(--text-xl); font-weight: 700; width: 48px; }
+  .variant-c .process-body h3 { color: var(--text); font-size: var(--text-lg); }
+  .variant-c .process-body p { color: var(--text-dim); margin-top: var(--space-2); font-size: var(--text-sm); }
+  .variant-c .final-cta { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 16px; padding: var(--space-16); text-align: center; backdrop-filter: blur(10px); }
+  .variant-c .final-cta h2 { margin: 0 auto; text-align: center; }
+  .variant-c footer { text-align: center; color: var(--text-dim); font-size: var(--text-xs); padding: var(--space-8); }
+
+  @media (max-width: 720px) {
+    .variant-a .offer-grid, .variant-b .offer-grid, .variant-c .offer-grid, .variant-b2 .offer-grid { grid-template-columns: 1fr; }
+    .variant-a .stat-row, .variant-b .stat-row, .variant-c .stat-row, .variant-b2 .stat-row { grid-template-columns: 1fr; }
+    .variant-b .process-list { grid-template-columns: 1fr; }
+    .variant-b2 .process-list { grid-template-columns: 1fr; }
+    .variant-c .hero { grid-template-columns: 1fr; }
+    .variant-c .gutter { display: none; }
+    .variant-b2 .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="variant-nav">
+  <span class="label">SKETCH 001 — VISUAL SYSTEM</span>
+  <button class="variant-tab" onclick="showVariant('a', event)">A: Terminal // CRT</button>
+  <button class="variant-tab" onclick="showVariant('b', event)">B: Pixel-Grid Brutalist (original)</button>
+  <button class="variant-tab" onclick="showVariant('c', event)">C: Dark Neon IDE</button>
+  <button class="variant-tab active" onclick="showVariant('b2', event)">B2: Polished & Refined ★ Selected</button>
+</div>
+
+<!-- ============ VARIANT A ============ -->
+<div id="variant-a" class="variant variant-a">
+  <div class="term-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="term-title">annie — zsh — 120x40</span>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="prompt">whoami</div>
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        a <span class="accent">forward deployed engineer</span> &amp; AI consultant<span class="cursor"></span>
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">./book-free-audit.sh</button>
+        <button class="btn btn-ghost" onclick="toast(this)">cat process.md</button>
+      </div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">the fix</div>
+      <h2>Off-the-shelf tools don't fit your workflow. Forward-deployed engineering does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">TIME RECOVERED / WEEK</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">EFFICIENCY GAIN</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">PROFIT RECOVERED / MO</div></div>
+      </div>
+      <div class="worst-case">even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">the offer</div>
+      <h2>Transparent pricing. No enterprise markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — FREE AUDIT</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — SETUP</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — RETAINER</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+  <hr class="divider">
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">how it works</div>
+      <h2>Three steps. No black box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready to close your AI gap?</h2>
+      <p class="body-text" style="margin: var(--space-4) auto 0; text-align:center;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-8);" onclick="toast(this)">./book-free-audit.sh</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant A</footer>
+</div>
+
+<!-- ============ VARIANT B ============ -->
+<div id="variant-b" class="variant variant-b">
+  <div class="topbar">
+    <div class="brand">ANNIE<span class="dot">.</span>DEV</div>
+    <button class="btn btn-ghost" style="padding: 10px 18px; font-size: 13px;" onclick="toast(this)">Book Audit</button>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="pixel-tag">AI-NATIVE // FORWARD DEPLOYED</span>
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">Book Free Audit →</button>
+        <button class="btn btn-ghost" onclick="toast(this)">See Process</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="market-gap-band">
+    <div class="wrap">
+      <span class="section-label" style="border-bottom-color: var(--accent);">The Access Gap</span>
+      <h2 style="max-width: 900px;">Enterprises Pay A Premium To Embed AI-Native Engineers Like This.<br>Now Small Businesses Can Too.</h2>
+      <p class="body-text" style="color: #ddd;">Palantir, OpenAI, and Anthropic pioneered the forward-deployed engineer model for their biggest enterprise clients — engineers who embed inside a business and build around its real workflows. That same caliber of engineering, priced for a small business, not a Fortune 500.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">The Fix</span>
+      <h2>Off-The-Shelf Tools Don't Fit Your Workflow.<br>Forward-Deployed Engineering Does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">Time Recovered / Week</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">Efficiency Gain</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">Profit Recovered / Mo</div></div>
+      </div>
+      <div class="worst-case">Even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">The Offer</span>
+      <h2>Transparent Pricing. No Enterprise Markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — Free Audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — Setup</div><div class="price">Under $5k</div><div class="desc">Or hourly, if you prefer. Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — Retainer</div><div class="price">Under $1,000/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="section-label">How It Works</span>
+      <h2>Three Steps. No Black Box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready To Close Your AI Gap?</h2>
+      <p style="margin: var(--space-4) auto 0; text-align:center; color:#ccc;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" onclick="toast(this)">Book Free Audit →</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant B</footer>
+</div>
+
+<!-- ============ VARIANT C ============ -->
+<div id="variant-c" class="variant variant-c">
+  <div class="editor-tabs">
+    <div class="tab active"><span class="dot"></span>hero.tsx</div>
+    <div class="tab">outcomes.tsx</div>
+    <div class="tab">offer.tsx</div>
+  </div>
+
+  <section class="hero">
+    <div class="gutter">01<br>02<br>03<br>04<br>05<br>06</div>
+    <div class="wrap" style="max-width: 1060px;">
+      <h1 class="hero-title">
+        <span class="hi">Hello, I'm Annie —</span>
+        a <span class="accent">forward deployed engineer</span> &amp; AI consultant
+      </h1>
+      <p class="lede">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
+      <div style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <button class="btn btn-primary" onclick="toast(this)">Book Free Audit</button>
+        <button class="btn btn-ghost" onclick="toast(this)">View Process</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">theFix</div>
+      <h2>Off-the-shelf tools don't fit your workflow. Forward-deployed engineering does.</h2>
+      <p class="body-text">I embed in your business, learn your specific workflows, and build the automation and AI that actually fits — not a generic SaaS bolt-on.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">12hrs</div><div class="stat-label">time recovered / week</div></div>
+        <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">efficiency gain</div></div>
+        <div class="stat-card"><div class="stat-num">$4.2k</div><div class="stat-label">profit recovered / mo</div></div>
+      </div>
+      <div class="worst-case">// even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">theOffer</div>
+      <h2>Transparent pricing. No enterprise markup.</h2>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="n">01 — free audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
+        <div class="offer-card"><div class="n">02 — setup</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — retainer</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-label">process</div>
+      <h2>Three steps. No black box.</h2>
+      <div class="process-list">
+        <div class="process-item"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div>
+        <div class="process-item"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div>
+        <div class="process-item"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta">
+      <h2>Ready to close your AI gap?</h2>
+      <p class="body-text" style="margin: var(--space-4) auto 0; text-align:center;">Book a free audit. No commitment, no cost.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-8);" onclick="toast(this)">Book Free Audit</button>
+    </div>
+  </section>
+  <footer>SKETCH — NOT PRODUCTION — variant C</footer>
+</div>
+
+<!-- ============ VARIANT B2 — POLISHED & REFINED ============ -->
+<div id="variant-b2" class="variant active variant-b2">
+  <div class="topbar">
+    <div class="brand">ANNIE<span class="dot">.</span>DEV</div>
+    <div class="nav-links">
+      <a href="#fix" onclick="return false">Approach</a>
+      <a href="#offer" onclick="return false">Pricing</a>
+      <a href="#process" onclick="return false">Process</a>
+    </div>
+    <span class="glow-wrap nav-glow">
+      <button class="btn btn-primary" style="padding: 9px 20px; font-size: 13px; border-radius: 8px;" onclick="toast(this)">Book a Free Call Now</button>
+    </span>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="status-pill reveal in"><span class="ping"></span> Available for new engagements</span>
+      <h1 class="hero-title reveal in">
+        <span class="hi">Hello, I'm <a href="../002-about-page/index.html" class="annie-link">Annie</a> —</span>
+        A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
+      </h1>
+      <p class="lede reveal in">95% of enterprise AI pilots fail to show measurable ROI, a failure rate rooted not in flawed models but in poor integration. I help close that gap for small businesses — workflow-first, white-glove implementation to <strong class="lede-highlight">save time</strong> and <strong class="lede-highlight">increase profit</strong>.</p>
+      <div class="reveal in" style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
+        <span class="glow-wrap">
+          <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+        </span>
+        <button class="btn btn-ghost" onclick="toast(this)">See Process</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-group"><b>WORKFLOW AUTOMATION</b><span class="sep">·</span><b>AI AGENTS</b><span class="sep">·</span><b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b><span class="sep">·</span><b>AI-NATIVE TRANSFORMATION</b><span class="sep">·</span></span>
+      <span class="ticker-group"><b>WORKFLOW AUTOMATION</b><span class="sep">·</span><b>AI AGENTS</b><span class="sep">·</span><b>CUSTOMIZED BUILDS TO YOUR EXISTING PROCESSES</b><span class="sep">·</span><b>AI-NATIVE TRANSFORMATION</b><span class="sep">·</span></span>
+    </div>
+  </div>
+
+  <section class="market-gap-band">
+    <div class="wrap">
+      <span class="section-label reveal">The Access Gap</span>
+      <h2 class="reveal" style="max-width: 780px;">Enterprises pay a premium to embed AI-native engineers like this. Now small businesses can too.</h2>
+      <p class="body-text reveal">Palantir, OpenAI, and Anthropic pioneered the forward-deployed engineer model for their biggest enterprise clients — AI-native engineers who modernize businesses for the AI era by building around their real-world workflows. That same caliber of engineering, priced for a small business, not a Fortune 500.</p>
+    </div>
+  </section>
+
+  <section id="fix">
+    <div class="wrap">
+      <span class="section-label reveal">The Fix</span>
+      <h2 class="reveal">Off-the-shelf tools don't fit your workflow. Forward-deployed engineering does.</h2>
+      <p class="body-text reveal">I actually audit your business' specific workflows first before building the automation and AI that actually fits — not a generic SaaS product bolt-on.</p>
+
+      <div class="stat-row reveal">
+        <div class="stat-card glow-box"><div class="glow-box-inner"><div class="stat-num">12hrs</div><div class="stat-label">Time recovered / week</div></div></div>
+        <div class="stat-card glow-box"><div class="glow-box-inner"><div class="stat-num">3x</div><div class="stat-label">Efficiency gain</div></div></div>
+        <div class="stat-card glow-box"><div class="glow-box-inner"><div class="stat-num">$4.2k</div><div class="stat-label">Profit recovered / mo</div></div></div>
+      </div>
+      <div class="worst-case reveal">Even in the worst case, you come out ahead.</div>
+    </div>
+  </section>
+
+  <section id="offer">
+    <div class="wrap">
+      <span class="section-label reveal">The Offer</span>
+      <h2 class="reveal">Transparent pricing. No enterprise markup.</h2>
+      <div class="offer-grid reveal">
+        <div class="offer-card glow-box"><div class="glow-box-inner"><div class="n">01 — Free Audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div></div>
+        <div class="offer-card glow-box"><div class="glow-box-inner"><div class="n">02 — Setup</div><div class="price">Under $5k</div><div class="desc"><b>Or hourly, if you prefer.</b> Scoped during your free audit.</div></div></div>
+        <div class="offer-card glow-box"><div class="glow-box-inner"><div class="n">03 — Retainer</div><div class="price">Under $1,000/mo</div><div class="desc">Scoped during your free audit.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <span class="section-label reveal">How It Works</span>
+      <h2 class="reveal">Three steps. No black box.</h2>
+      <div class="process-list reveal">
+        <div class="process-item glow-box"><div class="glow-box-inner"><div class="process-num">01</div><div class="process-body"><h3>Free Audit</h3><p>We map your workflows and find the highest-leverage automation opportunities.</p></div></div></div>
+        <div class="process-item glow-box"><div class="glow-box-inner"><div class="process-num">02</div><div class="process-body"><h3>Build &amp; Deploy</h3><p>I build the custom solution, embedded in how you already work.</p></div></div></div>
+        <div class="process-item glow-box"><div class="glow-box-inner"><div class="process-num">03</div><div class="process-body"><h3>Retainer</h3><p>Ongoing iteration, monitoring, and support as your business changes.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap final-cta reveal">
+      <h2>Ready to close your AI gap?</h2>
+      <p style="margin: var(--space-4) auto 0; text-align:center; color: var(--ink-soft);">Book a free audit. No commitment, no cost.</p>
+      <span class="glow-wrap-final">
+        <button class="btn btn-primary btn-final magnetic" onclick="toast(this)">Book Free Audit <span class="arrow">→</span></button>
+      </span>
+    </div>
+  </section>
+  <footer><span class="sig">built solo, deployed forward</span> — SKETCH, NOT PRODUCTION — variant B2</footer>
+</div>
+
+<div id="sketch-tools">
+  <span>viewport:</span>
+  <button onclick="setViewport('375px')">📱</button>
+  <button onclick="setViewport('768px')">📟</button>
+  <button onclick="setViewport('100%')">🖥️</button>
+</div>
+
+<div id="toast" style="position:fixed; bottom: 60px; left: 50%; transform: translateX(-50%) translateY(20px); background:#1f6feb; color:#fff; padding:10px 18px; border-radius:6px; font-family: var(--font-mono); font-size: 13px; opacity:0; pointer-events:none; transition: all 0.25s ease; z-index: 10000;">Booking flow → /book (not wired in sketch)</div>
+
+<script>
+function showVariant(id, evt) {
+  document.querySelectorAll('.variant').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('variant-' + id).classList.add('active');
+  if (evt) evt.target.classList.add('active');
+  window.scrollTo(0,0);
+}
+function setViewport(w) {
+  document.body.style.maxWidth = w === '100%' ? 'none' : w;
+  document.body.style.margin = w === '100%' ? '0' : '0 auto';
+  document.body.style.border = w === '100%' ? 'none' : '1px solid #333';
+}
+function toast(btn) {
+  const t = document.getElementById('toast');
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 1800);
+}
+
+/* B2 polish: scroll-reveal */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('#variant-b2 .reveal').forEach(el => revealObserver.observe(el));
+
+/* B2 polish: magnetic button (cursor-follow within bounds) */
+document.querySelectorAll('#variant-b2 .magnetic').forEach(btn => {
+  const isFinal = btn.classList.contains('btn-final');
+  btn.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) * 0.25;
+    const y = (e.clientY - r.top - r.height / 2) * 0.35;
+    const scale = isFinal ? ' scale(1.05)' : '';
+    btn.style.transform = `translate(${x}px, ${y - 2}px)${scale}`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+</script>
+
+</body>
+</html>
