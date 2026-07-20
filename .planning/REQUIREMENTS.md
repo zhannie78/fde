@@ -21,7 +21,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **DSGN-01**: Site carries a new, distinctive design direction (tokens, typography, layout) replacing the v1 visual system across landing and blog templates
 - [x] **DSGN-02**: The landing page's 5-part narrative is choreographed as a scroll-driven story (GSAP ScrollTrigger)
 - [x] **DSGN-03**: All scroll/motion effects respect `prefers-reduced-motion` with a fully readable static fallback
-- [x] **DSGN-04**: Redesigned pages meet Core Web Vitals on mobile despite the animation layer
+- [ ] **DSGN-04**: Redesigned pages meet Core Web Vitals on mobile despite the animation layer
 - [x] **DSGN-05**: Visitor can view the founder's name, photo, and bio on a new `/about` page (reverses the v1/Phase 5 anonymity constraint — validated via Phase 6 sketch findings, confirmed by user 2026-07-20)
 
 ### Blog / Content Engine
@@ -90,7 +90,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-01 | Phase 6 | Complete |
 | DSGN-02 | Phase 6 | Complete |
 | DSGN-03 | Phase 6 | Complete |
-| DSGN-04 | Phase 6 | Complete |
+| DSGN-04 | Phase 6 | Pending |
 | DSGN-05 | Phase 6 | Complete |
 | BLOG-01 | Phase 7 | Pending |
 | BLOG-02 | Phase 7 | Pending |
