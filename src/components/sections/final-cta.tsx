@@ -19,7 +19,7 @@ export function FinalCta() {
           forward-deployed engineering could recover time, efficiency, and
           profit for your business.
         </p>
-        <BookCta />
+        <BookCta glow />
       </div>
     </section>
   );

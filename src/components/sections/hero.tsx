@@ -33,7 +33,7 @@ export function Hero() {
         practice exists to close.
       </p>
       <div>
-        <BookCta />
+        <BookCta glow />
       </div>
     </section>
   );
