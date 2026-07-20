@@ -20,7 +20,7 @@ export function SiteFooter() {
     <footer className="bg-secondary text-secondary-foreground">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:flex-row md:items-start md:justify-between md:px-6">
         <div className="space-y-2">
-          <p className="font-heading text-lg font-semibold">{siteConfig.name}</p>
+          <p className="font-heading text-lg font-bold">{siteConfig.name}</p>
           <p className="text-sm text-secondary-foreground/80">{siteConfig.region}</p>
           <a
             href={`mailto:${siteConfig.founderEmail}`}
