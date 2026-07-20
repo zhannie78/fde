@@ -291,28 +291,22 @@
   }
 
   /* ============ Elevated final-CTA button — the last conversion moment gets
-     extra visual weight: bigger size, a tri-color rotating ring PLUS a slower
-     ambient breathing halo behind it, a periodic shine sweep across the face,
-     and an arrow that slides on hover. ============ */
+     extra visual weight: bigger size, a static tri-color glow ring PLUS a
+     softer ambient halo, both fixed in place (no rotation) and always visible
+     — not hover-gated — plus a periodic shine sweep across the face and an
+     arrow that slides on hover. ============ */
   .variant-b2 .glow-wrap-final { position: relative; display: inline-block; margin-top: var(--space-8); }
   .variant-b2 .glow-wrap-final::before {
     content: ""; position: absolute; inset: -5px; border-radius: 15px; z-index: -1;
     background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
     filter: blur(16px); opacity: 0.7;
-    animation: glow-final-spin 3s linear infinite;
   }
   .variant-b2 .glow-wrap-final::after {
     content: ""; position: absolute; inset: -26px; border-radius: 26px; z-index: -2;
     background: radial-gradient(circle, rgba(53,82,255,0.4), transparent 72%);
-    filter: blur(28px);
-    animation: glow-final-breathe 3.6s ease-in-out infinite;
+    filter: blur(28px); opacity: 0.7;
   }
   .variant-b2 .glow-wrap-final:hover::before { opacity: 0.95; filter: blur(20px); }
-  @keyframes glow-final-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes glow-final-breathe {
-    0%, 100% { transform: scale(0.9); opacity: 0.55; }
-    50% { transform: scale(1.18); opacity: 0.9; }
-  }
 
   .variant-b2 .btn-final {
     position: relative; overflow: hidden;
@@ -781,7 +775,7 @@
         <span class="hi">Hello, I'm Annie —</span>
         A <span class="accent">Forward Deployed Engineer</span> &amp; AI Consultant
       </h1>
-      <p class="lede reveal in">95% of enterprise generative-AI pilots fail to show measurable ROI. I close that gap — workflow-first, white-glove to save time and increase profit.</p>
+      <p class="lede reveal in">95% of enterprise generative-AI pilots fail to show measurable ROI – a failure rate rooted not in flawed models but in poor integration. I close that gap — workflow-first, white-glove implementation to save time and increase profit.</p>
       <div class="reveal in" style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
         <span class="glow-wrap">
           <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
