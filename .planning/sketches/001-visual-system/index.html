@@ -181,6 +181,11 @@
     display: inline-block; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.1em; margin-bottom: var(--space-4); border-bottom: 3px solid var(--accent-2); padding-bottom: 4px;
   }
+  .variant-b .market-gap-band {
+    background: var(--ink); color: #fff; margin: 0; padding: var(--space-24) var(--space-8);
+  }
+  .variant-b .market-gap-band h2 { color: #fff; }
+  .variant-b .market-gap-band .section-label { color: var(--accent-2); }
   .variant-b h2 { font-size: var(--text-3xl); font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; max-width: 820px; line-height: 1.2; }
   .variant-b .body-text { font-size: var(--text-base); line-height: 1.7; margin-top: var(--space-4); max-width: 640px; color: #2a2a2a; }
   .variant-b .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); margin-top: var(--space-12); }
@@ -303,13 +308,13 @@
 
 <div id="variant-nav">
   <span class="label">SKETCH 001 — VISUAL SYSTEM</span>
-  <button class="variant-tab active" onclick="showVariant('a', event)">A: Terminal // CRT</button>
-  <button class="variant-tab" onclick="showVariant('b', event)">B: Pixel-Grid Brutalist</button>
+  <button class="variant-tab" onclick="showVariant('a', event)">A: Terminal // CRT</button>
+  <button class="variant-tab active" onclick="showVariant('b', event)">B: Pixel-Grid Brutalist ★ Selected</button>
   <button class="variant-tab" onclick="showVariant('c', event)">C: Dark Neon IDE</button>
 </div>
 
 <!-- ============ VARIANT A ============ -->
-<div id="variant-a" class="variant active variant-a">
+<div id="variant-a" class="variant variant-a">
   <div class="term-bar">
     <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
     <span class="term-title">annie — zsh — 120x40</span>
@@ -383,7 +388,7 @@
 </div>
 
 <!-- ============ VARIANT B ============ -->
-<div id="variant-b" class="variant variant-b">
+<div id="variant-b" class="variant active variant-b">
   <div class="topbar">
     <div class="brand">ANNIE<span class="dot">.</span>DEV</div>
     <button class="btn btn-ghost" style="padding: 10px 18px; font-size: 13px;" onclick="toast(this)">Book Audit</button>
@@ -401,6 +406,14 @@
         <button class="btn btn-primary" onclick="toast(this)">Book Free Audit →</button>
         <button class="btn btn-ghost" onclick="toast(this)">See Process</button>
       </div>
+    </div>
+  </section>
+
+  <section class="market-gap-band">
+    <div class="wrap">
+      <span class="section-label" style="border-bottom-color: var(--accent);">The Access Gap</span>
+      <h2 style="max-width: 900px;">Enterprises Pay A Premium To Embed AI-Native Engineers Like This.<br>Now Small Businesses Can Too.</h2>
+      <p class="body-text" style="color: #ddd;">Palantir, OpenAI, and Anthropic pioneered the forward-deployed engineer model for their biggest enterprise clients — engineers who embed inside a business and build around its real workflows. That same caliber of engineering, priced for a small business, not a Fortune 500.</p>
     </div>
   </section>
 
@@ -425,8 +438,8 @@
       <h2>Transparent Pricing. No Enterprise Markup.</h2>
       <div class="offer-grid">
         <div class="offer-card"><div class="n">01 — Free Audit</div><div class="price">$0</div><div class="desc">Scope your workflows, find where AI actually helps.</div></div>
-        <div class="offer-card"><div class="n">02 — Setup</div><div class="price">Under $10k</div><div class="desc">Scoped during your free audit.</div></div>
-        <div class="offer-card"><div class="n">03 — Retainer</div><div class="price">Under $2k/mo</div><div class="desc">Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">02 — Setup</div><div class="price">Under $5k</div><div class="desc">Or hourly, if you prefer. Scoped during your free audit.</div></div>
+        <div class="offer-card"><div class="n">03 — Retainer</div><div class="price">Under $1,000/mo</div><div class="desc">Scoped during your free audit.</div></div>
       </div>
     </div>
   </section>

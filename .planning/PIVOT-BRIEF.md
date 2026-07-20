@@ -31,8 +31,10 @@ Every engagement is judged on three outcomes:
 ## Offer and pricing
 
 1. **Free audit** — scope the business's pain points; discover where AI can save time, increase efficiency, and increase profit. No cost, no commitment.
-2. **One-time setup** — build and deploy the custom solution. Priced under $10k (a fraction of enterprise consultancy rates).
-3. **Monthly retainer** — ongoing iteration, monitoring, and support. Under $2k/month.
+2. **One-time setup** — build and deploy the custom solution. ~~Priced under $10k~~ **REVISED 2026-07-20: Under $5k**, or hourly rate as an alternative (exact rate TBD — flag as an open question for discuss-phase). Still a fraction of enterprise consultancy rates.
+3. **Monthly retainer** — ongoing iteration, monitoring, and support. ~~Under $2k/month~~ **REVISED 2026-07-20: Under $1,000/month.**
+
+**Positioning note (REVISED 2026-07-20):** Explicitly surface the enterprise-vs-SMB access gap on the page — large enterprises pay significant premiums to embed AI-native experts like FDEs (see market framing above); this offer makes that same caliber of engineering accessible to small and medium businesses for the first time.
 
 ## What the site must do (v2 requirements)
 
