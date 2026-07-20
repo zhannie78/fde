@@ -1,258 +1,277 @@
 # Architecture Research
 
-**Domain:** Marketing site with public AI-powered interactive demos + AI-assisted lead-qualification funnel (form → AI draft → human review → email delivery)
-**Researched:** 2026-07-19
-**Confidence:** HIGH (stack/infra patterns, verified against official docs and multiple current sources) / MEDIUM (exact free-tier numbers, which vendors change without notice)
+**Domain:** v2.0 FDE-pivot additions to an existing Next.js 16 App Router marketing site — MDX blog/content engine, redesigned single-page IA, SEO layer, and a re-ideated Claude-backed interactive demo — deployed on Netlify Free via the Next.js Runtime v5
+**Researched:** 2026-07-20
+**Confidence:** HIGH (Next.js MDX/metadata APIs, verified against official Next.js docs current as of 2026-06-23) / MEDIUM (Netlify Next.js Runtime v5 internals and native rate-limiting compatibility with Route Handlers — WebSearch + Netlify docs, not hands-on verified, flagged explicitly below)
 
 ## Standard Architecture
 
-This is a well-trodden shape in 2026: a Next.js marketing site deployed on Vercel, with serverless route handlers acting as a thin, secured proxy in front of an LLM API, a lightweight serverless Postgres store for stateful flows, and a transactional email provider for both internal notifications and external delivery. Nothing here requires a "real" backend service, a queue system, or a dedicated ops layer — the entire system is composable from managed, free-tier-friendly primitives. This is exactly the shape recommended for solo-founder SaaS/marketing stacks in 2026 and matches the standard pattern for public-facing Claude API proxies (key stays server-side, rate limiting sits at the edge in front of the model call).
+Nothing about this milestone requires a new hosting model, a new deploy target, or a database. It is four additive layers on top of the existing static-first Next.js App Router site: (1) a filesystem-based MDX content layer that compiles to statically-generated blog routes at build time, (2) an IA restructure that collapses the v1 multi-page nav into one long-scroll FDE landing page plus the new `/blog` section, (3) a metadata/structured-data layer (`generateMetadata`, `sitemap.ts`, `robots.ts`, JSON-LD, RSS) that makes the blog discoverable and the buyer-vocabulary SEO strategy machine-readable, and (4) one new server-side Claude proxy surface (same shape as the Phase 2 demo work already scoped in the v1 stack research) sitting behind rate limiting, now re-ideated for the FDE framing rather than missed-call recovery. The content layer is 100% static (no DB, no runtime dependency); the demo layer is the only part of this milestone that touches a paid external API and needs abuse protection.
 
 ### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         CLIENT (Browser)                             │
-│  Marketing pages (static) │ Demo widgets │ Audit form │ /admin UI     │
-└───────┬───────────────────────┬───────────────┬───────────┬─────────┘
-        │ SSG/SSR HTML           │ fetch/stream   │ fetch      │ fetch (basic-auth)
-        ▼                        ▼                ▼           ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                  VERCEL EDGE / SERVERLESS (Next.js)                  │
-│                                                                       │
-│  ┌────────────────┐   ┌─────────────────┐   ┌────────────────────┐ │
-│  │ Static/SSR      │   │ /api/demo/*      │   │ /api/audit/*        │ │
-│  │ marketing pages │   │ (Claude proxy,   │   │ (submit, draft,     │ │
-│  │                 │   │  rate-limited)   │   │  send)               │ │
-│  └────────────────┘   └────────┬─────────┘   └──────┬──────┬───────┘ │
-│                                 │                     │      │        │
-│                        ┌────────┴────────┐            │      │        │
-│                        │ Rate limiter     │            │      │        │
-│                        │ middleware       │            │      │        │
-│                        └────────┬────────┘            │      │        │
-└─────────────────────────────────┼─────────────────────┼──────┼────────┘
-                                   │                      │      │
-                                   ▼                      ▼      ▼
-                          ┌──────────────┐      ┌──────────────┐ ┌─────────────┐
-                          │ Anthropic    │      │ Postgres      │ │ Resend      │
-                          │ Claude API   │      │ (Neon)        │ │ (email)     │
-                          └──────────────┘      └──────────────┘ └─────────────┘
-                                   ▲                      ▲
-                                   │                      │
-                          ┌──────────────┐                │
-                          │ Upstash Redis│────────────────┘
-                          │ (rate limit  │  shared limiter store
-                          │  counters)   │
-                          └──────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                             CLIENT (Browser)                                │
+│  FDE landing page (/)  │  /blog, /blog/[slug]  │  Demo widget  │  /book     │
+└───────┬─────────────────────────┬───────────────────┬────────────┬─────────┘
+        │ static HTML (SSG)       │ static HTML (SSG)  │ fetch/stream│ Cal embed
+        ▼                         ▼                     ▼            ▼
+┌───────────────────────────────────────────────────────────────────────────┐
+│                 NETLIFY (Next.js Runtime v5 / OpenNext)                     │
+│                                                                              │
+│  ┌─────────────────┐  ┌────────────────────┐  ┌──────────────────────────┐│
+│  │ Static/SSG pages │  │ MDX build pipeline  │  │ /api/demo/[name]         ││
+│  │ (/, /blog/*)      │  │ (@next/mdx, build   │  │ Route Handler            ││
+│  │ + sitemap.ts,     │  │  time only — reads  │  │ (Claude proxy)           ││
+│  │ robots.ts, RSS    │  │  content/*.mdx)     │  └──────────┬───────────────┘│
+│  └──────────────────┘  └──────────┬──────────┘             │                │
+│                                    │                         │                │
+│                          content/*.mdx files                │                │
+│                          (in-repo, git-versioned)            │                │
+│                                                              ▼                │
+│                                             ┌──────────────────────────────┐│
+│                                             │ Rate limit gate               ││
+│                                             │ (Netlify native code-based    ││
+│                                             │  rule on the /api/demo path,  ││
+│                                             │  OR Upstash Redis inside the  ││
+│                                             │  handler — see Pattern 3)     ││
+│                                             └──────────────┬───────────────┘│
+└────────────────────────────────────────────────────────────┼────────────────┘
+                                                               ▼
+                                                     ┌──────────────────┐
+                                                     │ Anthropic         │
+                                                     │ Claude API        │
+                                                     │ (Haiku, demo)     │
+                                                     └──────────────────┘
 ```
 
 ### Component Responsibilities
 
 | Component | Responsibility | Typical Implementation |
 |-----------|----------------|-------------------------|
-| Marketing pages | Static/SSR content: home, services, about, vertical pages | Next.js App Router, statically generated (SSG) at build time, no runtime dependencies |
-| Demo widgets | Client-side UI that simulates an interaction (missed call, incoming inquiry) and displays the Claude-generated result | React client components; call only their own `/api/demo/*` route, never Anthropic directly |
-| Demo API routes | Server-side Claude proxy for public demos: validate input, enforce rate limit, call Claude with a fixed/constrained system prompt, stream result back | Next.js Route Handlers (Node or Edge runtime), Anthropic SDK server-side, `@upstash/ratelimit` guard before the model call |
-| Rate limiter | Shared abuse-prevention layer across all Claude-calling routes; keys on IP (and optionally a lightweight fingerprint/cookie) | Upstash Redis + `@upstash/ratelimit` (sliding window), invoked as the first step inside each route handler or in Next.js middleware |
-| Audit form + submit API | Collect questionnaire answers, persist as a submission, kick off AI draft generation, notify founder | Route Handler writes to Postgres (status=`pending`), then triggers draft generation (sync if fast enough, or deferred with `after()`/QStash if not) |
-| Data store | Source of truth for audit submissions and their draft/review/sent lifecycle | Neon serverless Postgres (Vercel's native Postgres integration since Vercel Postgres was sunset), accessed via a lightweight ORM (Drizzle) |
-| Draft generation | Turn structured questionnaire answers into a structured audit report draft | Server-side Claude call using structured/tool-based output for a consistent report schema; result stored in Postgres (status=`drafted`) |
-| Founder notification | Alert the founder that a new submission needs review | Resend transactional email fired from the submit/draft-complete route handler |
-| Admin review UI | Single-user, password-gated page listing pending drafts; founder edits inline and approves send | Next.js route under `/admin`, protected by simple shared-secret middleware (not a full auth system); Server Action updates Postgres and triggers send |
-| Prospect delivery | Send the founder-approved report to the prospect | Resend send from the admin "approve" Server Action; updates submission status=`sent` in Postgres |
+| FDE landing page (`/`) | Single long-scroll page carrying the 5-part message hierarchy (gap → fix → outcomes → offer → CTA) and the embedded demo | Next.js Server Component, statically generated, composed of section components (mirrors the existing `src/components/sections/*` pattern) |
+| MDX content collection | Source of truth for blog posts and anonymized case-study write-ups | `content/blog/*.mdx` files in-repo, each with an `export const metadata = {...}` block (title, date, description, tags, type: "guide" \| "case-study") read via `@next/mdx` |
+| `/blog` index route | Lists all posts, supports filtering/tagging by content type for SEO-vocabulary coverage | Server Component; reads `content/blog/` at build time via `fs`/dynamic `import()`, sorts by date |
+| `/blog/[slug]` route | Renders one MDX post, generates per-post `<title>`/OG/JSON-LD metadata | Dynamic segment + `generateStaticParams` (full SSG, `dynamicParams = false`) + `generateMetadata` |
+| SEO/metadata layer | Machine-readable discoverability: sitemap (incl. blog slugs), robots, RSS feed, JSON-LD `Article`/`Organization` schema, per-page `generateMetadata` using buyer vocabulary | Extends existing `sitemap.ts`/`robots.ts`; new `app/blog/feed.xml/route.ts`; JSON-LD via inline `<script type="application/ld+json">` in layouts/pages |
+| Demo widget | Client-side UI for the re-ideated FDE-proof interaction; framed around TIME/EFFICIENCY/PROFIT, not the old missed-call scenario | React Client Component; calls only its own `/api/demo/[name]` route |
+| Demo Route Handler | Server-side Claude proxy: validate input, enforce rate limit, call Claude with a fixed system prompt, return/stream result | Next.js Route Handler (`app/api/demo/[name]/route.ts`), Anthropic SDK server-side only |
+| Rate limit gate | Abuse/cost protection in front of the one paid-API surface this milestone adds | See Pattern 3 — two viable implementations, confidence-flagged below |
+| `siteConfig` | Existing typed constants module — extended with blog/SEO-relevant values (canonical domain, default OG image, social handles if any) | `src/config/site.ts` (already exists; additive, not restructured) |
 
 ## Recommended Project Structure
 
 ```
+content/
+└── blog/                       # NEW — MDX source of truth, git-versioned
+    ├── what-is-forward-deployed-engineering.mdx
+    ├── ai-native-transformation-for-smbs.mdx
+    └── case-study-<anonymized-slug>.mdx
+
 src/
 ├── app/
-│   ├── (marketing)/            # Static/SSR marketing pages
-│   │   ├── page.tsx             # Home
-│   │   ├── services/page.tsx
-│   │   ├── about/page.tsx
-│   │   └── industries/[vertical]/page.tsx
-│   ├── audit/
-│   │   └── page.tsx             # Self-serve questionnaire (client form)
-│   ├── admin/
-│   │   ├── layout.tsx           # Basic-auth gate (middleware-enforced)
-│   │   └── page.tsx             # List + review/edit/send drafts
-│   └── api/
-│       ├── demo/
-│       │   ├── missed-call/route.ts
-│       │   └── intake-triage/route.ts
-│       └── audit/
-│           ├── submit/route.ts       # Create submission + kick off draft
-│           └── [id]/send/route.ts    # Founder-approved send to prospect
+│   ├── page.tsx                 # REWRITTEN — single FDE landing page (5-part hierarchy)
+│   ├── blog/
+│   │   ├── page.tsx              # NEW — index/listing, reads content/blog/
+│   │   ├── [slug]/
+│   │   │   └── page.tsx          # NEW — dynamic import of content/blog/[slug].mdx
+│   │   └── feed.xml/
+│   │       └── route.ts          # NEW — RSS/Atom feed, same content source
+│   ├── book/page.tsx             # KEPT — Cal.com embed, unchanged
+│   ├── api/
+│   │   └── demo/
+│   │       └── [name]/route.ts   # NEW — re-ideated Claude proxy (replaces the
+│   │                              #        scrapped missed-call/intake-triage routes)
+│   ├── about/                    # REMOVE or fold into `/` — see Pattern 1 rationale
+│   ├── services/                 # REMOVE or fold into `/` — see Pattern 1 rationale
+│   ├── sitemap.ts                # EXTENDED — add blog slugs dynamically
+│   ├── robots.ts                 # UNCHANGED — already points at sitemap.xml
+│   └── layout.tsx                # LIGHT EXTEND — add sitewide Organization JSON-LD
+├── mdx-components.tsx            # NEW — required by @next/mdx for App Router; maps
+│                                  #        MDX elements to styled components (prose,
+│                                  #        headings, custom callouts for case studies)
 ├── lib/
+│   ├── content/
+│   │   ├── posts.ts               # NEW — reads content/blog/, extracts metadata,
+│   │   │                          #        sorts/filters — single place blog + RSS +
+│   │   │                          #        sitemap all pull from
+│   │   └── json-ld.ts             # NEW — small builder functions for Article/
+│   │                              #        Organization schema objects
 │   ├── claude/
-│   │   ├── client.ts             # Server-only Anthropic SDK instance
-│   │   ├── prompts/               # System prompts per demo/report type
-│   │   └── audit-report-schema.ts # Structured output schema for reports
-│   ├── ratelimit.ts               # Upstash Redis limiter factory (per-route configs)
-│   ├── db/
-│   │   ├── schema.ts              # Drizzle schema (submissions, drafts)
-│   │   └── client.ts              # Neon connection
-│   ├── email/
-│   │   ├── notify-founder.ts
-│   │   └── send-report.ts
-│   └── auth/
-│       └── admin-guard.ts         # Shared-secret cookie check for /admin
-└── middleware.ts                  # Route /admin through admin-guard
+│   │   ├── client.ts               # NEW — server-only Anthropic SDK instance
+│   │   └── prompts/                # NEW — fixed system prompt(s) for the re-ideated demo
+│   └── ratelimit.ts                 # NEW — see Pattern 3 (implementation TBD by STACK.md)
+├── components/
+│   ├── sections/                    # EXTENDED — new sections for gap/fix/outcomes/offer
+│   └── blog/                        # NEW — PostCard, PostMeta, TableOfContents, etc.
+└── config/
+    └── site.ts                      # EXTENDED — add canonical URL, default OG image
 ```
 
 ### Structure Rationale
 
-- **`app/(marketing)/`:** Route group keeps static/SSR pages isolated from anything stateful — nothing in this tree touches the DB, Redis, or Claude directly, so it can be fully statically generated and cached at the edge for free.
-- **`app/api/demo/*` vs `app/api/audit/*`:** Two distinct API surfaces with different risk profiles — demos are public, stateless, rate-limit-critical; audit routes are semi-public (write path) but stateful and lower-frequency. Separating them makes it obvious where rate limiting is mandatory vs where it's secondary.
-- **`lib/claude/`:** Centralizes the only code allowed to hold the Anthropic API key and call the API. Every route imports from here rather than instantiating its own client — this is the enforcement point for "the key never reaches the client and every call goes through one audited path."
-- **`lib/ratelimit.ts`:** One shared factory so every Claude-calling route gets a limiter instance, rather than each route reinventing its own Redis logic (a common source of gaps where one endpoint quietly ships unprotected).
-- **`admin/`:** Deliberately outside `app/api` and gated by middleware rather than a full auth library — this is a single-user internal tool, not a multi-tenant admin panel, and should stay that simple.
+- **`content/blog/` at the repo root (not under `src/`):** Keeps MDX content visually and organizationally separate from application code — a solo founder writing a case study should not need to touch `src/`. Also makes the git history of content changes easy to scan independently of code changes.
+- **`lib/content/posts.ts` as the single read path:** The blog index, the RSS feed, and the sitemap all need the same list of posts with the same metadata. Reading `content/blog/` in three separate places is exactly the kind of duplication a solo maintainer will let drift; one shared module prevents the RSS feed and sitemap from silently disagreeing with what's actually published.
+- **`app/api/demo/[name]/route.ts` (dynamic route, not a hardcoded static path):** The old plan had `missed-call/route.ts` and `intake-triage/route.ts` as two separate demo endpoints. Since the demo concept itself is being re-ideated and may end up as one interaction type or several, a dynamic `[name]` segment (or a single fixed route if the new demo concept is singular) avoids over-committing to a route shape before the demo is designed. Collapse to a single fixed-name route once the re-ideated demo concept is locked in phase planning.
+- **`about/` and `services/` marked REMOVE or fold:** The pivot brief explicitly scraps the v1 homepage/About/Services IA. A single long-scroll landing page is the dominant, higher-converting pattern for a narrow single-offer consultancy pitch (one CTA: book the free audit) — see Pattern 1. This is a recommendation, not a hard requirement; if phase planning wants a standalone `/about` for the anonymous-founder credibility bio, it's a small addition, not a structural change.
+- **`mdx-components.tsx` at project root:** Required file-convention location for `@next/mdx` under the App Router — not optional, the App Router will not resolve MDX without it existing at this path (confirmed via official Next.js docs, HIGH confidence).
 
 ## Architectural Patterns
 
-### Pattern 1: Server-Side LLM Proxy (never expose the key)
+### Pattern 1: Single-Page IA with Content as the SEO Surface (not multi-page silos)
 
-**What:** All Claude API calls happen inside Next.js Route Handlers running server-side (Node or Edge runtime with the key in an environment variable). The browser never sees the Anthropic API key and never calls `api.anthropic.com` directly.
-**When to use:** Always, for any public-facing AI feature. This is non-negotiable for a public demo — an exposed key on a marketing site is an open invitation to have your Claude spend drained by scripts within minutes.
-**Trade-offs:** Adds one network hop (browser → your API → Anthropic) vs. calling Claude directly from the client, but this is the only architecture that keeps the key secret and lets you enforce rate limits and prompt constraints server-side.
+**What:** Instead of separate `/`, `/about`, `/services` pages each carrying a slice of the pitch, the entire 5-part message hierarchy (gap → fix → outcomes → offer → CTA) lives on one page (`/`), and buyer-vocabulary SEO ("AI agents," "automation," "AI-native transformation," "forward-deployed engineer") is carried primarily by the `/blog` content, not by proliferating thin marketing pages that each try to rank for one keyword.
+**When to use:** Solo-founder, single-offer consultancies with one primary CTA and no product catalog. This is the correct shape here because the offer itself is not segmented (one audit → one setup fee → one retainer, not a menu of services to compare across pages).
+**Trade-offs:** A single page is easier to maintain and gives one strong page more topical authority than several thin ones, but it's a worse fit if the offer later segments (e.g., distinct packages needing their own comparison pages) — revisit if the offer structure changes. Long-scroll pages also need careful in-page anchor navigation/CTAs so a mobile visitor doesn't have to scroll past the whole pitch to find "book a call" (the existing `StickyCtaBar` component already solves this and should be kept).
+
+### Pattern 2: File-Based MDX Content Layer with `export const metadata` (no Contentlayer, no frontmatter parser)
+
+**What:** Blog posts and case studies are `.mdx` files under `content/blog/`, each exporting a `metadata` object directly as JS (title, date, description, tags, type) rather than YAML frontmatter parsed by `gray-matter`. Routes are generated via a dynamic `[slug]` segment using dynamic `import()` + `generateStaticParams`, per Next.js's own documented pattern (not filesystem-routed `.mdx` pages directly in `app/blog/`, which would require one folder per post and complicate the shared index/RSS/sitemap read path).
+**When to use:** Low-to-moderate post volume (tens, not thousands, of posts) maintained by one person who is comfortable editing `.mdx` files directly in the repo. This is exactly this project's shape.
+**Trade-offs:** **Contentlayer** (the previous default answer for "typed content layer in Next.js") is effectively unmaintained since 2024 — its primary sponsor was acquired by Netlify and the maintainer scaled back to ~1 day/month (MEDIUM confidence, multiple community sources agree). Do not adopt it for new work. **Velite** is the actively-maintained spiritual successor if a schema-validated, typed content pipeline becomes worth the extra dependency — but for this project's expected volume (a handful of guides + case studies), plain `@next/mdx` with `export const metadata` avoids an entire dependency and its build-step integration for a benefit (compile-time schema validation) that isn't load-bearing at this scale. Revisit Velite only if post volume or content-modeling complexity grows materially (e.g., multiple content types with real cross-references).
 
 ```typescript
-// app/api/demo/missed-call/route.ts
-export async function POST(req: Request) {
-  const { success } = await ratelimit.limit(getClientIp(req));
-  if (!success) return new Response("Too many requests", { status: 429 });
+// content/blog/what-is-forward-deployed-engineering.mdx
+export const metadata = {
+  title: "What Is Forward-Deployed Engineering?",
+  date: "2026-08-01",
+  description: "...",
+  tags: ["forward-deployed engineer", "AI agents"],
+  type: "guide",
+};
 
-  const { scenario } = await req.json();
-  const stream = await anthropic.messages.stream({
-    model: "claude-...",
-    system: MISSED_CALL_DEMO_SYSTEM_PROMPT, // fixed, not user-controllable
-    messages: [{ role: "user", content: scenario }],
-  });
-  return new Response(stream.toReadableStream());
-}
+## The gap between AI capability and AI ROI
+...
 ```
 
-### Pattern 2: Distributed Rate Limiting at the Route Boundary
+```typescript
+// app/blog/[slug]/page.tsx
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { default: Post, metadata } = await import(`@/../content/blog/${slug}.mdx`);
+  return <Post />; // metadata consumed separately by generateMetadata()
+}
 
-**What:** Because each serverless invocation is stateless and isolated, per-IP counters must live in a shared store (Redis), not in-memory. Upstash Redis (HTTP-based, no persistent connections needed) is the standard fit for Vercel serverless/edge functions, with a first-class Vercel integration that auto-injects credentials.
-**When to use:** In front of every route that calls Claude, and on the audit form submit route (to prevent spam submissions from draining email/DB quota, not just Claude spend).
-**Trade-offs:** Adds an external dependency and a small per-request latency (~single-digit ms with Upstash's edge-replicated REST API), but it's the only viable way to cap cost exposure on serverless — without it, a single bot script can generate an unbounded Anthropic bill before you notice.
+export async function generateStaticParams() {
+  return getAllPostSlugs(); // lib/content/posts.ts — reads content/blog/ once
+}
+export const dynamicParams = false;
+```
+
+### Pattern 3: Netlify-Native Rate Limiting vs. Upstash Redis for the Demo Route (confidence-flagged decision point)
+
+**What:** The re-ideated demo still needs the same abuse/cost protection the v1 stack research already specified (Claude key never reaches the client; every call rate-limited per visitor). Two viable implementations exist for this milestone, and which one applies cleanly depends on how the Netlify Next.js Runtime v5 (OpenNext-based) exposes Route Handlers as underlying Netlify Functions:
+
+- **Option A — Netlify native code-based rate limiting (MEDIUM confidence, verify early):** Netlify has a first-party rate-limiting feature, explicitly marketed for "rate limiting AI features to avoid surprise costs," available on the Free plan (2 code-based rules per project). It's configured via an exported `config.rateLimit` block (`windowLimit`, `windowSize` up to 180s, `aggregateBy: ["ip","domain"]`, `action: "block"` → HTTP 429) on a Netlify Function or Edge Function file. **The open question:** the Next.js Runtime v5 (OpenNext) bundles all Route Handlers into its own generated Netlify Function(s) — it is not confirmed whether you can attach a `rateLimit` config directly to a Next.js `route.ts` file and have Netlify's post-processing pick it up, or whether it requires a separate, hand-written Netlify Edge Function (in `netlify/edge-functions/`) declared with a matching `path` (e.g. `/api/demo/*`) that gates the request before it reaches the Next.js origin function via `context.next()`. If it works, this is the cheaper option (zero extra vendor, no Redis account) and only costs 1 of the 2 free-plan rule slots.
+- **Option B — Upstash Redis + `@upstash/ratelimit` inside the Route Handler (HIGH confidence, proven pattern):** Called explicitly inside `app/api/demo/[name]/route.ts` as the first statement, independent of any Netlify-platform rate-limiting feature. This is the pattern already specified in the existing v1 stack research and is guaranteed to work regardless of how OpenNext structures the underlying functions, because it doesn't depend on Netlify's function/edge-function config plumbing at all — it's just a Redis call from application code.
+
+**When to use:** Attempt Option A first as a build-order spike early in whichever phase builds the demo (cheap to test, saves adding Upstash entirely if it works) — this is exactly the kind of "needs deeper research/validation before committing" item that should be flagged for phase-specific research rather than assumed. Fall back to Option B immediately if Option A's path-matching doesn't reliably gate the Next.js Route Handler.
+**Trade-offs:** Option A is simpler (no new vendor/account) but unverified against this specific runtime combination; Option B is one more free-tier account to manage but is a well-established, framework-agnostic pattern that sidesteps all Netlify-Runtime-internals uncertainty. Given the small blast radius of getting this wrong (a demo abuse incident costs API spend, not user data), it's reasonable to spike Option A for an hour and fall back rather than defaulting straight to Option B — but do not ship the demo publicly without confirming *one* of these two is actually gating requests (a rate limiter that silently doesn't attach is worse than not having built one, because it creates false confidence).
 
 ```typescript
-// lib/ratelimit.ts
+// Option B fallback — lib/ratelimit.ts (unchanged from v1 stack research)
 export const demoRatelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "10 s"), // per IP
+  limiter: Ratelimit.slidingWindow(5, "10 s"),
 });
 ```
 
-### Pattern 3: Human-in-the-Loop Review Gate (draft → review → send)
+### Pattern 4: Structured Data + Metadata API for Buyer-Vocabulary SEO
 
-**What:** The AI never sends anything directly to a prospect. The submit flow always lands in a `drafted` state visible only to the founder; a distinct, explicit approve/send action (the admin UI) is what actually triggers delivery. This mirrors the standard HITL pattern: AI produces output, a human reviews with the AI's output surfaced clearly, and only an explicit human action advances the workflow — with the state transitions themselves forming a lightweight audit trail (submission → drafted → sent, with timestamps).
-**When to use:** Any AI-generated artifact that reaches an external party (the prospect) rather than staying internal — this is explicitly required by the project's scope (no fully-automated report sending).
-**Trade-offs:** Adds latency between submission and delivery (founder has to act) and requires a review surface (however minimal) — but it's what makes it safe to use an AI draft for outbound communication before the business has a track record to lean on.
+**What:** Every blog post and the landing page carry `generateMetadata`-produced `<title>`/description/OG tags built from the post's own `metadata` export, plus inline JSON-LD (`<script type="application/ld+json">`) for `Article` schema on posts and `Organization`/`ProfessionalService`-style schema sitewide in the root layout. Buyer vocabulary ("AI agents," "automation," "AI-native transformation," "forward-deployed engineer") should appear naturally in post titles/descriptions/body copy, not stuffed into schema alone — schema supplements on-page copy, it doesn't substitute for it.
+**When to use:** Always for the blog section (this is the primary SEO surface per Pattern 1) and for the landing page's core metadata.
+**Trade-offs:** Minimal — this is pure addition with no runtime cost (all computed at build time for SSG pages). The only discipline required is validating JSON-LD output against Google's Rich Results Test before shipping, since malformed structured data is worse than none (search engines may flag the page).
 
-```typescript
-// app/admin/page.tsx (Server Action, simplified)
-async function approveAndSend(id: string, editedBody: string) {
-  "use server";
-  await db.update(submissions).set({ status: "sent", finalReport: editedBody }).where(eq(submissions.id, id));
-  await sendReportEmail({ to: submissionEmail(id), body: editedBody });
+```tsx
+// app/blog/[slug]/page.tsx (excerpt)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const { metadata } = await import(`@/../content/blog/${slug}.mdx`);
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    openGraph: { title: metadata.title, description: metadata.description, type: "article" },
+  };
 }
 ```
 
 ## Data Flow
 
-### Demo Request Flow (ephemeral, no persistence)
+### Content Build Flow (static, no runtime dependency)
 
 ```
-Visitor interacts with demo widget
+Founder writes/edits content/blog/<slug>.mdx (git commit)
     ↓
-POST /api/demo/[name]  → rate limiter check (Upstash, per-IP)
+Next.js build: lib/content/posts.ts reads content/blog/ once
+    ↓
+generateStaticParams() → one static route per slug (SSG, dynamicParams=false)
+    ↓
+Same read path feeds: /blog index, /blog/feed.xml (RSS), sitemap.ts (blog URLs + lastModified)
+    ↓
+Deployed as static HTML/XML — zero runtime cost per visitor, cacheable indefinitely at Netlify's edge
+```
+
+### Demo Request Flow (the one dynamic, cost-bearing surface in this milestone)
+
+```
+Visitor interacts with the re-ideated demo widget (on the landing page)
+    ↓
+POST /api/demo/[name]
+    ↓
+Rate limit gate (Pattern 3 — Netlify-native or Upstash) → 429 if exceeded
     ↓ (if allowed)
-Claude API call (fixed system prompt, bounded input) — streamed
+Claude API call (Haiku, fixed system prompt reflecting the FDE framing) — streamed
     ↓
 Response streamed back to widget, rendered live
     ↓
-(optional: increment a Redis counter for cost/usage visibility — no DB write)
-```
-
-### Audit Funnel Flow (stateful, human-gated)
-
-```
-Prospect submits questionnaire
-    ↓
-POST /api/audit/submit
-    ↓
-Insert row into Postgres (status: pending) ──────────┐
-    ↓                                                  │
-Claude call: structured-output audit report draft      │  durable record —
-    ↓                                                  │  survives retries/
-Update row (status: drafted, draft: <text>)             │  redeploys
-    ↓                                                  │
-Resend → notify founder "new audit ready to review" ───┘
-    ↓
-Founder opens /admin (password-gated) → sees draft
-    ↓
-Founder edits inline → clicks "Approve & Send"
-    ↓
-Server Action: update row (status: sent, finalReport: <edited text>)
-    ↓
-Resend → email final report to prospect
+No persistence — same as v1's demo flow, stateless by design
 ```
 
 ### Key Data Flows
 
-1. **Demo flow is stateless by design:** no submission ever needs to be recalled later, so there's no reason to write it to Postgres — keeping demos DB-free minimizes moving parts and cost for the highest-traffic, most abuse-prone part of the site.
-2. **Audit flow is DB-backed and stateful because it must survive a human delay:** the founder may review hours or days after submission, so the "draft awaiting review" state has to be durable, not held in memory or a serverless function's transient scope.
-3. **Notification is a side effect, not a blocking dependency:** if the founder-notification email fails to send, the submission and draft must still be safely persisted — the admin UI (querying "status = drafted") is the source of truth, the email is just a nudge.
+1. **Content is entirely build-time; only the demo is request-time.** This milestone adds a lot of new *pages* but only one new *dynamic backend surface*. That asymmetry should drive build order: the content/IA/SEO work is safe to ship incrementally with zero infra risk, while the demo work carries the same "must be rate-limited before going live" constraint the v1 research already flagged for the Phase 2 missed-call demo — that constraint doesn't relax just because the demo concept changed.
+2. **Sitemap/RSS/blog-index must share one source of truth (`lib/content/posts.ts`)**, or they will drift out of sync as posts are added — a common failure mode where a new post appears on `/blog` but not in the sitemap because someone forgot to update a second hardcoded list (see the current `src/app/sitemap.ts`, which already hardcodes a `routes` array — this pattern must not be copy-pasted for blog URLs).
+3. **`siteConfig.domain` currently holds a placeholder value** (`PLACEHOLDER_DOMAIN.example.invalid`) used to build the sitemap/robots base URL and will directly become the canonical URL / OG base for every new blog page's metadata — this is a shared, already-existing single point of truth and should stay that way rather than hardcoding a domain in the new blog/SEO code.
 
 ## Scaling Considerations
 
-At the scale implied by this project (solo consultancy, early-stage SMB lead gen), traffic will realistically stay in the low thousands of monthly visitors and dozens of audit submissions/demo interactions per month — this is not a scaling problem, it's a cost-and-abuse-containment problem.
-
 | Scale | Architecture Adjustments |
 |-------|---------------------------|
-| Current (0–1k visitors/mo, single founder) | Everything on free tiers as designed: Vercel Hobby, Neon free (0.5GB/project, ~191 compute-hours/mo), Upstash free (500K commands/mo), Resend free (3,000 emails/mo, 100/day cap) |
-| Growth (1k–10k visitors/mo, demos going semi-viral) | Rate-limit budgets become the real constraint, not infra — tighten per-IP demo limits, add Vercel's built-in bot/attack protections (available on Hobby), consider a CAPTCHA (e.g. Cloudflare Turnstile) on the audit form if spam appears |
-| Beyond solo capacity (needs a team / high volume) | Out of scope for this project's stated constraints, but the natural next step is moving from single-admin `/admin` gate to real multi-user auth, and from synchronous Claude report generation to a queued background job (Upstash QStash) if draft generation volume grows |
+| Current (a handful of posts, low-thousands monthly visitors) | Everything as designed: static MDX build, Netlify Free, demo behind one rate-limit layer. No adjustments needed. |
+| Growth (dozens of posts, demo gets shared/goes semi-viral) | Blog: still fine, SSG scales trivially with post count into the hundreds. Demo: this is where the rate-limit choice (Pattern 3) actually gets tested — tighten the window, and if Option A (native) turns out not to be gating correctly, this is the point it will surface as a cost spike, not before. |
+| Content-modeling complexity grows (many content types, cross-references, related-posts logic) | Reconsider Velite for schema validation and typed queries — not needed at this milestone's scope, but the natural next step past plain `@next/mdx` if the content layer's ad-hoc `fs`/dynamic-import logic starts feeling brittle. |
 
 ### Scaling Priorities
 
-1. **First bottleneck: Claude API cost from unrestrained public demo usage**, not server capacity. The rate limiter (Pattern 2) is the priority build item — it must exist before demos go live publicly, not be retrofitted after a cost spike.
-2. **Second bottleneck: Resend's 100-emails/day cap**, which will bind before the 3,000/month cap given the workflow sends at least two emails per audit (founder notification + prospect delivery) plus potential marketing/contact-form email. Trivial to monitor at this volume; only becomes a real concern if outbound volume scales into dozens of audits/day.
+1. **First and only real risk in this milestone: an unrated-limited or silently-non-functional rate limit on the demo route.** Everything else (content, IA, SEO) is static and effectively risk-free from a cost/scaling standpoint.
+2. **Second, much smaller: sitemap/RSS drift as content volume grows**, mitigated structurally by Pattern 2's single shared read path — not a runtime risk, just a maintainability one.
 
 ## Anti-Patterns
 
-### Anti-Pattern 1: Calling Claude Directly from the Browser
+### Anti-Pattern 1: Reaching for Contentlayer
 
-**What people do:** Put the Anthropic API key in a client-side env var (e.g. `NEXT_PUBLIC_ANTHROPIC_KEY`) to "keep it simple" for a demo.
-**Why it's wrong:** The key is trivially extractable from any bundled JS and can be abused by anyone, unrelated to your rate limits, running up unbounded spend on your account.
-**Instead:** Route every Claude call through a server-side Route Handler (Pattern 1) — no exceptions, even for "just a demo."
+**What people do:** Default to Contentlayer because it was the standard "typed MDX content layer for Next.js" answer as recently as 2024 tutorials.
+**Why it's wrong:** Contentlayer has been effectively unmaintained since its primary sponsor (Stackbit) was acquired by Netlify — ironic given this project's own hosting choice — leaving it a single-maintainer side project at ~1 day/month of attention (MEDIUM confidence, consistent across multiple community sources). Adopting an unmaintained content-layer dependency for a solo-maintained project is exactly the kind of risk this project's constraints (solo founder, must be maintainable by one person) exist to avoid.
+**Instead:** Plain `@next/mdx` with `export const metadata` (Pattern 2) at this project's post volume; Velite if/when typed schema validation becomes worth the dependency.
 
-### Anti-Pattern 2: Building Real Telephony for the Missed-Call Demo
+### Anti-Pattern 2: Fragmenting the Landing Page into Many Thin SEO Pages
 
-**What people do:** Reach for Twilio (or similar) to make the "missed-call recovery" demo actually place/receive calls, so it feels "real."
-**Why it's wrong:** Massively increases scope, cost, and compliance surface (phone numbers, carrier approval, SMS regulations) for a marketing-site demo whose only job is to *illustrate* the auto-text-back concept convincingly — not operate as a production phone system. This directly contradicts the project's "lean/free-tier" constraint and its explicit exclusion of a voice-bot demo.
-**Instead:** Simulate the scenario entirely in the UI (a mocked "incoming call" state that transitions to a generated auto-text-back message via a single Claude call). This is standard practice for interactive marketing demos — SOTA "try it yourself" widgets are almost always simulated front-ends over a single model call, not live integrations.
+**What people do:** Create a separate page per buyer-vocabulary keyword (`/ai-agents`, `/automation`, `/ai-native-transformation`, `/forward-deployed-engineer`) hoping each ranks independently.
+**Why it's wrong:** Thin, near-duplicate marketing pages targeting one keyword each are a well-known low-value SEO pattern in 2026 — they dilute topical authority instead of concentrating it, and multiply the solo founder's maintenance surface for pages that mostly restate the same offer.
+**Instead:** One strong landing page (Pattern 1) covering the offer, backed by a genuinely useful `/blog` content engine that naturally uses the buyer vocabulary across multiple substantive posts — this is both better SEO practice and directly matches the project's own framing of content as "the credibility engine, not an afterthought."
 
-### Anti-Pattern 3: Fully Automating the Audit Report Send
+### Anti-Pattern 3: Letting the Demo Ship Without Confirming Rate Limiting Actually Attached
 
-**What people do:** Once the AI draft looks good in testing, wire the "send" step directly to draft completion to remove friction from the funnel.
-**Why it's wrong:** Removes the human review gate the project explicitly requires while trust is being built (an AI-drafted, unreviewed report going out under the founder's name is a real reputational/quality risk with SMB prospects who are the intended proof point).
-**Instead:** Keep draft-generation and send as two distinct, explicitly-triggered steps (Pattern 3) — the review gate is a product requirement, not just an engineering nicety, and the architecture should make it structurally impossible to skip (no code path sends an unapproved draft).
+**What people do:** Add a rate-limit `config` block or an Upstash call, see it doesn't immediately error, and assume it's working.
+**Why it's wrong:** Given the Netlify-native option (Pattern 3, Option A) has unverified compatibility with how the Next.js Runtime v5 exposes Route Handlers, a rate limiter that's configured but not actually intercepting traffic is a silent failure mode — the demo goes live, looks fine in manual testing (one request never trips any limit), and the cost exposure is identical to having no rate limiter at all.
+**Instead:** Explicitly test the limiter by exceeding the configured window in a pre-launch check (e.g., script 10 rapid requests, confirm a 429 appears) before the demo route is linked from any public page — this is a five-minute check that closes a real gap.
 
-### Anti-Pattern 4: Over-Building Admin Auth for a Single User
+### Anti-Pattern 4: Duplicating the Post List Across Blog Index, RSS, and Sitemap
 
-**What people do:** Reach for NextAuth/Clerk/a full RBAC system to protect `/admin` "because that's the standard way to do auth."
-**Why it's wrong:** Adds real setup cost (provider config, session storage, sometimes another paid service) to protect a page only one person will ever log into.
-**Instead:** A middleware check against a single shared secret (password → signed cookie) is standard and sufficient for a solo-founder internal tool; upgrade only if/when a second reviewer is added.
-
-### Anti-Pattern 5: In-Memory Rate Limiting on Serverless
-
-**What people do:** Implement rate limiting with a plain in-memory `Map` counter inside the route handler.
-**Why it's wrong:** Each serverless invocation may run in a fresh, isolated instance — the counter resets constantly and provides close to zero real protection, giving false confidence.
-**Instead:** Use a shared external store (Upstash Redis, Pattern 2) so counters are consistent across invocations and regions.
+**What people do:** Write separate `fs.readdir`/glob logic in `app/blog/page.tsx`, `app/blog/feed.xml/route.ts`, and `app/sitemap.ts`.
+**Why it's wrong:** Three independent implementations of "list all blog posts" will drift — a new post appearing on the blog index but missing from the sitemap (or vice versa) is a common, easy-to-miss SEO bug.
+**Instead:** One shared `lib/content/posts.ts` module (Pattern 2/Structure Rationale) that all three consume.
 
 ## Integration Points
 
@@ -260,43 +279,36 @@ At the scale implied by this project (solo consultancy, early-stage SMB lead gen
 
 | Service | Integration Pattern | Notes |
 |---------|----------------------|-------|
-| Anthropic Claude API | Server-side SDK call from Route Handlers only; structured/tool-based output for the audit report to get a consistent, parseable schema | Never call from client. Use streaming for demo latency; report generation can be synchronous within Vercel's function timeout (10s Hobby / 15s Pro) if kept to a single call, or deferred via `after()`/a queue if generation risks exceeding it |
-| Upstash Redis | REST-based client (`@upstash/redis`, `@upstash/ratelimit`), first-class Vercel integration auto-injects env vars | Free tier (~500K commands/mo) is far more than sufficient at this project's scale |
-| Neon Postgres | Serverless Postgres, accessed via Drizzle ORM; this is now Vercel's native/default Postgres integration (Vercel Postgres itself was sunset in favor of Neon) | Free tier: multiple projects, ~191 compute-hours/mo, 0.5GB storage/project — ample for low-volume audit submissions |
-| Resend | Transactional email API, two distinct sends: founder notification, prospect report delivery | Free tier: 3,000 emails/mo, capped at 100/day — the daily cap is the more likely constraint given 2 emails/audit |
-| (optional) Cloudflare Turnstile | Client-side widget + server-side token verification on the audit form | Add only if spam becomes an observed problem — avoid adding friction to the funnel preemptively |
+| Anthropic Claude API | Server-side SDK call from the new `/api/demo/[name]` Route Handler only | Same non-negotiable server-side-only pattern as the v1 demo research — carries forward unchanged for the re-ideated demo. Model choice (Haiku for public demo traffic) is a STACK.md decision, not an architecture one. |
+| Netlify (Next.js Runtime v5 / OpenNext) | Existing deploy target, unchanged for this milestone — MDX content and new routes deploy the same way existing pages do | The one open integration question is Pattern 3's rate-limiting compatibility — verify early, don't assume |
+| Netlify native rate limiting (if Option A works) | Exported `config.rateLimit` on a Netlify Function/Edge Function; free plan allows 2 code-based rules per project | MEDIUM confidence — spike before committing; consumes 1 of 2 free-plan rule slots if adopted |
+| Upstash Redis (fallback, if Option A doesn't work) | `@upstash/ratelimit` called inside the Route Handler | HIGH confidence, proven pattern already specified in v1 stack research — zero new architectural risk if reached for |
+| Cal.com | Unchanged — existing `/book` embed | No integration changes for this milestone |
 
 ### Internal Boundaries
 
 | Boundary | Communication | Notes |
 |----------|----------------|-------|
-| Demo widget ↔ Demo API route | `fetch`/streaming HTTP, JSON in, text/event-stream out | Widget never holds any secret; all validation and prompt construction happens server-side |
-| Audit form ↔ Submit API | `fetch` POST, JSON | Form should do basic client-side validation but server must re-validate (never trust client input going into a Claude prompt or DB write) |
-| Submit API ↔ Data store | Drizzle ORM queries | Only server-side code touches the DB — no client-side Postgres access ever |
-| Admin UI ↔ Data store / Email | Server Actions (mutations) + server-side reads | Keeps `/admin` free of a separate API layer; Server Actions are the standard Next.js pattern for this kind of internal-tool mutation |
-| All Claude-calling routes ↔ Rate limiter | Shared `lib/ratelimit.ts` factory, invoked first in every handler | Centralizing this prevents the common failure mode of one endpoint shipping without protection |
+| `content/blog/*.mdx` ↔ `lib/content/posts.ts` | Build-time `fs`/dynamic `import()` | Only server-side/build-time code touches the filesystem; never exposed to the client directly |
+| `lib/content/posts.ts` ↔ `/blog`, `/blog/[slug]`, `/blog/feed.xml`, `sitemap.ts` | Direct function import, same process, build time | Single source of truth — see Anti-Pattern 4 |
+| Demo widget ↔ `/api/demo/[name]` | `fetch`/streaming HTTP | Widget holds no secret; identical boundary shape to the v1 demo research |
+| `siteConfig` ↔ everything needing canonical URL/OG defaults | Direct import from `src/config/site.ts` | Already-established pattern (D-06 in existing codebase); extend, don't parallel it |
 
 ## Sources
 
-- [Rate Limiting in Next.js: Protecting Your API Routes — Nextcraft](https://www.nextcraft.agency/resources/insights/nextjs-rate-limiting)
-- [Setting Up Proxy API Routes in Next.js: The Definitive Guide](https://www.nextsaaspilot.com/blogs/nextjs-proxy-api-route)
-- [Keeping Your Next.js API Key Secure](https://nextnative.dev/blog/api-key-secure)
-- [Ratelimit with Upstash Redis — Vercel Templates](https://vercel.com/templates/next.js/ratelimit-with-upstash-redis)
-- [Rate Limiting Your Next.js App with Vercel Edge — Upstash Blog](https://upstash.com/blog/edge-rate-limiting)
-- [Overview — Upstash Ratelimit SDK Docs](https://upstash.com/docs/redis/sdks/ratelimit-ts/overview)
-- [Rate limits — Claude Platform Docs](https://platform.claude.com/docs/en/api/rate-limits)
-- [Usage and Cost API — Claude Platform Docs](https://platform.claude.com/docs/en/manage-claude/usage-cost-api)
-- [Human-in-the-Loop Workflows for AI — Velt (June 2026)](https://velt.dev/blog/designing-human-in-the-loop-workflows-ai-products)
-- [Human-in-the-loop in AI workflows: Meaning and patterns — Zapier](https://zapier.com/blog/human-in-the-loop/)
-- [AI Agent Approval Workflows: Human Oversight That Scales — Waxell (2026)](https://waxell.ai/blog/ai-agent-approval-workflows)
-- [Neon vs Vercel (2026): Serverless Postgres + Hosting Stack](https://www.buildmvpfast.com/compare/neon-vs-vercel)
-- [Vercel Supabase: Full Stack Setup and Limits in 2026 — Kuberns](https://kuberns.com/blogs/vercel-supabase/)
-- [Supabase Pricing 2026: Free Tier Limits & Real Costs](https://designrevision.com/blog/supabase-pricing)
-- [New Free Tier — Resend Blog](https://resend.com/blog/new-free-tier)
-- [What are Resend account quotas and limits? — Resend Docs](https://resend.com/docs/knowledge-base/account-quotas-and-limits)
-- [Upstash Free Tier 2026: Limits, Pricing & What Changed](https://agentdeals.dev/vendor/upstash)
-- [The Best SaaS Stack in 2026: Build Production Apps Fast — Makerkit](https://makerkit.dev/blog/saas/saas-stack-2026)
+- [Guides: MDX — Next.js Docs](https://nextjs.org/docs/app/guides/mdx) (fetched 2026-07-20, doc `lastUpdated: 2026-06-23`, version 16.2.10) — HIGH confidence, official, current
+- [`mdx-components.tsx` file convention — Next.js Docs](https://nextjs.org/docs/app/api-reference/file-conventions/mdx-components) — HIGH confidence, official
+- [`generateSitemaps` — Next.js Docs](https://nextjs.org/docs/app/api-reference/functions/generate-sitemaps) — HIGH confidence, official
+- [Guides: JSON-LD — Next.js Docs](https://nextjs.org/docs/app/guides/json-ld) — HIGH confidence, official
+- npm registry (`npm view @next/mdx version`, fetched 2026-07-20) — confirms `@next/mdx@16.2.10` ships in lockstep with `next@16.2.10`, already installed in this project — HIGH confidence
+- [ContentLayer has been Abandoned — What are the Alternatives? — Wisp CMS](https://www.wisp.blog/blog/contentlayer-has-been-abandoned-what-are-the-alternatives) — MEDIUM confidence, corroborated by multiple independent community sources (Medium/dub.co migration posts) on Contentlayer's unmaintained status
+- [Next.js on Netlify — Netlify Docs](https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/) (fetched 2026-07-20) — MEDIUM confidence (WebFetch summary of official docs); confirms Route Handlers/Server Actions/streaming/ISR full support, edge "runtime" for SSR actually executes in Node.js not true edge, Middleware runs as Netlify Edge Functions
+- [Rate limiting — Netlify Docs](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/) (fetched 2026-07-20) — MEDIUM confidence; confirms code-based rules available on all plans (2 rules/project on Free), config syntax, `windowSize` capped at 180s, per-IP+domain aggregation on Free
+- [Introducing Netlify's New Rate Limiting Feature / Rate limiting AI features on Netlify to avoid surprise costs — Netlify Blog](https://www.netlify.com/blog/how-to-rate-limit-ai-features-and-avoid-surprise-costs/) — MEDIUM confidence; directly on-point for this project's demo-cost-protection use case, but does not resolve the OpenNext/Route-Handler compatibility question (flagged in Pattern 3)
+- Netlify community/support forum threads on function timeouts (aggregated via WebSearch) — MEDIUM confidence: 10s timeout on Free plan functions, up to 300s for streaming edge responses — consistent with the existing v1 stack research's Netlify choice, no new constraint introduced by this milestone
+- Prior project research: `.planning/research/STACK.md`, `.planning/research/ARCHITECTURE.md` (v1, 2026-07-19) — carried-forward patterns (server-side Claude proxy, never-expose-the-key, defense-in-depth rate limiting) re-affirmed rather than re-derived
+- Existing codebase inspection (`src/app/*`, `src/config/site.ts`, `src/app/sitemap.ts`, `src/app/robots.ts`) — HIGH confidence, ground truth for what's actually built today
 
 ---
-*Architecture research for: Marketing site + public AI demos + AI-assisted audit funnel with human review*
-*Researched: 2026-07-19*
+*Architecture research for: v2.0 FDE-pivot blog/content engine, IA redesign, SEO layer, and re-ideated Claude-backed demo*
+*Researched: 2026-07-20*

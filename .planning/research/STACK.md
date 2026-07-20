@@ -1,165 +1,131 @@
 # Stack Research
 
-**Domain:** Solo-consultancy marketing/lead-gen website with live Claude-powered demos and an AI-drafted, human-reviewed audit funnel
-**Researched:** 2026-07-19
-**Confidence:** HIGH (framework/hosting/API patterns verified against official docs); MEDIUM (exact free-tier numbers, which shift — treat as directional, re-verify before implementation)
+**Domain:** v2.0 FDE Pivot additions — blog/content engine, buyer-vocabulary SEO, visually impressive redesign, re-ideated Claude-backed demos
+**Researched:** 2026-07-20
+**Confidence:** HIGH (Context7 + official Next.js docs for MDX/Metadata/OG; npm registry ground-truth for all versions; MEDIUM on animation-library judgment calls, which are inherently opinion/taste-dependent)
+
+**Scope note:** This document covers only what's *new* for v2. Already-validated and unchanged from v1 (not re-researched here): Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + shadcn/ui, Netlify free-tier deploy (Next.js Runtime v5), Cal.com booking embed, `@anthropic-ai/sdk` server-side pattern, Upstash rate limiting, Cloudflare Turnstile, Resend/react-email, Supabase persistence, Zod validation. That layer is captured in `CLAUDE.md` (project instructions) from v1's research.
 
 ## Recommended Stack
 
-### Core Technologies
+### Core Technologies (New for v2)
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| Next.js (App Router) | 16.x (16.2 current) | Framework — pages, API/Route Handlers, Server Actions | This is the dominant 2025/2026 pattern for "marketing site + interactive product demo," specifically because the demos need server-side logic (calling Claude without exposing the key) on the same routes as the marketing content. Route Handlers give you `/api/demo/*` endpoints for free; Server Actions give you type-safe form submission for the audit questionnaire without a separate backend. One deploy target, one repo, one mental model — critical for a solo maintainer. Also the framework Claude Code has the deepest, most current training/tooling support for, which matters since a solo founder will lean on AI-assisted coding to build and maintain this. |
-| React | 19.x | UI library (via Next.js) | Ships with Next.js 16; Server Components reduce client JS for the mostly-static marketing pages while the two demo widgets and questionnaire become explicit Client Components. |
-| TypeScript | 5.x | Type safety | Non-negotiable for a solo dev shipping AI-integration code (Claude request/response shapes, Zod-validated form data, DB rows) without a team to catch mistakes. |
-| Tailwind CSS | 4.x | Styling | Standard for solo-built marketing sites in 2025/2026 — CSS-first config in v4 removes the old `tailwind.config.js` ceremony; pairs with shadcn/ui for fast, ownable UI. |
-| @anthropic-ai/sdk | 0.112.x | Official Claude API client | HIGH confidence, official SDK. Use server-side only (Route Handlers / Server Actions) — never in client bundles. Supports streaming, structured tool-use output, and the Batch API if audit-report drafting volume ever grows. |
+| `@next/mdx` + `@mdx-js/loader` + `@mdx-js/react` + `@types/mdx` | 16.2.10 (tracks Next.js release) | Blog/content engine — MDX pages under `app/blog/` | Official Next.js team package, zero extra content-pipeline infrastructure. Frontmatter-as-JS-export (`export const metadata = {...}` inside the `.mdx` file) is read directly by a `page.tsx` that imports the file, so a blog index can enumerate posts with plain `fs`/`globby` — no database, no build-time content compiler, nothing extra for a solo maintainer to keep patched. Fully compatible with Server Components (the App Router default), so blog posts ship zero client JS by default. Contentlayer, the historical alternative, was archived in 2024 and is no longer safe to adopt new. |
+| `motion` (npm package name for what was "Framer Motion") | 12.42.2 | Component-level animation — hero reveals, hover states, page/section transitions, scroll-triggered fade-ins via `whileInView` | Purpose-built for React, smallest-footprint option for "make the site feel considered" without committing to a full animation-engine dependency. Ships an App-Router-specific import (`motion/react-client`) that trims client JS further. This is the right default for *most* of the redesign's interactivity — reach for GSAP only for the specific sections that need timeline-precision scroll choreography (see Stack Patterns below). |
+| GSAP core + `ScrollTrigger` + `@gsap/react` | gsap 3.15.0, @gsap/react 2.1.2 | Scroll-driven storytelling for the landing page's 5-part message hierarchy (gap → fix → outcomes → offer → CTA), if the redesign wants a cinematic scrollytelling hero or pinned/scrubbed sections | As of April 2025, Webflow (which acquired GreenSock in Oct 2024) made **100% of GSAP free** — every plugin that used to require a paid "Club GSAP" membership (ScrollTrigger, SplitText, MorphSVG, ScrollSmoother, DrawSVG) now ships with no license key, no auth token, no cost. This directly matches the $0-recurring-budget constraint — a capability that used to have a price tag is now free, and a lot of tutorials/articles predating April 2025 still say otherwise, so don't be misled by older sources. GSAP + ScrollTrigger is the de facto industry-standard combo for "pin a section, scrub a multi-step timeline as the user scrolls" — exactly what a gap→fix→outcomes narrative section wants. `@gsap/react`'s `useGSAP()` hook handles React 19 effect cleanup correctly (context reversion on unmount), which raw GSAP does not do for you. |
+| `next/font` (built into `next`, no separate install) | ships with next@16.2.10 | Self-hosted, zero-CLS Google/local fonts for the redesign's new typography | Not a new dependency — already part of the kept Next.js scaffold — but worth calling out explicitly for the redesign: `next/font/google` downloads and self-hosts font files at build time (no runtime request to Google, no layout shift, no separate font CDN to pay for), which fits both "visually impressive" and "$0 recurring budget." Use variable fonts where available to keep weight-switching cheap. |
+| `next/og` (`ImageResponse`, built into `next`, no separate install) | ships with next@16.2.10 | Per-route Open Graph / Twitter-card images — one per blog post, one for the FDE landing page | Built into Next.js App Router; `@vercel/og` is bundled in and does not need a separate `npm install`. Drop an `opengraph-image.tsx` (or a dynamic `[slug]/opengraph-image.tsx`) in any route segment and Next.js auto-generates the image and injects the `og:image` meta tags — no manual `<meta>` wiring, no third-party image-generation service, no cost. Directly serves the "buyer-vocabulary SEO" requirement: every blog post and the landing page get a real, on-brand social preview instead of a default screenshot. |
 
 ### Supporting Libraries
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| zod | 4.x | Schema validation | Validate the audit questionnaire form data AND validate/force the shape of Claude's JSON output (see Claude integration pattern below). One schema, two jobs. |
-| react-hook-form | 7.82.x | Form state management | Multi-question audit questionnaire needs client-side validation feedback before hitting the server; pairs natively with zod via `@hookform/resolvers`. |
-| resend | 6.17.x | Transactional email delivery | Sends: (1) internal notification to founder when a new audit draft is ready for review, (2) final reviewed report to the prospect, (3) any demo-related follow-up. Modern DX, generous low-volume free tier, official React Email integration. |
-| react-email | latest | Email templates as React components | Write the audit-report email and internal-notification email as components instead of raw HTML strings — much easier to maintain solo. |
-| @upstash/ratelimit + @upstash/redis | 2.0.x / 1.38.x | Per-IP/session rate limiting on public demo routes | Anthropic's API rate limits are account-wide, not per-visitor — they do NOT stop one visitor from hammering your demo and running up your bill. This is the standard serverless-friendly (HTTP-based, no persistent connection) way to cap "N demo runs per IP per hour." Required, not optional, given the public/unauthenticated demo surface. |
-| @marsidev/react-turnstile (or Cloudflare's own snippet) | latest | Bot protection on questionnaire + demo forms | Cloudflare Turnstile is free, does NOT require moving your DNS to Cloudflare, and stops the cheap-bot class of abuse before it ever reaches your rate limiter or Claude API. Verify the token server-side in the Route Handler — the widget alone is not protection. |
-| @supabase/supabase-js | 2.110.x | Database client for audit submissions | See Persistence section below. |
-| ai (Vercel AI SDK) | latest | Optional: streaming helper for the intake-triage chat-style demo | Only pull this in if the triage demo is conversational/streamed token-by-token; adds a dependency, so skip it for the simpler missed-call-recovery demo which can return a single structured response. |
-| @t3-oss/env-nextjs | latest | Build-time env var validation | Solo dev safety net — fails the build if `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, etc. are missing, instead of failing silently in production. |
+| `remark-gfm` | 4.0.1 | GitHub-Flavored-Markdown support (tables, strikethrough, task lists) in MDX plugin pipeline | Add to `@next/mdx`'s `remarkPlugins` config if blog posts need tables or checklists (likely for engagement write-ups with before/after metrics tables). |
+| `rehype-slug` + `rehype-autolink-headings` | 6.0.0 / 7.1.0 | Auto-generate `id` attributes on headings + anchor links | Standard for a content/blog engine — lets you deep-link to a section of a long-form post (e.g., a specific case-study outcome), which is good for SEO and good for sharing a specific claim. Cheap to add via `rehypePlugins`. |
+| `@tailwindcss/typography` | 0.5.20 | `prose` class for styling MDX-rendered HTML | The official pairing for `@next/mdx` + Tailwind — apply `prose` classes in a shared blog layout instead of hand-styling every markdown-generated `<h2>`/`<ul>`/`<blockquote>`. Saves real time for a solo maintainer writing content regularly. |
+| `reading-time` | 1.5.0 | Computes estimated read time from post body text | Small, standard credibility-engine touch ("6 min read") for blog index/detail pages; negligible cost to add. |
+| `schema-dts` | 2.0.0 | TypeScript types for JSON-LD structured data (Google's own schema types package) | Use when hand-writing `<script type="application/ld+json">` blocks for `Organization`/`Service`/`Article`/`FAQPage` schema — types-only (zero runtime weight), catches typos in schema property names at compile time. Directly supports buyer-vocabulary SEO: structured data is where you can explicitly mark up "AI agents," "automation," "forward-deployed engineer" in a way search engines parse as entities, not just body copy. |
+| `feed` | 6.0.0 | RSS/Atom/JSON feed generation | Optional but cheap: a `app/blog/feed.xml/route.ts` Route Handler using this package gives the content engine an RSS feed, which some SMB-owner audiences (and any journalist/newsletter picking up a case study) still consume via feed readers. Low effort, reinforces "credibility engine" framing. |
+| `lenis` | 1.3.25 | Smooth/inertia scrolling | Only add if the redesign specifically wants buttery inertia scroll to pair with GSAP ScrollTrigger scrubbing — it is the standard pairing (GSAP's own docs recommend it over the deprecated `ScrollSmoother`-only approach for this). **Caution:** smooth-scroll libraries are a common accessibility and Core Web Vitals pitfall. Always gate behind `prefers-reduced-motion: no-preference` and don't let it hijack scroll on the blog/content pages, only the landing-page hero if used at all. |
+| `ai` (Vercel AI SDK) + `@ai-sdk/anthropic` + `@ai-sdk/react` | 7.0.31 / 4.0.16 / 4.0.34 | Streaming, multi-step, tool-call-visible chat/agent UI for the re-ideated demo(s) | **Upgraded from "optional" (v1) to primary recommendation for v2.** The FDE pitch is literally "watch an engineer's AI agent work inside your actual workflow" — a demo that *shows its steps* (tool calls, intermediate reasoning, streamed output token-by-token) sells that story far better than a single request/response card. `useChat`/`useObject` from `@ai-sdk/react` combined with `@ai-sdk/anthropic`'s streaming provider is the standard 2026 pattern for this; render every `part.type` (`text`, `tool-call`, `tool-result`, `reasoning`) explicitly in the UI — the default renderer only shows `text`, so an unhandled `tool-call` part looks like the demo silently froze. This is a meaningful new client-side dependency, so only pull it in if the re-ideated demo concept is actually multi-step/agentic; for a single structured-JSON-output demo (closer to v1's shape), stay with the plain `@anthropic-ai/sdk` Route Handler pattern already validated in v1 and skip this entirely. |
 
 ### Development Tools
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| shadcn/ui | Component primitives | Copy-paste, not an npm dependency — you own the code, no version-lock risk for a project with no team to manage upgrades. Use for form inputs, cards, the admin review screen. |
-| ESLint + Prettier | Linting/formatting | Use Next.js's built-in `eslint-config-next`. |
-| Vitest | Unit tests (optional, targeted) | Not a TDD-heavy project, but worth a handful of tests around the Zod schemas that shape Claude's structured output and the rate-limiter logic — these are the two places a silent bug costs real money. |
+| Native `app/sitemap.ts` + `app/robots.ts` (Next.js file convention, no package) | Sitemap and robots.txt generation | Do not add the `next-sitemap` npm package — Next.js 16's App Router has this built in as a Metadata Route file convention (`sitemap.ts` exporting `MetadataRoute.Sitemap`, served automatically at `/sitemap.xml`). Enumerate blog posts dynamically here (read the same `fs`/`globby` post list used for the blog index) so new posts appear in the sitemap without a manual step — matches "buyer-vocabulary SEO" and is zero extra dependency. |
+| Next.js `generateMetadata` / static `metadata` export (built-in) | Per-page `<title>`, `<meta description>`, canonical URL, Open Graph tags | Set `metadataBase` once in the root layout so every relative OG/canonical URL across the new landing page and blog posts resolves correctly without hardcoding the domain in every file — important since the domain is still `*.netlify.app` for now and will change later; one config point to update. |
 
 ## Installation
 
 ```bash
-# Core
-npx create-next-app@latest deployed-ai --typescript --tailwind --app
-npm install @anthropic-ai/sdk zod react-hook-form @hookform/resolvers
+# Blog/content engine
+npm install @next/mdx @mdx-js/loader @mdx-js/react @types/mdx
+npm install remark-gfm rehype-slug rehype-autolink-headings reading-time feed
+npm install @tailwindcss/typography
 
-# Email
-npm install resend react-email
+# SEO structured data
+npm install schema-dts
 
-# Rate limiting + bot protection
-npm install @upstash/ratelimit @upstash/redis
-npm install @marsidev/react-turnstile
+# Redesign — animation (add incrementally, see Stack Patterns)
+npm install motion
+npm install gsap @gsap/react   # only if scroll-choreographed sections are built
+npm install lenis              # only if paired with GSAP for hero smooth-scroll
 
-# Persistence
-npm install @supabase/supabase-js
+# Re-ideated demo — only if the demo concept is multi-step/agentic
+npm install ai @ai-sdk/anthropic @ai-sdk/react
 
-# Env safety
-npm install @t3-oss/env-nextjs
-
-# Dev dependencies
-npm install -D vitest @vitejs/plugin-react
+# No install needed (built into next@16.2.10, already in the kept scaffold):
+# next/font, next/og (ImageResponse), app/sitemap.ts, app/robots.ts, generateMetadata
 ```
-
-## Hosting: Netlify (Free plan) — NOT Vercel Hobby
-
-This is the single most important deviation from "the obvious default" and needs to be explicit for the roadmap.
-
-**Vercel Hobby is disqualified.** Per Vercel's own Fair Use Guidelines (verified 2026-06-16 doc): *"Hobby teams are restricted to non-commercial personal use only... Commercial usage is defined as any Deployment that is used for the purpose of financial gain of anyone involved in any part of the production of the project... Examples include: Advertising the sale of a product or service."* AI Deployed's entire site is a lead-gen funnel for paid consulting engagements — this is squarely commercial use. Using Hobby would be a ToS violation, not just a faux pas. The alternative is Vercel Pro at $20/month minimum, which conflicts with the "free-tier-first" constraint.
-
-**Recommendation: Netlify Free plan.** Netlify's terms explicitly permit commercial use on the free tier ("you can host a paid SaaS or a business site on Free as long as you stay within the monthly credit allowance"). It includes Netlify Functions (serverless, for the Claude proxy routes), full Next.js App Router support including Server Actions via the official Next.js Runtime v5 adapter, and a managed Postgres offering if you want to keep the DB and host in one vendor. At this traffic scale (marketing site + occasional demo/audit usage) the free credit allowance is not a realistic constraint.
-
-**Alternative: Cloudflare Pages/Workers (Free).** Also explicitly allows commercial use, unlimited static bandwidth, and pairs naturally with Turnstile (same vendor) and Cloudflare KV/D1 if you want to consolidate rate-limiting storage and DB with your host. Slightly more setup friction for Next.js App Router edge cases than Netlify's adapter; choose this if you'd rather consolidate more services under one Cloudflare account (Turnstile + Pages + KV) than spread across Netlify + Upstash + Supabase.
-
-**Do not use Vercel unless** the founder is willing to pay the $20/mo Pro minimum — in which case Vercel remains the smoothest Next.js deployment experience and this whole section becomes moot.
-
-## Claude API Integration Pattern
-
-**Never call Claude from the client.** All three AI touchpoints (missed-call demo, intake-triage demo, audit report drafting) go through server-side Route Handlers or Server Actions that hold `ANTHROPIC_API_KEY` as a server-only env var. This is non-negotiable — it's the standard pattern for any public-facing Claude integration and the only way to keep the key from leaking into a browser bundle.
-
-**Model selection by use case (cost-driven, HIGH confidence on pricing as of intro-pricing window through Aug 31 2026):**
-- **Public demos (missed-call recovery, intake triage): Claude Haiku 4.5** ($1/$5 per million input/output tokens). These run on unauthenticated public traffic with unpredictable volume — cheap and fast is the right tradeoff, and demo output quality doesn't need frontier reasoning.
-- **Audit report drafting: Claude Sonnet (4.5/4.6 family)** ($3/$15 per million tokens, or $2/$10 intro pricing through Aug 2026). This is the actual deliverable a prospect will judge the consultancy by — worth the higher cost, and volume is naturally lower (one questionnaire submission → one draft, not open-ended demo replay) and human-reviewed before sending, so quality matters more than the marginal cost difference.
-
-**Structured output for the audit report:** Use forced tool-use (a single defined tool/JSON schema passed to the Messages API) to get the audit findings back as structured JSON (pain points, ROI estimates, recommended next steps) rather than parsing freeform prose. Validate the response against the same Zod schema used for the questionnaire input — this makes the founder's review screen a form-over-structured-data editor instead of an editable text blob, and catches malformed Claude output before it's ever shown to the founder or a prospect.
-
-**Rate limiting (defense in depth, three layers):**
-1. **Upstash-backed sliding-window limiter** on every demo/questionnaire Route Handler, keyed by IP (or a lightweight cookie-based fingerprint) — e.g., cap each visitor to N demo runs per hour. This is the layer that actually protects your wallet from a single abusive visitor or scraper, since Anthropic's own rate limits are account-wide and won't stop that.
-2. **Turnstile verification** in front of both the demo trigger and the questionnaire submit, checked server-side before the Claude call fires — filters out the cheap-bot traffic class before it costs you a token.
-3. **Spend limit configured in the Claude Console** (Settings → Plans & Billing / Limits) as a hard backstop — caps total monthly spend regardless of what gets past the other two layers. Treat this as the "worst case" tripwire, not the primary control.
-
-**Streaming:** Optional. If the intake-triage demo is framed as a live chat-style interaction, stream the response (Vercel AI SDK's `streamText`/`useChat`, or a raw `ReadableStream` from the Route Handler) for a more convincing live-demo feel. The missed-call-recovery demo and the audit-report draft are both better as single structured responses — no streaming needed there.
-
-## Lightweight Persistence for Audit Submissions
-
-**Recommendation: Supabase (Free plan), Postgres.** One table for questionnaire submissions with status tracking (`submitted` → `draft_generated` → `reviewed` → `sent`), storing the raw answers, Claude's structured draft (JSONB), the founder's edited final version, and timestamps. Free tier (500MB DB, 500K edge-function invocations, 50K MAU) is far more than a solo consultancy's audit volume will touch. `@supabase/supabase-js` gives simple typed queries without an ORM, which is enough for one table doing CRUD.
-
-**Known gotcha (verify at implementation time):** Supabase free projects auto-pause after 7 consecutive days with zero API requests. For a live marketing site this is unlikely to trigger once real traffic exists, but during pre-launch/staging it can catch a solo founder off guard. Mitigate with a scheduled GitHub Actions cron hitting a lightweight health-check endpoint weekly, or just don't worry about it post-launch.
-
-**Review workflow (no auth system needed):** Because there is exactly one reviewer (the founder), skip building real authentication. Protect `/admin/*` routes with a single shared-secret check in Next.js middleware (a long random password stored as an env var, set as an HTTP-only cookie after a simple login form) — this avoids pulling in an auth provider (Clerk/Auth.js/Supabase Auth) for a one-user use case. When a questionnaire is submitted: store row → call Claude to draft → store draft → Resend sends the founder an internal email with a link to `/admin/reports/[id]` → founder edits the structured draft in a form UI → clicking "Send" triggers a Resend email to the prospect and flips status to `sent`.
-
-**Lower-effort alternative: Airtable.** If building even a minimal custom admin review UI feels like too much surface area for a solo founder pre-launch, store submissions directly in an Airtable base and let the founder review/edit the AI draft in Airtable's own interface (no custom admin page needed at all). Trade-off: less control over the review UX, and you're gluing a third-party no-code tool into the funnel instead of owning the data model. Reasonable MVP-of-MVP choice if the custom admin panel is cut for time; migrate to Supabase + custom admin later if the audit funnel proves out and the review flow needs more structure.
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|--------------------------|
-| Next.js (App Router) | Astro + React islands | If the site ends up being 90% static content with only light-touch interactivity (e.g., if the two demos get simplified to non-Claude static mockups). Astro ships far less JS by default and has native type-safe server Actions for forms. For this project's spec — two live Claude-backed demos plus an AI-drafted, editable report — Next.js's unified Server Components/Route Handlers/Server Actions model is the better fit; don't switch unless the interactive surface shrinks significantly. |
-| Netlify (Free) | Vercel (Pro, $20/mo) | If the founder decides the $20/mo is worth it for Vercel's marginally smoother DX and is fine paying instead of using free tier. Do not use Vercel Hobby for this project — it violates their commercial-use terms. |
-| Netlify (Free) | Cloudflare Pages/Workers (Free) | If consolidating Turnstile + hosting + KV/D1 under one Cloudflare account is preferred over spreading services across Netlify + Upstash + Supabase. |
-| Supabase (Postgres) | Airtable | If a fully custom admin review UI is more engineering than the founder wants to maintain solo — see Persistence section above. |
-| Supabase (Postgres) | Neon (serverless Postgres) | If you want branchable databases for preview deploys (each PR gets its own DB branch) — overkill for a solo dev with no team, but a fine alternative if that workflow appeals. |
-| Upstash Redis rate limiting | In-memory rate limiting | Never, for this project — serverless functions are stateless/ephemeral between invocations, so an in-memory counter resets constantly and provides no real protection. Only viable on a long-running server process, which this stack doesn't have. |
-| Resend | SendGrid / Postmark | If email volume grows well beyond marketing-site scale (thousands/day) — Resend's free/low tiers are the better fit at this project's expected volume and its DX (React Email) is a better match for a solo dev. |
+| `@next/mdx` (native, file-based) | `velite` | If you want a Contentlayer-style typed content pipeline with schema validation across many content collections (blog + case studies + changelog, etc.) with generated TypeScript types. For a single blog collection maintained by one person, native `@next/mdx` is less machinery; reach for Velite only if the content model grows past "one folder of MDX posts." |
+| `@next/mdx` (native, file-based) | `next-mdx-remote` / `next-mdx-remote-client` | If MDX content needs to be fetched from a remote source at request time (e.g., a headless CMS) rather than living in the repo. Not applicable here — the pivot brief explicitly favors in-repo MDX for solo-maintainability. |
+| `@next/mdx` (native, file-based) | Contentlayer / Contentlayer2 | Do not adopt for a new project — original Contentlayer is archived/unmaintained (last real activity 2024); Contentlayer2 is a community fork with smaller reputation and adds a build-time codegen step that's one more thing to debug alone. Only relevant if migrating an *existing* Contentlayer site. |
+| Motion for UI, GSAP for scroll-storytelling (both, scoped to purpose) | GSAP for everything | If you want one animation mental model everywhere and don't mind GSAP's more imperative API for simple hover/tap micro-interactions too. Valid choice, but Motion's declarative `whileHover`/`whileTap`/`whileInView` props are less code for the high-frequency small interactions a marketing site has many of. |
+| Motion for UI, GSAP for scroll-storytelling (both, scoped to purpose) | Motion only, skip GSAP entirely | If the redesign's ambition is "polished and tasteful" rather than "cinematic scrollytelling." Motion's `whileInView` + `useScroll`/`useTransform` hooks can do basic scroll-linked reveals without adding a second library. Simpler dependency footprint for a solo maintainer — legitimate default if the founder doesn't want to invest design time in a pinned/scrubbed hero sequence. |
+| `ai` SDK for the re-ideated demo | Plain `@anthropic-ai/sdk` streaming (as in v1) | If the re-ideated demo concept turns out to be a single-turn, structured-JSON-output experience (closer to v1's audit-drafting pattern) rather than a visibly multi-step agent. Keeps the dependency surface identical to what v1 already validated — no new library to learn or maintain. |
+| Native `app/sitemap.ts` | `next-sitemap` package | Only relevant for the Pages Router or very large sites needing sitemap index splitting across thousands of URLs — not applicable at this project's scale. |
+| `next/og` `ImageResponse` (built-in) | Standalone `@vercel/og` install, or a third-party OG-image-as-a-service | Never for this project — `@vercel/og` is already bundled inside `next`, and an external OG-image service adds a network dependency and, often, a paid tier for a capability that's free and built in. |
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|--------------|
-| Vercel Hobby plan | Explicitly disallows commercial use per Vercel's Fair Use Guidelines — this is a lead-gen site for a paid consultancy, which is commercial by their own definition | Netlify Free (commercial use explicitly allowed) or Vercel Pro if budget allows |
-| Calling `@anthropic-ai/sdk` directly from a Client Component | Leaks `ANTHROPIC_API_KEY` into the browser bundle — trivially stealable, leads to a drained/abused API budget | Server-side Route Handler or Server Action that proxies the call |
-| Relying only on Anthropic's account-level rate limits to protect a public demo | Those limits are org/workspace-wide, not per-visitor — a single abusive visitor or bot can consume your entire budget before any Anthropic-side limit engages | Upstash-backed per-IP rate limiting in front of every demo route, plus Turnstile, plus a Console spend limit |
-| A full auth provider (Clerk, Auth.js, Supabase Auth) for the admin review screen | Massive overkill for exactly one user (the founder) reviewing drafts — adds a dependency, a login flow, and maintenance surface for zero real benefit at this scale | A single shared-secret cookie check in middleware |
-| Parsing Claude's freeform text response for the audit report | Freeform prose is brittle to build a structured, editable review UI on top of, and silent formatting drift breaks the admin screen without warning | Forced tool-use / structured JSON output validated against a Zod schema |
-| An ORM (Prisma, Drizzle) for one Supabase table | Unnecessary abstraction layer for a single-table CRUD use case, adds a migration/build-step dependency a solo founder has to maintain | `@supabase/supabase-js` typed client directly |
+| Contentlayer (original) | Archived, unmaintained since 2024; adopting it new means inheriting an abandoned build-time codegen dependency with no security/compat updates going forward | `@next/mdx` (native) or Velite if a typed multi-collection pipeline is truly needed |
+| `next-sitemap` npm package | Duplicates functionality Next.js 16's App Router ships natively via the `app/sitemap.ts` file convention; adds a postbuild step and a dependency for something that's a zero-dependency built-in | Native `app/sitemap.ts` / `app/robots.ts` |
+| Standalone `@vercel/og` install | Already bundled into `next` as `next/og`; installing it separately risks a version mismatch with the one Next.js expects internally | `import { ImageResponse } from 'next/og'` |
+| Scroll-jacking (GSAP `ScrollSmoother`/Lenis) applied site-wide, including blog/content pages | Smooth-scroll and scroll-pinning libraries are a well-documented accessibility hazard (breaks native scroll behavior for screen-reader and keyboard users, fights `prefers-reduced-motion`, mobile momentum scroll) and a Core Web Vitals risk if not lazy-loaded; content/blog pages in particular gain nothing from it and lose scannability | Scope any scroll-driven library strictly to the landing-page hero/narrative section, gate behind `prefers-reduced-motion: no-preference`, and leave blog/content pages as plain native scroll |
+| Old GSAP tutorials/blog posts referencing "Club GSAP" membership or license tokens for ScrollTrigger/SplitText | Predate the April 2025 Webflow acquisition that made all plugins free; following a pre-2025 guide may lead you to add unnecessary license-key config that no longer exists | Current GSAP docs (gsap.com) — no membership, no token, `npm install gsap` gets everything |
+| Rendering `useChat`'s default UI without explicitly handling `tool-call`/`tool-result`/`reasoning` part types | The default renderer only shows `text` parts; when the model pauses to call a tool, the UI shows nothing and the demo looks frozen to a skeptical, non-technical visitor — the worst possible failure mode for a demo whose entire job is building trust | Explicitly switch on all `part.type` values in the render loop and show a visible "agent is doing X" state for tool calls |
 
 ## Stack Patterns by Variant
 
-**If the founder wants zero custom backend/admin code before launch:**
-- Use Airtable instead of Supabase for persistence + review
-- Skip the custom `/admin` middleware-protected UI entirely
-- Because it trades review-UX polish for dramatically less code to build and maintain solo pre-launch
+**If the redesign scope is "polished and tasteful" (default, lower-risk):**
+- Use Motion alone for hero reveals, hover states, and `whileInView` scroll fades
+- Skip GSAP and Lenis entirely
+- Because it's the smaller dependency footprint and faster to build/maintain solo — reach for the heavier scrollytelling stack only if the founder specifically wants a cinematic, timeline-choreographed hero
 
-**If demo cost exposure becomes a real concern after launch (e.g., a demo goes viral or gets hammered by bots):**
-- Tighten the Upstash rate-limiter window (e.g., 3 runs/IP/day instead of /hour)
-- Drop the public demos to Haiku's cheapest configuration and cap `max_tokens` tightly
-- Consider requiring an email address (captured via the form, validated, and rate-limited per-email too) before a demo runs, turning "anonymous public demo" into a soft lead-capture gate
-- Because the three-layer defense in the base recommendation is a reasonable default, not a guarantee — real-world abuse patterns should tighten it, not the reverse
+**If the redesign scope is "cinematic scrollytelling landing page" (higher visual ambition, matches "site itself is proof of craft"):**
+- Add `gsap` + `ScrollTrigger` + `@gsap/react` for the 5-part message-hierarchy scroll narrative, optionally `lenis` for inertia scroll
+- Because GSAP+ScrollTrigger is the industry-standard tool for pinned/scrubbed multi-step scroll sequences and, since April 2025, costs nothing — but budget real design/QA time for `prefers-reduced-motion` fallbacks and mobile scroll testing, since this is the highest-pitfall-risk part of the redesign
+
+**If the re-ideated demo is single-turn / structured-output (closer to v1's shape):**
+- Reuse the already-validated `@anthropic-ai/sdk` Route Handler + Zod-schema-forced-tool-use pattern from v1 unchanged
+- Because it's proven, and adding the `ai` SDK for a non-streaming, non-multi-step demo is unjustified extra surface area for a solo maintainer
+
+**If the re-ideated demo is multi-step / visibly agentic ("watch the agent work" — the stronger fit for FDE positioning):**
+- Use `ai` + `@ai-sdk/anthropic` + `@ai-sdk/react` (`useChat` or `useObject`) with explicit UI for every streamed part type
+- Because the FDE narrative's differentiator *is* proximity/process visibility — a demo that only shows a final answer undersells the pitch that this consultancy embeds in and exposes real workflow steps
 
 ## Version Compatibility
 
 | Package A | Compatible With | Notes |
 |-----------|------------------|-------|
-| next@16.x | react@19.x, react-dom@19.x | Next.js 16 requires React 19; `create-next-app@latest` wires this up automatically. |
-| next@16.x (App Router) | Netlify Next.js Runtime v5 | v5 is the current Netlify adapter with full App Router + Server Actions support (confirmed via Netlify docs, early 2026) — do not use the legacy v4 runtime for a new project. |
-| tailwindcss@4.x | Next.js 16 | v4's CSS-first config (`@import "tailwindcss"` in globals.css, no `tailwind.config.js` needed by default) is what `create-next-app --tailwind` scaffolds now; don't follow v3-era tutorials that reference `tailwind.config.js` as required. |
-| @upstash/ratelimit@2.x | @upstash/redis@1.x | Ratelimit v2 is built against the HTTP-based `@upstash/redis` client, not `ioredis` — required for compatibility with stateless serverless/edge runtimes (Netlify Functions, Cloudflare Workers). |
-| zod@4.x | react-hook-form@7.x via @hookform/resolvers | Confirm the resolvers package version supports Zod 4's schema API before upgrading past what `npm install` resolves by default — Zod 4 changed some internal type-inference behavior from v3. |
+| `@next/mdx@16.2.10` | `next@16.2.10` | Versioned in lockstep with Next.js core — install whatever version `npm install @next/mdx` resolves against the project's installed `next` version rather than pinning independently. |
+| `@next/mdx` + Turbopack | remark/rehype plugins passed as **strings** (e.g., `'remark-gfm'`), not function references | Turbopack (Next.js 16's default dev/build engine) can't pass JS functions to its Rust plugin pipeline; plugins without serializable string-based config aren't usable yet under Turbopack. Confirmed in official Next.js MDX guide (fetched 2026-07-20, doc dated 2026-06-23). |
+| `motion@12.x` | `react@19.x` (App Router, Server Components) | Any file importing `motion` must be a Client Component (`"use client"`), or import from `motion/react-client` instead of `motion/react` to shrink the client bundle. Confirmed via Context7 (`/websites/motion_dev`, React 19/Next.js App Router installation docs). |
+| `gsap@3.15.0` + `@gsap/react@2.1.2` | `react@19.x` | Use the `useGSAP()` hook from `@gsap/react` (not raw `useEffect`) for any GSAP animation inside a component — it handles context cleanup correctly on unmount/Strict Mode re-render, which matters for React 19's stricter effect behavior. |
+| `ai@7.x` | `@ai-sdk/anthropic@4.x`, `@ai-sdk/react@4.x` | These three move together as one SDK family; check that all three are on compatible majors when upgrading — the AI SDK's provider-package versioning has moved fast through 2025–2026, so pin and upgrade them as a set rather than individually. |
+| `@tailwindcss/typography@0.5.20` | `tailwindcss@4.x` | Already-compatible with the kept Tailwind CSS 4 scaffold; add via the CSS-first `@plugin` directive in `globals.css` (v4 pattern) rather than a `tailwind.config.js` `plugins` array. |
 
 ## Sources
 
-- Vercel Docs — `/docs/plans/hobby` and `/docs/limits/fair-use-guidelines` (fetched 2026-07-19, doc `last_updated: 2026-06-16`) — HIGH confidence, official source, direct quote on commercial-use restriction
-- Netlify Support Forums + netlify.com/pricing — commercial use permitted on Free plan — MEDIUM confidence (community + vendor marketing page, not a formal ToS fetch, but consistent across multiple sources)
-- Netlify Docs / netlify.com blog — Next.js Runtime v5 App Router + Server Actions support — MEDIUM confidence (WebSearch-aggregated, not a direct doc fetch)
-- Cloudflare Developer Docs — Pages/Workers free tier limits, commercial use, Turnstile independence from DNS proxy — MEDIUM confidence (WebSearch + community threads)
-- Claude Platform Docs — `/docs/en/manage-claude/rate-limits-api` (fetched 2026-07-19) — HIGH confidence, official, confirms rate limits are org/workspace-scoped (not per-visitor) and that spend limits are configured via Console Limits tab
-- Claude/Anthropic pricing pages (aggregated via WebSearch, cross-referenced across cloudzero.com, finout.io, benchlm.ai) — MEDIUM confidence on exact figures ($1/$5 Haiku 4.5, $3/$15 Sonnet with $2/$10 intro pricing through Aug 2026) — re-verify at platform.claude.com/docs/en/about-claude/pricing before committing budget
-- Context7 — `/vercel/next.js` and `/anthropics/anthropic-sdk-typescript` resolved — confirms both are actively maintained, high-reputation libraries; used for version/ecosystem signal, not deep API detail in this pass
-- npm registry (`npm view <pkg> version`, fetched 2026-07-19) — HIGH confidence, ground-truth current published versions for all listed packages
-- Astro Docs — `docs.astro.build/en/guides/actions/` (aggregated via WebSearch) — MEDIUM confidence, used only to characterize the Astro alternative, not the primary recommendation
-- Supabase Docs / billing FAQ (aggregated via WebSearch) — MEDIUM confidence on free-tier numbers and the 7-day auto-pause behavior — re-verify exact limits at supabase.com/pricing before implementation, these figures shift
+- Context7 `/websites/motion_dev` — React 19 / Next.js App Router installation, RSC compatibility — HIGH confidence
+- Next.js official docs — `nextjs.org/docs/app/guides/mdx` (fetched 2026-07-20, doc `lastUpdated: 2026-06-23`, `version: 16.2.10`) — HIGH confidence, direct fetch, covers `@next/mdx` setup, frontmatter-as-export pattern, Turbopack plugin string requirement
+- Next.js official docs — `nextjs.org/docs/app/getting-started/metadata-and-og-images`, `nextjs.org/docs/app/api-reference/functions/image-response` (aggregated via WebSearch, cross-referenced) — MEDIUM-HIGH confidence; `next/og` bundling and `opengraph-image.tsx` file convention consistent across multiple sources
+- npm registry (`npm view <pkg> version`, fetched 2026-07-20) — HIGH confidence, ground-truth current published versions for every package listed
+- Webflow / GreenSock — `webflow.com/updates/gsap-becomes-free`, GSAP `gsap.com/pricing` (aggregated via WebSearch, cross-referenced across Webflow's own announcement, GSAP's pricing page, and multiple independent write-ups) — HIGH confidence on the free-plugin-license claim; consistent across the vendor's own announcement and third-party coverage
+- WebSearch (aggregated, multiple sources) — Motion vs. GSAP tradeoffs for marketing-site scroll animation — MEDIUM confidence, judgment-based rather than a hard technical fact; treated as informed opinion, not asserted as settled truth
+- WebSearch (aggregated) — Vercel AI SDK streaming, `useChat` part-type rendering pitfall (tool calls appearing "frozen" if unhandled) — MEDIUM confidence; consistent across several dev-focused sources, worth spot-checking against `ai-sdk.dev` docs directly at implementation time given how fast this SDK has moved through majors in 2025–2026
+- Contentlayer archival status — WebSearch aggregated (multiple sources describing 2024 archival and the Contentlayer2 community fork) — MEDIUM confidence
 
 ---
-*Stack research for: Solo AI-consultancy marketing site with Claude-powered demos and AI-drafted audit funnel*
-*Researched: 2026-07-19*
+*Stack research for: AI Deployed v2.0 FDE Pivot — blog/content engine, SEO, visual redesign, re-ideated demos*
+*Researched: 2026-07-20*

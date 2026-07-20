@@ -1,198 +1,204 @@
 # Feature Research
 
-**Domain:** AI-automation consultancy / agency lead-generation website (solo founder, SMB targets)
-**Researched:** 2026-07-19
-**Confidence:** MEDIUM-HIGH (WebSearch-verified across multiple sources; no Context7-eligible libraries in this domain — this is a marketing/positioning research question, not a library API question)
+**Domain:** FDE/AI-transformation consultancy marketing site — landing page, content/blog credibility engine, interactive AI demos, for a solo, anonymous, SMB-facing practice
+**Researched:** 2026-07-20
+**Confidence:** MEDIUM (consultancy/SaaS landing-page and content patterns are well-documented and cross-verified across multiple sources; FDE-specific *solo-practice* website examples are scarce — existing FDE web presence is enterprise consultancies like Deloitte/Fujitsu, not solo/anonymous operators, so that piece is triangulated from adjacent domains: solo consultants, B2B SaaS, and AI automation agencies)
+
+**Note:** This supersedes the v1 (2026-07-19) FEATURES.md, which was written for the pre-pivot positioning (missed-calls pain point, 4-vertical strategy, named-founder trust signals). That research is obsolete per PIVOT-BRIEF.md — this file replaces it for the v2.0 FDE Pivot milestone.
 
 ## Feature Landscape
 
-### Table Stakes (Users Expect These)
+### Area 1 — FDE Landing Page
 
-Features a skeptical SMB owner assumes exist. Missing these reads as "not a real business" and they bounce.
+#### Table Stakes (Visitors Expect These)
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Clear, jargon-free homepage headline stating the outcome (not the tech) | SMB owners buy dollars/hours, not "AI." Generic AI-agency copy is the single most-cited credibility killer in competitor research. | LOW | ROI-first language already decided in PROJECT.md — enforce on every page, not just homepage. |
-| 5-page core structure: Home, About, Services, Proof, Contact | This is the baseline structure found across every solo-consultant site researched; visitors expect to find these without hunting. | LOW | "Proof" substitutes for case studies pre-launch (see Differentiators — anonymized/demo-based proof). |
-| Persistent, low-friction booking CTA (Calendly-style embed) on every page | Businesses using on-site scheduling see meaningfully higher booked-consultation rates; removing the "email back and forth" step is now a baseline expectation, not a differentiator. | LOW | Use a scheduling embed (Calendly/Cal.com), not a "contact us and we'll email you" form. |
-| Real contact info + real person: founder photo, name, physical city/region, matching business email domain | Trust-signal research is unanimous: anonymity/genericness is the top skepticism trigger for SMB buyers evaluating an unknown vendor. | LOW | Directly served by the FDE founder-story requirement already in PROJECT.md. |
-| Mobile-responsive, fast-loading, HTTPS | Baseline technical hygiene; real estate/home-services buyers are majority-mobile. Missing = looks unmaintained. | LOW | Standard for any modern static/JAMstack site. |
-| Simple, structured lead-capture form (not a bare "Contact us" textbox) | Generic single-field contact forms underperform structured/qualifying forms; SMB owners expect the intake to feel considered, especially for a "workflow audit." | LOW-MEDIUM | The workflow-audit questionnaire itself satisfies this — no separate generic contact form needed as the primary CTA. |
-| Explicit "here's what happens next" / how-it-works section | Reduces the biggest objection for unknown solo vendors: "what am I actually agreeing to?" | LOW | Applies to both the audit funnel and the engagement model (project → retainer). |
-| Vertical-relevant language on each landing surface (not one generic page for all 4 industries) | Research is unanimous: a landing page tuned for one vertical underperforms badly when reused verbatim for a different one — different objections, different purchase cycles, different vocabulary. | MEDIUM | Does not require 4 fully separate page designs at launch — but headline, pain examples, and audit questions must be vertical-aware at minimum. |
+| Single clear hero: outcome-focused headline + subhead naming audience/mechanism + one primary CTA | 57% of page-viewing time is spent above the fold; headlines under ~8 words that name the outcome (not the feature) convert best | LOW | Headline should center TIME/EFFICIENCY/PROFIT or the gap, not "AI agents" jargon — jargon belongs in subhead/body for SEO, not the emotional hook |
+| Problem → agitate → solution copy flow (PAS) | Names the visitor's real frustration in their own words before pitching a fix; matches the brief's gap→fix→outcomes→offer→CTA hierarchy almost 1:1 | LOW | The 95%-failure stat is the "agitate" — use it early, with the source cited for credibility |
+| One consistent CTA repeated top/mid/bottom ("Book your free audit") | Buyers scan long pages; identical CTA at every scroll depth removes friction and keeps the single conversion goal unambiguous | LOW | Already have Cal.com booking (kept from v1) — reuse, don't add a second conversion path |
+| Benefits framed as outcomes, not features | "Fast workflow automation" is a feature; "recover 10 hours a week" is a benefit — visitors answer "what's in it for me," not "what does it do" | LOW | TIME/EFFICIENCY/PROFIT are already the right vocabulary for this |
+| Transparent pricing / offer structure visible on the page (not gated behind a call) | B2B buyers self-qualify on price; publishing structure (even ranges) reduces buyer anxiety and filters unqualified leads before they book time | LOW | Offer is already decided: free audit → <$10k setup → <$2k/mo retainer — this is well *below* the $3k–$20k/mo retainer range typical of AI automation agencies (MEDIUM confidence, cross-referenced across 3 pricing-guide sources), so the affordability contrast is a legitimate, provable claim, not just marketing copy |
+| Mobile-responsive, fast-loading | B2B research increasingly starts on mobile even when deals close on desktop; page speed affects both conversion and SEO ranking | LOW | Standard Next.js/Tailwind baseline; watch this against the "visually impressive" redesign goal (see Anti-Features) |
+| Social proof / trust signal near the CTA | Reduces buyer risk-anxiety at the exact decision point; even without named-client logos, *some* proof element must sit beside the CTA | MEDIUM | This is the hardest table-stake for this project specifically — no clients yet, anonymous positioning rules out headshots/bios. Substitute proof = methodology transparency (how the audit works, step by step), the 95%-stat citation, and process credibility until real anonymized case studies exist |
+| Buyer-vocabulary SEO in headings/copy: "AI agents," "automation," "AI-native transformation," "forward-deployed engineer" | These are the literal search terms buyers use; matching visible copy to buyer vocabulary is both an SEO requirement and a comprehension requirement (jargon anchors trust with technical buyers, plain-language outcomes anchor trust with non-technical ones) | LOW | Already specified in PROJECT.md — needs to appear in H1/H2s and meta, not just body copy, to actually move SEO |
 
-### Differentiators (Competitive Advantage)
-
-These map directly to the wedge already chosen in PROJECT.md. Competitor research confirms none of the surveyed AI-audit-lead-magnet competitors (Ciela AI, Arkeo AI, Execution Point Consulting, Layer3 Labs, MannVenture, Fleece AI) combine live interactive demos with an AI-drafted, human-reviewed audit report — most offer either a static audit form or a booked call, not both an experiential demo and a self-serve report.
+#### Differentiators (Competitive Advantage)
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Ungated interactive demos (missed-call recovery, intake triage) usable without an email gate | Interactive demos drive dramatically higher conversion than static content (roughly 8x reported industry-wide), and top-performing demo CTAs are placed above the fold, un-gated, "try it yourself" style. Gating kills the "let them experience it" advantage this project is built around. | MEDIUM-HIGH | Requires live Claude API calls on demo interaction — needs rate-limiting/cost guardrails (ties to PROJECT.md budget constraint). Keep each demo short: best-performing interactive product demos complete in well under 12 steps. |
-| Self-serve workflow-audit questionnaire → Claude-drafted, founder-reviewed findings report | This is the core wedge: it's simultaneously the lead magnet, the qualifier, and a live proof-of-capability demo — competitors' "free audit" offers are either a phone call or a generic PDF, not a personalized AI-drafted artifact the prospect can watch get created for them. | HIGH | Depends on: questionnaire (vertical-aware branching logic) + Claude drafting pipeline + founder review/edit step before send. Human review step is what keeps this trustworthy (see Pitfalls/anti-features on hallucination risk). |
-| Vertical-specific ROI calculator/estimator (e.g., "a missed call costs your HVAC business ~$X/month") | ROI calculators convert roughly 2x better than static pages because buyers who build their own business case are far more likely to act — and dollar-framed math is exactly the ROI-first messaging PROJECT.md calls for. | MEDIUM | Depends on rough per-vertical benchmark data (avg. job value, missed-call rate) — needs light research/assumptions per vertical, clearly labeled as estimates. |
-| Founder FDE story as the explicit "why trust an AI-drafted report" narrative | Directly answers the "no case studies yet" credibility gap — research confirms that for pre-portfolio consultants, a sharp, specific diagnosis of the prospect's situation (which the demo + audit report both deliver) builds more trust than borrowed case studies. | LOW | Content/copy work, not engineering — pairs with About page. |
-| Transparent engagement-model page (fixed-scope project → monthly retainer, explained plainly, indicative pricing range) | SMB owners are wary of "call us for a quote" — showing the shape of engagement (not necessarily exact price) reduces the biggest friction point before booking a call, especially for buyers unused to buying "AI." | LOW-MEDIUM | Doesn't require published fixed pricing (still custom proposals per PROJECT.md) — a clear 2-step model diagram + "what's included" satisfies the transparency need without contradicting the custom-proposal decision. |
-| "Powered by Claude" / AI-native transparency angle | Positions the founder as using the same frontier tooling being sold — a subtle proof point that the consultancy practices what it pitches, differentiating from agencies that resell black-box no-code tools. | LOW | Content decision, ties to PROJECT.md's "AI features built on Claude" constraint. |
+| The site itself as proof of craft (visually impressive, distinctive design system) | For a business selling "custom, white-glove" work, a template-looking site directly undercuts the pitch — this is explicitly called out in PROJECT.md/PIVOT-BRIEF.md as a founder priority | MEDIUM–HIGH | Real differentiation risk if under-executed: "visually impressive" is subjective and easy to over-scope solo. Bound it — one strong distinctive element (e.g., a signature visual motif, thoughtful micro-interactions) beats broad novelty everywhere |
+| Explicit "worst-case scenario" / conservative framing in the outcomes section | Removes risk for a skeptical buyer — "even in the worst case, you still come out ahead" is a documented pattern in AI ROI tooling for exactly this audience (skeptical SMB owners) | LOW–MEDIUM | Pairs naturally with the free-audit no-commitment framing already in the offer |
+| Process/methodology transparency section ("how the audit works," "how an engagement runs") | Substitutes for the trust signals a named founder or client logos would normally provide; makes the anonymous positioning feel deliberate/professional rather than evasive | LOW | Directly mitigates the biggest table-stakes gap (no social proof yet) — treat as near-mandatory, not optional, given the anonymity constraint |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+---
+
+### Area 2 — Blog / Content Credibility Engine
+
+#### Table Stakes (Needed at Launch for the Engine to Function)
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| One pillar page + a small cluster of supporting posts, not a single "blog" dumping ground | Topic-cluster structure (pillar → cluster, internally linked) is the dominant SEO pattern for building topical authority in 2026; a handful of disconnected posts doesn't build authority the way a structured cluster does | MEDIUM | Recommended minimum for a solo operator at launch: 1 pillar (e.g., "What Forward-Deployed AI Engineering Means for Small Businesses," ~1,500–3,000 words — full 3,000–5,000 is B2B-competitive-topic scale, likely overkill pre-launch) + 3–5 cluster posts answering one specific buyer question each (what is an FDE, what is AI-native transformation, why off-the-shelf AI tools fail SMBs, etc.) |
+| Content written to buyer search vocabulary, not internal jargon | Freelancers/consultants commonly fail here — they write about what interests them, not what prospects actually search; the whole point of this content engine is buyer-vocabulary SEO | LOW | Directly reuses the four required terms from PROJECT.md as cluster-post topics/titles |
+| Each post answers one specific buyer question and links back to the landing page / audit CTA | Content that doesn't route back to conversion is a blog for its own sake, not a credibility *engine* | LOW | Every post needs a "book your free audit" CTA — this is a lead-gen site, not a personal blog |
+| Anonymized engagement write-ups (case-study-style posts) as they accumulate | This is the single highest-value content type name-checked in the pivot brief itself — before/after, quantified outcomes | MEDIUM | None exist at launch ("as they accumulate" — PROJECT.md). Structure the format now (situation → diagnosis → what was built → measured TIME/EFFICIENCY/PROFIT outcome, client anonymized by descriptor e.g. "a 12-person HVAC dispatcher") so the first real engagement slots in without a rework |
+| Readable, fast, indexable pages (no gating, no heavy client-side-only rendering) | Gated content (email walls) kills SEO value — the entire purpose here is search visibility and authority, not lead capture through content | LOW | Server-rendered/static MDX pages align with Next.js App Router defaults already in the stack |
+
+#### Differentiators (Competitive Advantage)
+
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| Anonymized case studies with specific, quantified before/after numbers | The documented technique for making anonymous case studies still convincing is *compensating* for the missing brand name with richer data (exact percentages, timelines, quotes by job title not name) — this is achievable within the anonymity constraint | MEDIUM | This is where "TIME/EFFICIENCY/PROFIT" outcomes become concrete instead of abstract marketing language — high leverage once even 1 engagement is written up |
+| "AI-native transformation" as an owned content pillar (not just a keyword) | This phrase has lower existing competition than "AI agents" or "automation" (broader, more contested terms) — becoming the reference explainer for this specific term is a realistic ranking target for a new site | LOW–MEDIUM | Good candidate for the pillar page itself; unverified ranking-difficulty claim (LOW confidence, not measured directly) — treat as a reasonable bet, not a guarantee |
+
+---
+
+### Area 3 — Interactive AI Demo(s)
+
+#### Table Stakes (For the Demo Concept to Do Its Job)
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Demo directly demonstrates the *actual* service (an audit-style diagnosis or a live agent doing real work), not a generic "chat with AI" novelty | v1's scrapped demos (missed-call recovery, intake triage) failed this test by being tied to a specific pain point rather than the FDE process itself; a demo that doesn't map to "what you'd actually get" doesn't move a skeptical buyer | MEDIUM | Re-ideation should center on the audit/diagnosis motion itself — e.g., visitor describes a real repetitive task, the demo (Claude Haiku) responds with a mini "here's where automation fits and roughly what it'd save you" — this mirrors the real deliverable instead of a disconnected use-case toy |
+| No signup/email wall to try it | Public demos exist to prove capability before the ask; gating the demo behind a form defeats its purpose and most comparable demo tools are try-first | LOW | Rate-limit and bot-protect (Turnstile) instead of gating — already decided in STACK.md |
+| Fast (results in seconds), mobile-friendly, bounded input | Skeptical non-technical visitors abandon slow or confusing tools quickly; the demo needs to feel effortless, not like homework | LOW–MEDIUM | Reuses the already-decided Haiku 4.5 + rate-limit + Turnstile pattern from STACK.md — no new infra decisions needed, only new prompt/output design |
+| Visible, believable output tied to the outcomes framing (TIME/EFFICIENCY/PROFIT) | The demo's output should use the same three-outcome vocabulary as the rest of the site, or it feels like a disconnected gimmick | LOW | Cheap to get right, easy to get wrong by accident — enforce via the Zod-validated structured output schema (already decided in STACK.md) |
+
+#### Differentiators (Competitive Advantage)
+
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| "Mini-audit" style demo: visitor briefly describes one repetitive task, demo returns a structured mini-diagnosis (where automation fits + rough TIME/EFFICIENCY/PROFIT estimate) | Directly previews the real product (the free audit) rather than an arbitrary use case — very few competitor consultancy sites let a visitor experience a scaled-down version of the actual deliverable before booking anything | MEDIUM | Highest-value re-ideation candidate found in research; low marginal Claude cost per run (Haiku, bounded input/output) fits the $0-recurring / pay-as-you-go constraint |
+| Simple client-side ROI calculator (hours/week × hourly cost → annual TIME/PROFIT recovered) as a *second*, zero-marginal-cost proof point | ROI calculators are a well-established pattern for this exact audience (skeptical SMB owners want to see their own numbers, not generic claims); this one needs no Claude API call at all, so it's free to run unlimited times | LOW | Good complement to the Claude-backed mini-audit demo — gives a free, instant, no-rate-limit-needed interaction, then funnels toward the deeper (rate-limited) AI demo or the CTA |
+| Optional "worst-case toggle" on the calculator/demo output | Documented technique for defusing skepticism directly — showing that even a conservative/worst-case estimate still nets positive value removes the buyer's main objection | LOW | Cheap addition to either demo; reinforces the anonymous-positioning trust-substitute strategy from Area 1 |
+
+---
+
+### Anti-Features (Commonly Requested, Often Problematic — All Three Areas)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|------------------|-------------|
-| Voice-bot / AI phone receptionist demo | Feels like the "obvious" AI-agency demo | Market is saturated and commoditized (Podium, Bland, dozens of others already own this positioning); already correctly excluded in PROJECT.md | Missed-call text-back + intake triage demos, which are fresher and cheaper to run live |
-| Fully-automated audit report with no human review | Feels more "AI-native," removes founder bottleneck, scales infinitely | LLM hallucination risk is well documented in marketing/consulting contexts (fabricated stats, invented specifics) — sending an unreviewed report to a prospect risks a credibility-destroying factual error on the very artifact meant to build trust | Keep the human-review gate (already decided in PROJECT.md); consider a visible "reviewed by [founder]" note on the report as a trust signal, not just an internal QC step |
-| Generic AI chatbot widget answering all site questions unsupervised | Seems like a natural "we use AI" showcase | Research flags over-automation and unsupervised AI agents as active trust-destroyers for SMB buyers specifically — the opposite of the intended effect; also a support burden (someone must monitor it) for a solo founder | Let the two flagship demos (missed-call, intake triage) carry the "we build AI agents" proof; skip a generic on-site chatbot entirely |
-| Gating interactive demos behind an email-capture form before they can be tried | Standard SaaS lead-gen instinct ("capture the lead first") | Directly contradicts what makes interactive demos convert well — friction before value defeats the "try it yourself" proof strategy this project is betting on; top-performing demo CTAs are un-gated | Let demos run freely; put the email/qualifying capture at the workflow-audit questionnaire step, which is the natural next action after a convinced visitor |
-| Fake/placeholder testimonials, stock "trusted by" logos, or padded 5-star ratings with no text | No real clients yet, feels like a shortcut to instant credibility | Research is explicit: generic, unverifiable social proof reads as fake and increases skepticism rather than reducing it — actively worse than no social proof section at all | Lead with demo-based proof ("try it yourself") + founder credibility story; add a real testimonials section only once real client results exist (v2+) |
-| Full self-serve checkout / payment processing on the site | Feels more "automated" and scalable, matches SaaS conventions | Already correctly excluded in PROJECT.md — engagements are custom scoped proposals; a payment flow implies fixed productized pricing that doesn't exist yet | Booking → conversation → custom proposal, closed off-site |
-| Client portal / logged-in dashboard at launch | Feels like a "real product," roadmap-friendly to imagine early | No clients yet — building auth/dashboard infra before there's anyone to use it is premature complexity for a solo-maintained site | Defer to v2+, only once retainer clients exist and need a shared workspace |
-| Long, enterprise-style multi-step lead qualification / lead-scoring / CRM routing logic | Standard B2B SaaS lead-gen playbook, feels sophisticated | Target buyer is a single-owner decision-maker with no procurement committee (per PROJECT.md) — enterprise-grade lead routing solves a problem this business doesn't have and adds real engineering/maintenance overhead for a solo founder | Keep the workflow-audit questionnaire itself as the qualifier; route everything to one inbox/CRM the founder checks directly |
+| Open-ended "ask me anything about AI" chatbot | Feels like an easy, impressive-looking demo to build | Unbounded input/cost risk against the $0-recurring budget even with rate limiting; doesn't demonstrate FDE-specific value (this is exactly the trap v1's demos fell into — generic capability, not proof of the actual service); increases abuse surface | The bounded "mini-audit" demo (Area 3) — same underlying Claude call pattern, but scoped input and structured output |
+| Named founder bio/headshot section for credibility | Founder bios are a default "build trust" move in consulting-site templates | Directly conflicts with the explicit anonymity constraint in PROJECT.md/PIVOT-BRIEF.md ("an experienced FDE," no name or photo) | Process/methodology transparency section + anonymized case studies (Area 1 & 2 differentiators) |
+| Gating blog content behind email capture | Feels like it converts content readers into leads | Kills the SEO/authority value that is the entire point of a "credibility engine" — search engines and skeptical readers both distrust gated thought-leadership; also adds an email-nurture system this solo build doesn't need yet | Every post ends with a direct "book your free audit" CTA instead — no intermediate gate |
+| Full case-study library / dozens of blog posts at launch | More content feels more credible | Solo-maintainable content velocity is the real constraint — over-committing to volume at launch risks an abandoned-looking blog, which damages credibility worse than a lean one | 1 pillar + 3–5 cluster posts at launch (Area 2 table stakes); add real anonymized case studies as engagements complete, not before |
+| Vertical-specific landing pages (home services, medical/dental, legal, real estate) | Was the v1 approach; feels like better-targeted SEO | Explicitly out of scope for v2 — the pivot brief sells FDE horizontally to SMBs, not through vertical wedges; rebuilding vertical pages recreates scope the pivot deliberately cut | Single horizontal FDE landing page + buyer-vocabulary blog content that ranks across verticals |
+| Client login portal / dashboard for demo history or audit results | Feels "complete" for a product-style site | No clients yet — this is a marketing/lead-gen site, not a delivery platform; explicitly out of scope in PROJECT.md | Audit results delivered via the existing email pattern (Resend, already decided in STACK.md) |
+| Heavy animation/scroll-jacking "impressive" design | Directly requested by the "visually impressive" redesign goal if interpreted too literally | Hurts page speed, mobile UX, and SEO — undermines the "site as proof of craft" goal by making the craft feel like flash instead of substance; also a much larger solo build/maintenance burden | One or two well-executed signature visual/interaction elements rather than pervasive heavy animation (see Area 1 differentiator note) |
 
 ## Feature Dependencies
 
 ```
-Workflow Audit Questionnaire (vertical-aware)
-    └──requires──> Vertical-relevant copy/question branching
-                       └──requires──> Vertical landing-page content decisions
+[FDE Landing Page: message hierarchy]
+    └──requires──> [Pricing/offer content decided] (already resolved — free audit → <$10k → <$2k/mo)
+    └──requires──> [Trust-signal substitute copy] (process transparency, since no case studies exist at launch)
+    └──enhanced by──> [Blog/content credibility engine] (internal links from landing page to pillar content raise both SEO and on-page depth)
+    └──enhanced by──> [Interactive demo(s)] (demo sits within or links from the landing page's "outcomes/offer" section as the proof point)
 
-AI-Drafted Audit Report
-    └──requires──> Workflow Audit Questionnaire (data source)
-    └──requires──> Claude drafting pipeline + founder review/edit step
+[Blog / Content Credibility Engine]
+    └──requires──> [Buyer-vocabulary keyword decisions] (already resolved — AI agents, automation, AI-native transformation, forward-deployed engineer)
+    └──requires──> [Content IA/blog implementation choice] (open question in PIVOT-BRIEF.md — in-repo MDX vs. alternative; must be resolved before any post is written)
+    └──enhances──> [FDE Landing Page] (cluster posts capture long-tail buyer searches that a single landing page cannot rank for alone)
 
-ROI Calculator (per vertical)
-    └──enhances──> Vertical landing pages
-    └──enhances──> Homepage ROI-first messaging
+[Interactive Demo(s)]
+    └──requires──> [Existing Claude API integration pattern] (Route Handler/Server Action proxy, Haiku 4.5, Zod-validated structured output — already decided in STACK.md, carried from v1, reusable as-is)
+    └──requires──> [Rate limiting + bot protection] (Upstash + Turnstile — already decided in STACK.md, must ship with any public demo, not after)
+    └──conflicts with──> [Open-ended chatbot demo] (see Anti-Features — the bounded/structured approach and an unbounded chatbot are mutually exclusive design choices, not additive)
 
-Interactive Demos (missed-call recovery, intake triage)
-    └──enhances──> Homepage (above-the-fold proof)
-    └──enhances──> Vertical landing pages (contextualized per industry)
-
-Booking/Scheduling CTA
-    └──requires──> Services/Engagement-model page (context before the ask)
-    (but can also stand alone as a persistent global CTA)
-
-Transparent Engagement-Model Page ──informs──> Booking CTA copy (what happens after booking)
-
-Founder Credibility Story (About) ──supports──> Trust in AI-Drafted Audit Report
-Founder Credibility Story (About) ──supports──> Trust in Interactive Demos
-
-Gated Lead Capture ──conflicts──> Ungated Interactive Demos
-    (do not require email before letting a visitor try a demo)
-
-Fully-Automated Report (no review) ──conflicts──> Human-Reviewed Report
-    (PROJECT.md has already resolved this conflict in favor of human review)
+[Anonymized case-study format]
+    └──requires──> [At least 1 completed engagement] (does not exist yet — format can and should be designed now, but content itself is a v1.x addition, not launch-blocking)
 ```
 
 ### Dependency Notes
 
-- **AI-Drafted Audit Report requires Workflow Audit Questionnaire:** the report is generated from questionnaire answers; questionnaire UX/question design must be finalized (including vertical branching) before the drafting pipeline can be built and tested meaningfully.
-- **ROI Calculator enhances Vertical landing pages and Homepage:** it is not a standalone page — it's most effective embedded where the visitor is already reading vertical-specific pain points, per ROI-calculator conversion research (buyers convert better building their own business case in context).
-- **Interactive Demos enhance Homepage and Vertical pages:** the same two demo components should be reusable/embeddable across the homepage and each vertical page with light copy/framing changes (e.g., "missed call" example uses HVAC framing on the home-services page, front-desk framing on the dental page) rather than being rebuilt per vertical.
-- **Gated Lead Capture conflicts with Ungated Interactive Demos:** this is a real design tension to resolve early — the temptation to capture email before showing the demo will undercut the conversion advantage; resolve by putting the capture point at the audit questionnaire, not the demo.
-- **Fully-Automated Report conflicts with Human-Reviewed Report:** flagging this explicitly because it will resurface as a "just let Claude send it automatically, it'll scale better" temptation later; PROJECT.md already made the trust-first call here and research supports that call (hallucination risk on trust-critical artifacts).
+- **Landing page requires trust-signal substitute copy:** because there are no clients yet and no named founder, the "social proof near CTA" table stake (Area 1) cannot use the default pattern (logos/testimonials) — it must be satisfied by process/methodology transparency instead. This needs to be treated as a first-class content requirement, not a placeholder to fill in later.
+- **Blog requires the content IA/implementation decision:** PIVOT-BRIEF.md flags "in-repo MDX vs. anything else" as still open. This blocks any content work and should be resolved early in phase planning — it's infrastructure, not content strategy.
+- **Interactive demo requires the existing Claude integration pattern:** this is a genuine dependency on already-completed v1 stack decisions (Haiku, rate limiting, Turnstile, structured output via Zod) — the re-ideation work is about the demo *concept and prompt design*, not new infrastructure. Scope phases accordingly; don't re-litigate the technical pattern.
+- **Open-ended chatbot conflicts with the bounded mini-audit demo:** these are alternative designs solving the same "prove AI capability" goal — pick one direction (bounded/structured, per Table Stakes) rather than building both.
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (v1 of the pivot / "v2.0 FDE Pivot" milestone)
 
-Minimum viable product — what's needed to prove the core wedge (demo + audit → booked call) works at all.
+- [ ] FDE landing page with full 5-part hierarchy (gap → fix → outcomes → offer → CTA) — this is the core deliverable of the milestone
+- [ ] Transparent pricing/offer section (free audit → <$10k setup → <$2k/mo retainer) on the landing page — already-decided content, low complexity to implement
+- [ ] Process/methodology transparency section substituting for absent social proof — required given zero case studies + anonymity constraint
+- [ ] Buyer-vocabulary SEO applied to landing page headings, meta, and body copy
+- [ ] 1 pillar blog post + 3–5 cluster posts covering FDE definition / AI-native transformation / why off-the-shelf tools fail SMBs — minimum viable credibility engine, not a full library
+- [ ] Anonymized case-study format/template defined (even with zero posts using it yet) — so the first real engagement slots in without a content-model rework
+- [ ] One re-ideated interactive demo: the bounded "mini-audit" concept (Claude Haiku, rate-limited, structured Zod output) mapped to the FDE framing
+- [ ] Visual redesign covering at minimum the landing page and blog templates — "the site as proof of craft" is core to this milestone, not deferrable
 
-- [ ] Homepage with ROI-first messaging and at least one embedded interactive demo above the fold — this is the core hypothesis under test
-- [ ] Missed-call recovery interactive demo (ungated, try-it-yourself) — cheapest of the two flagship demos to build and validate the "let them experience it" thesis
-- [ ] Self-serve workflow-audit questionnaire (can start with shared/generic questions across verticals, light vertical branching) — the funnel/qualifier can't be deferred, it's the product
-- [ ] Claude-drafted audit report + founder review/edit step before send — trust-critical, must exist from day one, not bolted on later
-- [ ] About/credibility page with founder FDE story — the primary substitute for missing case studies
-- [ ] Services/engagement-model page explaining project → retainer model plainly
-- [ ] Persistent booking CTA (Calendly/Cal.com embed) — table stakes, low complexity, high leverage
+### Add After Validation (v2.x)
 
-### Add After Validation (v1.x)
+- [ ] Client-side ROI calculator as a second, zero-marginal-cost proof point — add once the primary demo and landing page are validated to be converting, since it's additive rather than foundational
+- [ ] Additional blog cluster posts based on early search-performance data
+- [ ] First real anonymized case study, once the first engagement completes — triggers filling in the format defined at launch
+- [ ] "Worst-case scenario" toggle on demo/calculator output — a refinement of an existing proof point, not a new one
 
-Add once the core loop (demo → audit → booked call) is proven to produce at least a few real conversations.
+### Future Consideration (v3+)
 
-- [ ] Intake triage agent demo (second flagship demo) — add once missed-call demo's engagement/conversion data justifies building a second live-Claude-API demo
-- [ ] Full vertical-specific landing pages for all 4 industries (dedicated headline, pain examples, tuned audit questions) — start with the 1-2 verticals showing the most early traction, expand from there
-- [ ] Vertical-specific ROI calculator — once real inputs (avg. job value, missed-inquiry rate assumptions) are validated with early prospects, not invented in a vacuum
-- [ ] Real testimonials/case-study section — trigger: first retainer client agrees to be referenced (even anonymized)
-
-### Future Consideration (v2+)
-
-Defer until there's a client base and retainer relationships to support the added complexity.
-
-- [ ] Client portal / logged-in dashboard — defer until there are actual retainer clients who need a shared workspace; premature before then (already excluded in PROJECT.md)
-- [ ] Additional demo concepts (end-of-day owner digest, review/reputation autoresponder, conversational lead qualifier) — mentioned as future ideas in PROJECT.md; validate the first two demos convert before expanding the demo library
-- [ ] Referral program / partner ecosystem — research notes referral networks are the highest-value lead channel for professional-services/consulting specifically, but this requires an existing client base to seed
-- [ ] Paid-traffic-optimized landing page variants — premature before organic/referral funnel is validated; adds ongoing testing overhead for a solo founder
+- [ ] Full case-study library (multiple anonymized engagements) — defer until enough engagements exist; premature with zero clients at pivot time
+- [ ] Second demo concept — only justified once there's evidence one demo alone isn't converting well enough to warrant more Claude-API surface area
+- [ ] Comparison/positioning content ("FDE consultancy vs. AI agency" style posts) targeting bottom-of-funnel comparison searches — a later-stage SEO play once the pillar/cluster foundation is ranking
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| ROI-first homepage messaging | HIGH | LOW | P1 |
-| Missed-call recovery interactive demo | HIGH | MEDIUM | P1 |
-| Workflow audit questionnaire | HIGH | MEDIUM | P1 |
-| Claude-drafted report + human review | HIGH | HIGH | P1 |
-| About/founder credibility page | HIGH | LOW | P1 |
-| Booking CTA (Calendly-style) | HIGH | LOW | P1 |
-| Engagement-model/services page | MEDIUM | LOW | P1 |
-| Intake triage demo | HIGH | MEDIUM-HIGH | P2 |
-| Full 4-vertical landing pages | MEDIUM-HIGH | MEDIUM-HIGH | P2 |
-| Vertical ROI calculator | MEDIUM-HIGH | MEDIUM | P2 |
-| Real testimonials/case studies | HIGH (once available) | LOW | P2 (blocked on having clients) |
-| Client portal | LOW (pre-clients) | HIGH | P3 |
-| Additional demo library (digest, review responder, qualifier) | MEDIUM | MEDIUM-HIGH each | P3 |
-| Referral/partner program | MEDIUM | MEDIUM | P3 |
+| FDE landing page (5-part hierarchy) | HIGH | MEDIUM | P1 |
+| Pricing/offer transparency section | HIGH | LOW | P1 |
+| Process-transparency trust substitute | HIGH | LOW | P1 |
+| Buyer-vocabulary SEO copy/meta | HIGH | LOW | P1 |
+| Pillar + 3–5 cluster blog posts | HIGH | MEDIUM | P1 |
+| Case-study format/template (no content yet) | MEDIUM | LOW | P1 |
+| Bounded "mini-audit" interactive demo | HIGH | MEDIUM | P1 |
+| Visually distinctive redesign (landing + blog templates) | HIGH | HIGH | P1 |
+| Client-side ROI calculator | MEDIUM | LOW | P2 |
+| First real anonymized case study | HIGH | LOW (content only, once engagement exists) | P2 |
+| Worst-case-scenario toggle | LOW–MEDIUM | LOW | P2 |
+| Full case-study library | MEDIUM | MEDIUM | P3 |
+| Second demo concept | MEDIUM | MEDIUM | P3 |
+| Comparison/bottom-funnel content | MEDIUM | LOW | P3 |
 
 **Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+- P1: Must have for this milestone's launch
+- P2: Should have, add once P1 is shipped and validated
+- P3: Nice to have, future consideration post-milestone
 
 ## Competitor Feature Analysis
 
-| Feature | Ciela AI / Arkeo AI / Execution Point (free-audit AI agencies) | Podium / missed-call SaaS incumbents | Our Approach |
-|---------|------------------------------------------------------------------|----------------------------------------|--------------|
-| Free audit lead magnet | Yes — the category norm; typically a booked call or a static-form-to-PDF/report flow | N/A (product-led, not audit-led) | Match the category norm but differentiate with a *self-serve* questionnaire that produces an AI-drafted, personalized report — most competitors still gate this behind a scheduled call, not a self-serve flow |
-| Live interactive demo on the marketing site | Rare — most rely on describing capability in copy or requiring a booked call to see anything | N/A — Podium demos are typically behind a sales-request form, not open/ungated | Ungated, try-it-yourself demos as the primary above-the-fold proof mechanism — a clear differentiation gap in this competitive set |
-| Human review before deliverable is sent | Inconsistent — several (e.g., Fleece AI) explicitly market "no meetings, instant roadmap," implying no human review step | N/A | Keep explicit human review — turns a competitor's "instant, unreviewed" positioning into our trust advantage, consistent with PROJECT.md decision |
-| Vertical-specific targeting | Mixed — Execution Point targets real estate/insurance/law explicitly; others are generic "small business" | Podium markets broadly across local-service verticals with vertical-flavored case studies/pages | Match with vertical-aware questionnaire branching and (v1.x) dedicated vertical landing pages for the 4 chosen verticals |
-| Transparent engagement/pricing model | Mostly opaque ("book a call to find out") | Published tiered SaaS pricing ($300-500/mo range for missed-call/CRM bundles) | Publish the *shape* of the engagement (project → retainer) without fixed price, splitting the difference — more transparent than audit-agency norm, more flexible than fixed-tier SaaS pricing |
-| Social proof | Testimonials/logos where an existing client base exists; thin or absent for newer entrants | Extensive published case studies and logos (established incumbent) | Cannot compete on social-proof volume pre-launch; substitute with demo-based "try it yourself" proof + founder credibility story, add real proof once earned |
+| Feature | Enterprise FDE consultancies (Deloitte, Fujitsu FDE+C) | Generic AI automation agencies | AI Deployed (this project) |
+|---------|---------------------------------------------------------|----------------------------------|------------------------------|
+| Pricing transparency | Not published (enterprise sales-cycle, custom quotes) | Mixed — some publish ranges, many gate behind a call | Fully published: free audit → <$10k → <$2k/mo — this is a genuine differentiator vs. both comparison sets |
+| Named team/founder credibility | Named leadership, case studies, logos | Usually named founder(s)/team | Anonymous by design — must be compensated with process transparency + anonymized case studies |
+| Interactive proof-of-capability demo | Rare/absent — enterprise sales relies on RFP/pilot process, not public web demos | Occasionally present, usually a generic chatbot widget | Bounded mini-audit demo tied directly to the actual free-audit deliverable — closer to the real product than either comparison set typically offers |
+| Content/blog credibility engine | Present but written for enterprise buyers/analysts, not SMB owner-operators | Inconsistent; often thin or absent for smaller agencies | Buyer-vocabulary-targeted, SMB-owner-operator-focused content — underserved niche per the pivot brief's core market thesis |
 
 ## Sources
 
-- [The 12 best strategies to generate consulting leads in 2026](https://www.enginy.ai/blog/generate-consulting-lead)
-- [How to Build a Lead Generation Website in 2026 That Actually Converts?](https://emergent.sh/learn/how-to-build-a-lead-generation-website)
-- [The 10 Steps to Building a Client-Generating Consulting Website | Consulting Success](https://www.consultingsuccess.com/consulting-website)
-- [Building Trust Signals: The New Currency of Small Business Websites in 2026](https://www.connectmediaagency.com/website-trust-signals/)
-- [Trust Signals That Actually Increase Conversion Rates](https://www.stackmatix.com/blog/trust-signals-that-increase-conversion)
-- [Website Trust Signals: The Complete Guide for Small Businesses](https://www.remarqz.com/post/website-trust-signals-guide)
-- [B2B Website Trust Signals: Building Credibility That Converts](https://www.trajectorywebdesign.com/blog/b2b-website-trust-signals)
-- [6 Ways to Improve Demo Conversions on Your Site | Arcade Blog](https://www.arcade.software/post/how-to-drive-saas-website-conversions)
-- [How to Increase Conversions For Interactive Demos | Navattic](https://www.navattic.com/blog/increase-conversions-for-interactive-demos)
-- [Interactive Demo Platforms and Best Practices for 2026 | Navattic](https://www.navattic.com/blog/interactive-demos)
-- [Impact Of Interactive Demos On Conversion Rates & Time To Convert | Storylane](https://www.storylane.io/plot/the-impact-of-interactive-demos-on-conversion-rates-sales-velocity)
-- [Interactive Demo Best Practices: The Complete Guide for PLG Teams | Chameleon](https://www.chameleon.io/blog/interactive-demo-best-practices)
-- [ROI Calculator Examples: 15 B2B SaaS Tools (2026) Analysis | Outgrow](https://outgrow.co/blog/roi-calculator-examples-b2b-saas)
-- [B2B SaaS Landing Page Best Practices: 5 Pillars for 20% CVR | SaaS Hero](https://www.saashero.net/design/landing-page-optimization-b2b-saas/)
-- [How to Get AI Agency Clients With a Free Audit (2026 Playbook) | Ciela AI](https://ciela.ai/blogs/how-to-get-ai-agency-clients-with-a-free-audit)
-- [Free AI Audit for Small Business | Execution Point Consulting](https://executionpointconsulting.com/ai-audit)
-- [AI Workflow Audit: Free ROI Scorecard for Small Business | Layer3 Labs](https://www.layer3labs.io/ai-workflow-audit)
-- [AI Consulting — Free Workflow Automation Audit | Fleece AI](https://fleeceai.app/ai-consulting)
-- [Free AI Audit for Small Business | MannVenture](https://mannventure.com/ai-audit)
-- [Missed Call Text Back: Best Tools & Setup Guide [2026]](https://www.getaira.io/blog/missed-call-text-back)
-- [4 Ways to Avoid the Hidden Cost of Missed Calls - Podium](https://www.podium.com/article/avoid-the-hidden-cost-of-missed-calls)
-- [Best Missed-Call Text-Back Software for Local Service Businesses | Local Growth Stack](https://localgrowthstack.com/guides/best-missed-call-text-back-software/)
-- [8 Landing Page Examples for Your Home Services Business | Scorpion](https://www.scorpion.co/home-services/insights/blog/verticals/home-services/8-landing-page-examples-for-your-home-services-b/)
-- [Top Examples of Real Estate Landing Pages | Muffin Group](https://muffingroup.com/blog/real-estate-landing-pages/)
-- [7 Professional Services Website Examples for 2026 | Solo Blog](https://blog.soloist.ai/professional-services-website-examples)
-- [How to create an AI Consultant website that actually gets clients (2026 guide)](https://www.theoriq.fr/en/post/ai-consultant-website)
-- [How to get your first 3 clients as an AI consultant (without a portfolio)](https://www.bizwhat.net/p/how-to-get-your-first-3-clients-as)
-- [Book More Appointments And Calls From Your Website - Leadferno](https://leadferno.com/blog/book-more-appointments-and-calls-from-your-website)
-- [20 Website Fixes That Increase Booked Consultations | WSI Next Gen Marketing](https://wsinextgenmarketing.com/checklist-20-website-fixes-that-increase-booked-consultations/)
-- [Qualify, Route, and Book Sales Meetings Instantly | Calendly](https://calendly.com/resources/guides/book-meetings-instantly)
-- [AI Hallucinations in Marketing: 7 Mistakes and How to Stop Them](https://faststrat.ai/ai-hallucinations-marketing-7-mistakes/)
-- [Common AI Marketing Mistakes That Small Businesses Make | LNM](https://linknow.com/blog/2026/02/06/common-ai-marketing-mistakes/)
-- [5 Reasons Your AI Website Sucks - Hemisphere Design](https://www.hemispheredm.com/ai-website-problems-solutions-small-business)
+- [Creating a Consulting Landing Page That Turns Visitors Into Clients — Melisa Liberman](https://www.melisaliberman.com/blog/consulting-landing-page) — MEDIUM confidence, consultant-specific landing page structure
+- [CXL — How to Build a High-Converting Landing Page: Anatomy, Structure & Design](https://cxl.com/blog/how-to-build-a-high-converting-landing-page/) — MEDIUM confidence, established CRO publication
+- [Unbounce — 15 high-converting landing page examples](https://unbounce.com/landing-page-examples/high-converting-landing-pages/) — MEDIUM confidence
+- [Flow Agency — High-Performing B2B SaaS Landing Page Best Practices](https://www.flow-agency.com/blog/b2b-saas-landing-page-best-practices/) — MEDIUM confidence, cross-referenced hero/social-proof/CTA findings
+- [SaaS Hero — Data-Driven B2B SaaS Landing Page CTA Best Practices](https://www.saashero.net/design/b2b-saas-landing-cta-practices/) — MEDIUM confidence
+- [Invisible Tech — What is Forward-Deployed Engineering](https://invisibletech.ai/blog/what-is-forward-deployed-engineering) — HIGH confidence (already the project's own core-thesis source, per PIVOT-BRIEF.md)
+- [Deloitte — Forward Deployed Engineering](https://www.deloitte.com/us/en/services/consulting/services/forward-deployed-engineering.html) — MEDIUM confidence, only enterprise FDE web-presence example found
+- [Fujitsu Global — Forward deployed engineer + consultant (FDE+C)](https://global.fujitsu/en-global/wayfinders/what-we-do/fde-c) — MEDIUM confidence, second enterprise FDE web-presence example
+- [XY Planning Network — The Trust Factor: How Solo Practitioners Can Build Credibility Without Compromising Client Privacy](https://www.xyplanningnetwork.com/advisor-blog/the-trust-factor-how-solo-practitioners-can-build-credibility-without-compromising-client-privacy) — MEDIUM confidence, directly relevant to anonymous-positioning trust-substitute strategy
+- [Umbrex — Build a Simple, Credible Online Presence for Trust](https://umbrex.com/resources/how-to-start-your-own-consulting-practice/build-a-simple-credible-online-presence/) — MEDIUM confidence, independent-consultant-specific
+- [Proofmap — How to Write Anonymous Case Studies: Template & Best Practices](https://proofmap.com/insights/how-to-write-anonymous-case-studies) — MEDIUM confidence, directly informs the anonymized-case-study format recommendation
+- [Orange Marketing — What's In A Name? Writing Compelling Anonymous Case Studies](https://blog.orangemarketing.com/writing-compelling-anonymous-case-studies) — MEDIUM confidence, corroborates the "compensate with data" technique
+- [Search Engine Land — The complete guide to topic clusters and pillar pages for SEO](https://searchengineland.com/guide/topic-clusters) — HIGH confidence, established SEO publication, used for pillar/cluster minimums
+- [Conductor — Topic Cluster and Pillar Page SEO/AEO Guide](https://www.conductor.com/academy/topic-clusters/) — MEDIUM confidence, cross-referenced cluster-count recommendation (6–15 range across sources)
+- [Whitehat SEO — What Is a Pillar Page?](https://whitehat-seo.co.uk/blog/what-is-a-pillar-page) — MEDIUM confidence, pillar length guidance
+- [HRBrain, Chatarmin, CNAX, eMediaAI — AI ROI calculator tools (aggregated)](https://www.enrichlabs.ai/free-tools/ai-roi-calculator) — LOW–MEDIUM confidence, WebSearch-aggregated pattern survey, not deep-dived individually; used only to establish the ROI-calculator + worst-case-toggle pattern as real and common for this exact audience
+- [Layer3Labs — AI Automation Agency Cost (2026): Real Pricing Guide](https://www.layer3labs.io/roi/ai-automation-agency-cost) — MEDIUM confidence, used to benchmark AI Deployed's <$10k/<$2k pricing against market retainer ranges ($3k–$20k/mo typical)
+- [Taskip — AI Automation Agency Pricing: 6 Proven Models for 2026](https://taskip.net/ai-automation-agency-pricing/) — MEDIUM confidence, corroborates pricing-range benchmark
+- [Landingi — Lead Magnet Landing Page: Definition, How to Create & 7 Examples](https://landingi.com/landing-page/lead-magnet/) — MEDIUM confidence, free-audit-as-lead-magnet pattern
+- Note: no direct Context7/official-docs lookups performed for this research pass — findings are marketing/content/UX pattern research (not library API research), so WebSearch was the primary tool per the mode's guidance; all load-bearing claims above are cross-referenced across 2+ independent sources except where explicitly flagged LOW confidence
 
 ---
-*Feature research for: AI-automation consultancy / agency lead-generation website*
-*Researched: 2026-07-19*
+*Feature research for: FDE consultancy marketing site — v2.0 pivot (landing page, blog credibility engine, interactive demos)*
+*Researched: 2026-07-20*

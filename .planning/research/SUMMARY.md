@@ -1,171 +1,168 @@
 # Project Research Summary
 
-**Project:** AI Deployed
-**Domain:** Solo AI-transformation consultancy — marketing/lead-gen website with public Claude-powered interactive demos and a self-serve, AI-drafted/human-reviewed workflow-audit funnel
-**Researched:** 2026-07-19
+**Project:** AI Deployed — v2.0 FDE Pivot
+**Domain:** Solo-consultancy marketing/lead-gen site (Next.js App Router) — repositioning to a forward-deployed-engineer (FDE) narrative, adding a blog/content credibility engine, buyer-vocabulary SEO, a visually distinctive redesign, and a re-ideated Claude-backed interactive demo
+**Researched:** 2026-07-20
 **Confidence:** MEDIUM-HIGH
 
 ## Executive Summary
 
-AI Deployed is a well-trodden 2026 architecture pattern wearing a novel go-to-market wedge. The technical shape — a Next.js marketing site with serverless Route Handlers proxying Claude API calls, a lightweight Postgres store for one stateful workflow, and a transactional email provider — is standard, low-risk, and fully buildable on free-tier infrastructure by a solo founder. What's differentiated is the product bet: ungated, try-it-yourself interactive demos plus a self-serve questionnaire that produces an AI-drafted, founder-reviewed audit report. Research confirms no surveyed competitor (Ciela AI, Arkeo AI, Execution Point, Layer3 Labs, Fleece AI, MannVenture) combines a live experiential demo with a personalized self-serve AI report — this pairing is the real wedge, not any single technology choice.
+This milestone is not a new product — it's a repositioning-in-place of an existing Next.js 16/React 19/Tailwind 4/Netlify site, adding four additive layers on top of an already-validated foundation: a static MDX blog/content engine, a single-page IA rewrite carrying a 5-part message hierarchy (gap → fix → outcomes → offer → CTA), a buyer-vocabulary SEO/metadata layer, and one re-ideated Claude-backed public demo. Nothing here requires a new hosting model, a database, or new infrastructure decisions — the v1 stack research (Netlify Free, `@anthropic-ai/sdk` server-side proxy, Upstash rate limiting, Turnstile, Resend, Supabase) carries forward unchanged, and this research only adds what's new: `@next/mdx` for content, `motion`/optionally `gsap` for the redesign's visual ambition, and the Vercel AI SDK if the re-ideated demo turns out to be multi-step/agentic rather than single-turn.
 
-The recommended approach: Next.js 16 (App Router) + TypeScript + Tailwind, deployed to **Netlify Free** rather than Vercel (Vercel Hobby's terms explicitly prohibit the commercial use this site constitutes), with Claude Haiku 4.5 powering the cheap/high-volume public demos and Claude Sonnet powering the higher-stakes audit report draft. Every Claude call is server-side only, sits behind Upstash-backed per-IP rate limiting plus a Console-level spend cap, and the audit report always passes through a human review gate before it reaches a prospect — never fully automated. Persistence is a single Supabase/Postgres table tracking submission → draft → reviewed → sent, with a shared-secret-gated `/admin` page in place of a full auth system, since there is exactly one reviewer.
+The recommended approach is disciplined scoping around three tensions the research repeatedly surfaces: (1) "visually impressive" must be bounded — one or two high-craft signature elements on top of the kept shadcn/ui foundation, not a bespoke component system or heavy animation stack, or it directly threatens the site's own Core Web Vitals, accessibility, and solo-maintainability; (2) the anonymous-founder positioning has no default trust-signal substitute — process/methodology transparency, transparent (but scope-qualified) pricing, and at least one real anonymized case study are near-mandatory compensating content, not optional polish; (3) buyer-vocabulary SEO must be executed as content organized around real buyer intent (a genuine pillar+cluster blog), not literal keyword insertion into every section, which reads as unnatural and is a negative ranking signal.
 
-The key risks are not technical scaling risks (traffic will be low) but cost-abuse and trust risks: an unmetered public demo can generate a four/five-figure bill overnight if the proxy/rate-limit/spend-cap chain isn't built before launch; a hallucinated "fact" in an AI-drafted audit report can destroy the exact trust the funnel is built to create; and — because the founder is a strong engineer — the single biggest non-technical risk is over-building site infrastructure before a real visitor has validated that ROI-first copy plus demo plus audit actually converts skeptical SMB owners. The roadmap should sequence infrastructure guardrails (Claude proxy + rate limiting) before any public-facing AI feature, treat the human-review gate as structurally non-optional, and resist scope creep beyond the core funnel until real usage data exists.
+The single highest-severity risk in this milestone is the public Claude-backed demo shipping without its full three-layer cost/abuse defense (Turnstile + Upstash rate limiting + Anthropic Console spend cap) — this is a day-one financial risk on a $0-recurring-budget project, not a scale-later concern, and the risk is specifically elevated here because the demo is being re-ideated from scratch, making it easy to assume the old demo's protections "still apply" when they don't automatically carry over to new routes. The second-highest risk is a half-migrated rebrand — stray v1 copy/routes/vocabulary (missed-call recovery, vertical pages) surviving in corners of the site alongside the new FDE positioning — which is cheap to prevent (a full-repo grep as an explicit phase exit criterion) but easy to miss without that explicit step.
 
 ## Key Findings
 
 ### Recommended Stack
 
-Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 is the dominant, best-supported pattern for a marketing site that also needs server-side AI logic on the same routes/deploy target — critical for a solo maintainer who wants one repo, one mental model. The official `@anthropic-ai/sdk` is used exclusively server-side. Hosting is **Netlify Free**, not Vercel Hobby, because Vercel's Fair Use Guidelines explicitly disallow commercial use on the Hobby tier and this site is a lead-gen funnel for paid consulting — a real ToS risk, not a style preference. Supporting libraries (zod, react-hook-form, resend/react-email, @upstash/ratelimit + @upstash/redis, Turnstile, @supabase/supabase-js, @t3-oss/env-nextjs) round out form validation, email, rate limiting/bot protection, and persistence — all chosen specifically for free-tier viability and low solo-maintenance overhead (e.g., shadcn/ui copy-paste components over a versioned dependency, no ORM for a single-table use case, no auth provider for a single-reviewer admin page).
+The v1 foundation (Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Netlify Free via Next.js Runtime v5, `@anthropic-ai/sdk` server-side, Upstash rate limiting, Cloudflare Turnstile, Resend/react-email, Supabase, Zod) is unchanged and not re-litigated. What's new for v2 is purpose-built and narrowly scoped: a native, zero-extra-infrastructure MDX content pipeline for the blog; a scoped animation approach (Motion for the common case, GSAP added only if the redesign wants cinematic scroll-choreography — and GSAP/ScrollTrigger is now 100% free since Webflow's April 2025 acquisition of GreenSock, correcting a common outdated assumption); and built-in Next.js primitives (`next/font`, `next/og`, `sitemap.ts`/`robots.ts`, `generateMetadata`) for zero-cost, zero-dependency SEO/performance wins.
 
 **Core technologies:**
-- Next.js 16 (App Router): framework — unifies marketing pages, demo API routes, and audit Server Actions in one deploy target
-- @anthropic-ai/sdk (server-only): official Claude client — Haiku 4.5 for public demos (cheap/fast), Sonnet 4.5/4.6 for audit report drafting (quality matters more, lower volume)
-- Netlify (Free): hosting — the only free tier among major platforms that explicitly permits this site's commercial use
-- Upstash Redis + @upstash/ratelimit: per-IP rate limiting — the only real defense against unmetered public-demo cost blowout on stateless serverless functions
-- Supabase (Postgres, Free): single-table persistence for audit submissions with a `pending → drafted → reviewed → sent` status lifecycle
+- `@next/mdx` (+ `remark-gfm`, `rehype-slug`, `@tailwindcss/typography`) — blog/content engine — official, zero-DB, git-versioned, ships zero client JS for posts; Contentlayer (the old default) is unmaintained since 2024 and must not be adopted new
+- `motion` (Framer Motion's current package name) — component-level animation (hero reveals, hover states, scroll fades) — smallest-footprint, purpose-built for React, App-Router-aware imports
+- `gsap` + `ScrollTrigger` + `@gsap/react` — only if the redesign wants a cinematic, pinned/scrubbed scroll narrative for the 5-part message hierarchy — now fully free, industry-standard for this specific effect
+- `next/og` (`ImageResponse`) + `schema-dts` + `feed` — per-route OG images, typed JSON-LD, and an RSS feed — all built-in or near-zero-cost, directly serve the buyer-vocabulary SEO requirement
+- `ai` + `@ai-sdk/anthropic` + `@ai-sdk/react` — only if the re-ideated demo is visibly multi-step/agentic ("watch the agent work"); otherwise reuse v1's plain `@anthropic-ai/sdk` Route Handler pattern unchanged
 
 ### Expected Features
 
-The feature landscape confirms PROJECT.md's scope is already well-aligned with what converts for this buyer (skeptical, non-technical SMB owner) and what differentiates from competitors. Table stakes are mostly low-complexity content/UX hygiene; the real differentiators are the ungated demos and the self-serve AI-drafted report, both already scoped as launch requirements.
+Three feature areas: the FDE landing page, the blog/content credibility engine, and the interactive demo(s) — all converging on one CTA (book the free audit) and one consistent outcome vocabulary (TIME/EFFICIENCY/PROFIT).
 
 **Must have (table stakes):**
-- ROI-first homepage headline and copy (outcome, not technology) on every page
-- 5-page core structure (Home, About, Services, Proof, Contact) with real founder identity/contact info
-- Persistent, low-friction booking CTA (Calendly/Cal.com-style embed) on every page
-- Explicit "here's what happens next" framing for both the audit funnel and the engagement model
-- Vertical-relevant language at minimum in headline/pain-point/audit-question copy, even before dedicated per-vertical pages exist
+- Single-page 5-part message hierarchy (gap → fix → outcomes → offer → CTA) with one repeated CTA and outcome-framed (not feature-framed) benefit copy
+- Transparent, scope-qualified pricing (free audit → <$10k setup → <$2k/mo retainer) visible on the page, not gated behind a call
+- Process/methodology transparency section — the mandatory trust-signal substitute given anonymous positioning and zero case studies at launch
+- Buyer-vocabulary SEO ("AI agents," "automation," "AI-native transformation," "forward-deployed engineer") in headings/meta, mapped to buyer intent, not keyword-stuffed
+- 1 pillar blog post + 3–5 cluster posts (topic-cluster structure), each routing back to the audit CTA, no gating
+- Anonymized case-study format/template defined now, even with zero posts using it yet
+- One bounded "mini-audit" style interactive demo (Claude Haiku, rate-limited, Zod-structured output) that previews the actual audit deliverable, not a generic chatbot
+- Visual redesign covering at minimum the landing page and blog templates
 
-**Should have (differentiators — already in PROJECT.md scope):**
-- Ungated, try-it-yourself interactive demos (missed-call recovery, intake triage) — no email gate before value is shown
-- Self-serve workflow-audit questionnaire → Claude-drafted, founder-reviewed report — the core wedge, unmatched by surveyed competitors
-- Vertical-specific ROI calculator (defer to v1.x — needs validated per-vertical benchmark inputs)
-- Transparent (not fixed-price) engagement-model page: project → retainer, explained plainly
+**Should have (competitive):**
+- The site itself as visible proof of craft (one strong signature visual/interaction element, not pervasive heavy animation)
+- Explicit "worst-case scenario" framing in the outcomes section to defuse skeptical-buyer risk-anxiety
+- Anonymized case studies with specific, quantified before/after numbers (once real engagements exist)
 
-**Defer (v1.x / v2+):**
-- Intake triage demo (second flagship demo) — build after missed-call demo's engagement data justifies it
-- Full 4-vertical dedicated landing pages — start with 1-2 verticals showing early traction
-- Real testimonials/case studies — blocked on the first completed engagement
-- Client portal, payment processing, voice-bot demo — explicitly out of scope per PROJECT.md and confirmed low-value/high-risk by research
+**Defer (v2+):**
+- Client-side ROI calculator (zero-marginal-cost second proof point) — add once primary demo/landing page are validated
+- "Worst-case scenario" toggle on demo/calculator output
+- Full case-study library, second demo concept, comparison/bottom-funnel content — all explicitly v3+, premature pre-launch
+
+**Explicit anti-features:** open-ended "ask me anything" chatbot demo (cost/abuse risk, undersells FDE specificity), named founder bio/headshot (conflicts with anonymity constraint), gated blog content (kills the SEO purpose), vertical-specific landing pages (v1 approach, explicitly scrapped), client login/dashboard (out of scope), and pervasive scroll-jacking/heavy animation (undermines the "craft not flash" goal).
 
 ### Architecture Approach
 
-The system is fully composable from managed, free-tier-friendly primitives with no queue system or dedicated ops layer required. Marketing pages are static/SSR with zero runtime dependencies; every Claude-calling route is a server-side Route Handler behind a shared rate-limiter factory; the audit funnel is the only stateful flow, backed by Postgres because a human review step means the "drafted" state must survive an indeterminate delay; and a single shared-secret-gated `/admin` page (not a full auth system) is sufficient since there is exactly one reviewer.
+Four additive layers on the existing static-first Next.js App Router site: a filesystem-based MDX content layer (`content/blog/*.mdx`, `export const metadata`, `generateStaticParams`, fully SSG, no DB); a single-page IA collapsing the v1 multi-page nav into one long-scroll landing page plus `/blog`; a metadata/structured-data layer (`generateMetadata`, `sitemap.ts`, `robots.ts`, JSON-LD, RSS) sharing one `lib/content/posts.ts` read path to prevent sitemap/RSS/index drift; and one re-ideated Claude proxy surface (`/api/demo/[name]/route.ts`) behind rate limiting — the only dynamic, cost-bearing surface this milestone adds, everything else is build-time static and effectively risk-free.
 
 **Major components:**
-1. **Marketing pages** (`app/(marketing)/`) — static/SSR, no DB/Redis/Claude dependencies, fully cacheable at the edge
-2. **Demo API routes** (`app/api/demo/*`) — server-side Claude proxy, rate-limited, fixed system prompts, streamed responses, stateless (no DB writes)
-3. **Audit funnel** (`app/api/audit/*` + `app/admin/`) — submit → Postgres row → Claude structured-output draft → founder email notification → admin review/edit → approve-and-send Server Action → Resend delivery
-4. **Shared Claude client + rate-limiter** (`lib/claude/`, `lib/ratelimit.ts`) — the single enforcement point ensuring the API key never reaches the client and every Claude-calling route is protected, preventing the common failure mode of one endpoint shipping unprotected
+1. FDE landing page (`/`) — single Server Component carrying the full 5-part hierarchy, statically generated
+2. `content/blog/` + `lib/content/posts.ts` — single source of truth feeding `/blog`, `/blog/[slug]`, RSS, and sitemap
+3. Demo Route Handler (`/api/demo/[name]`) — server-side Claude proxy, rate-limit gate in front of every call
+4. SEO/metadata layer — `generateMetadata`, JSON-LD, sitemap/robots/RSS, all built at compile time
+
+**One open, flagged architecture decision:** whether Netlify's native code-based rate limiting can gate Next.js Runtime v5 (OpenNext) Route Handlers directly, or whether the proven Upstash-in-handler pattern from v1 must be used instead. Recommended: spike the native option early (cheap, ~1 hour), fall back to Upstash immediately if path-matching doesn't reliably intercept — but do not ship the demo publicly without explicitly testing that whichever option is chosen actually returns a 429 under load.
 
 ### Critical Pitfalls
 
-1. **Unmetered public demo = open wallet** — a scripted/bot-abused demo with no per-IP/session cap and no Console spend limit can produce a four-to-five-figure bill overnight; the proxy + rate limit + spend cap chain must exist before the first demo ships, not be retrofitted after a bill.
-2. **API key leakage via client-side code** — any Claude call originating from the browser (including a `NEXT_PUBLIC_`-prefixed key) is instantly exploitable; all calls must go through server-side Route Handlers, verified by inspecting the deployed bundle before each launch.
-3. **AI-drafted reports sent with hallucinated/overconfident claims** — even with human review, a rushed pass lets a fabricated dollar figure or competitor claim through; the review step needs an explicit checklist (all numeric claims traceable to input or an approved reference table), not a general "read it over" pass, and the report-drafting prompt itself must be constrained to prevent invented specifics.
-4. **Demos and copy that alienate the actual buyer** (AI-jargon copy, chat-style/dev-console demo UX) — a non-technical SMB owner needs a 10-second "trigger → outcome" demo and outcome-first language throughout, not a transparent-reasoning chat interface or "agentic workflow" vocabulary; this risk recurs on secondary pages even after the homepage gets it right.
-5. **Over-engineering the site before validating the core hypothesis** — the founder's engineering strength makes CMS/personalization/testing-infrastructure feel productive, but it delays the only thing that matters pre-launch (real visitors trying the demo/audit); scope should stay to core funnel pages until usage data justifies more.
+1. **Public Claude demo ships without full cost/abuse defense** — because the demo is being rebuilt from scratch, it's easy to assume old protections carry over. Require Turnstile + Upstash rate limiting + Console spend cap as an explicit Definition-of-Done gate for the demo phase, re-verified against the new demo's actual routes.
+2. **Half-migrated positioning** — stray v1 copy/routes (missed-call recovery, vertical pages) surviving alongside new FDE copy reads as incoherent to a skeptical visitor. Make a full-repo grep for retired vocabulary an explicit phase exit criterion, not implicit cleanup.
+3. **"Visually impressive" redesign tanks performance/accessibility/maintainability** — heavy animation/bespoke components risk CWV regressions and abandon the shadcn/ui-owned-code model. Set explicit CWV budgets (LCP <2.5s, CLS <0.1, INP <200ms) and `prefers-reduced-motion` support before design work starts.
+4. **MDX/Netlify integration breaks in production despite working in `next dev`** — MDX + App Router + Netlify has real, under-documented failure classes. Verify a production Netlify build (not just local dev) as an explicit blog-phase exit criterion, and confirm the Runtime v5 plugin version.
+5. **Anonymous positioning leaves a trust gap the redesign alone doesn't fix** — a purely aesthetic redesign solves the craft-credibility problem, not the identity-credibility problem. At least one real anonymized case study before active traffic push, plus concrete (if unnamed) origin-story specifics, are required compensating content.
+
+Also flagged: misusing the 95%-AI-failure stat without scoping it to "enterprise pilots" (credibility risk if fact-checked), buyer-vocabulary SEO executed as keyword stuffing (negative ranking signal + undermines the specificity pitch), and pricing numbers shipped as unconditional promises rather than scope-qualified ranges tied to the free audit.
 
 ## Implications for Roadmap
 
-Based on combined research, suggested phase structure:
+Based on combined research, the natural build order follows the risk/dependency gradient: static content-and-copy work (safe, zero infra risk) can ship incrementally, while the one dynamic/cost-bearing surface (the demo) needs its full defense wired before it's ever public. Positioning/copy work should be finished and cleaned up atomically (not left half-migrated) before or alongside the visual redesign, since the redesign phase is the natural place to also enforce CWV/accessibility budgets.
 
-### Phase 1: Marketing Foundation
-**Rationale:** Nothing else can ship without the deploy pipeline, core pages, and positioning in place; this phase has no dependency on Claude/DB infrastructure and establishes the credibility layer (founder story, ROI-first copy) that every later AI feature leans on for trust.
-**Delivers:** Next.js/Netlify scaffold, Home/About/Services pages, booking CTA embed, ROI-first copy pass.
-**Addresses:** Table-stakes features (5-page structure, real founder identity, booking CTA, engagement-model transparency) from FEATURES.md.
-**Avoids:** Pitfall 4 (AI-jargon copy) and Pitfall 7 (weak positioning without testimonials) by getting outcome-first, specific-not-generic copy right from the start; also the first checkpoint against Pitfall 10 (over-engineering) — keep this phase to static/SSR pages only.
+### Phase 1: FDE Landing Page — Positioning, Copy, IA Rewrite
+**Rationale:** This is the core deliverable and the dependency root for everything else (blog CTAs link back to it, the demo sits within it, the redesign restyles it). Copy/positioning must be locked before visual and content work builds on top of it.
+**Delivers:** Single long-scroll page with the full 5-part hierarchy (gap → fix → outcomes → offer → CTA), transparent scope-qualified pricing, process/methodology transparency section, properly-sourced 95%-stat citation, buyer-vocabulary SEO in headings/meta.
+**Addresses:** FDE landing page table stakes + differentiators (FEATURES.md Area 1)
+**Avoids:** Pitfall 1 (half-migrated positioning — full-repo grep as exit criterion), Pitfall 3 (misused stat), Pitfall 6 (keyword stuffing), Pitfall 8 (unconditional pricing)
 
-### Phase 2: Secure Claude Integration Layer
-**Rationale:** Both flagship demos and the audit report depend on the same server-side proxy, rate-limiting, and spend-cap infrastructure; building this as its own phase — not bolted onto the first demo — is exactly what PITFALLS.md prescribes for the two most severe risks in this project (cost blowout, key leakage).
-**Delivers:** `lib/claude/` server-only client, `lib/ratelimit.ts` shared Upstash-backed limiter factory, Turnstile verification wiring, Anthropic Console + hosting-platform spend caps configured.
-**Uses:** @anthropic-ai/sdk, @upstash/ratelimit + @upstash/redis, @marsidev/react-turnstile, @t3-oss/env-nextjs (STACK.md).
-**Implements:** Server-Side LLM Proxy and Distributed Rate Limiting patterns (ARCHITECTURE.md Patterns 1–2).
+### Phase 2: Visual Redesign
+**Rationale:** Redesign the landing page (and set the design system that blog templates will inherit) only once copy/IA is locked, so visual work isn't wasted restyling content that's about to change.
+**Delivers:** Distinctive, high-craft visual treatment scoped to a small number of signature elements on top of the kept shadcn/ui foundation; explicit CWV budgets and `prefers-reduced-motion` support baked into Definition of Done.
+**Uses:** `motion` (default), optionally `gsap`+`ScrollTrigger`+`@gsap/react` if cinematic scroll-choreography is chosen; `next/font` for zero-CLS typography
+**Avoids:** Pitfall 2 (performance/accessibility/maintainability regression), Pitfall 7 partially (redesign must not be mistaken for solving the trust-identity gap)
 
-### Phase 3: Flagship Demo — Missed-Call Recovery
-**Rationale:** The cheapest of the two flagship demos to build and validate the "let them experience it" thesis; ships on top of the Phase 2 infrastructure rather than inventing its own proxy/rate-limit logic.
-**Delivers:** Ungated, button-triggered "before/after" demo widget embedded above the fold on the homepage.
-**Addresses:** The primary above-the-fold differentiator from FEATURES.md (P1 priority).
-**Avoids:** Pitfall 3 (prompt injection), Pitfall 5 (demos that impress engineers, not owners), Pitfall 11 (latency undermining trust) — requires an adversarial-input test pass and non-technical user test as explicit acceptance criteria before this phase is considered done.
+### Phase 3: Blog / Content Credibility Engine
+**Rationale:** Depends on the landing page's finalized positioning/vocabulary (cluster posts extend the same buyer-vocabulary strategy) and benefits from the redesign's typography/design tokens being settled first (blog templates inherit them), but is otherwise independently shippable and static/low-risk.
+**Delivers:** `@next/mdx` content pipeline, 1 pillar + 3–5 cluster posts, shared `lib/content/posts.ts` feeding blog index/RSS/sitemap, JSON-LD Article schema, anonymized case-study format/template (no content yet).
+**Implements:** Architecture Pattern 2 (file-based MDX, no Contentlayer) and Pattern 4 (structured data/SEO layer)
+**Avoids:** Pitfall 5 (MDX/Netlify build breaks — verify production build explicitly), Pitfall 6 (keyword stuffing in content)
 
-### Phase 4: Workflow Audit Funnel (Questionnaire → AI Draft → Human Review → Send)
-**Rationale:** This is the core wedge and the actual product-market-fit test for the business, but it has the most dependencies (Postgres schema, structured Claude output, admin UI, email delivery) — it belongs after the Claude integration layer and after at least one demo has proven the proxy pattern works end-to-end in production.
-**Delivers:** Self-serve questionnaire (short, staged/multi-step), Supabase submission table with status lifecycle, Claude structured-output drafting pipeline, shared-secret-gated `/admin` review UI, Resend founder-notification + prospect-delivery emails.
-**Addresses:** The core differentiator feature from FEATURES.md (P1 priority) — questionnaire, AI-drafted report, human review.
-**Avoids:** Pitfall 6 (form friction — keep field count minimal, wire drop-off analytics from day one) and Pitfall 8 (hallucinated claims — build the founder-review checklist alongside the drafting prompt, not after).
-
-### Phase 5: Vertical-Aware Content & Compliance Pass
-**Rationale:** Vertical branching in the questionnaire and light per-vertical copy variants are cheapest to add once the questionnaire and demo shells already exist; this phase also closes the compliance gap that two of the four verticals (medical/dental, legal) carry and that a generic funnel design would otherwise miss.
-**Delivers:** Vertical-aware questionnaire branching, vertical-flavored demo framing (same components, different copy per industry), synthetic-data disclaimers on medical/dental demo paths, AI-disclosure language on the audit report.
-**Addresses:** Vertical-relevant language table-stakes requirement and sets up v1.x full vertical landing pages (FEATURES.md).
-**Avoids:** Pitfall 9 (HIPAA/legal-advertising compliance blind spots) — explicit content requirement, not a legal afterthought.
-
-### Phase 6: Launch Hardening & Validation Readiness
-**Rationale:** A cross-cutting QA gate before the site goes fully public — this is where the "looks done but isn't" checklist from PITFALLS.md gets explicitly verified rather than assumed, and where scope is deliberately capped rather than allowed to keep expanding.
-**Delivers:** Documented worst-case-cost answer for every public demo; verified server-side key isolation (bundle/network inspection); completed adversarial-input test pass per demo; step-by-step funnel analytics live; non-technical (ideally target-vertical) user test completed.
-**Addresses:** Launch readiness across all P1 features from FEATURES.md.
-**Avoids:** Pitfall 10 (over-engineering) by acting as the explicit stop-and-ship checkpoint, plus final verification of Pitfalls 1, 2, 3, 6, 8, 9 before real traffic arrives.
+### Phase 4: Re-ideated Interactive Demo
+**Rationale:** Placed last because it's the one net-new dynamic/cost-bearing surface and the only piece with an unresolved architecture question (Netlify-native vs. Upstash rate limiting); sequencing it after the static work is settled reduces the number of moving pieces when validating the cost-control defense.
+**Delivers:** Bounded "mini-audit" demo (Claude Haiku, Zod-structured output, TIME/EFFICIENCY/PROFIT-framed) wired with Turnstile + rate limiting + Console spend cap, explicitly tested (not assumed) before going live.
+**Uses:** `@anthropic-ai/sdk` server-side Route Handler (or `ai`/`@ai-sdk/anthropic`/`@ai-sdk/react` if the concept ends up multi-step/agentic); Upstash fallback if Netlify-native rate limiting doesn't cleanly gate Route Handlers
+**Avoids:** Pitfall 4 (demo ships without full cost/abuse defense) — the single highest-severity pitfall identified
 
 ### Phase Ordering Rationale
 
-- **Infrastructure before features that depend on it:** the Claude proxy/rate-limit layer (Phase 2) is a hard dependency for both demos and the audit funnel — PITFALLS.md is explicit that this must be designed in from the first line of AI-feature code, not retrofitted, so it cannot be deferred past the first demo.
-- **Cheapest flagship demo before the harder audit funnel:** Phase 3 (missed-call demo) validates the proxy pattern and the "ungated try-it-yourself" thesis in production at lower engineering cost than Phase 4's multi-system audit pipeline, giving an earlier signal before the highest-complexity phase is built.
-- **Vertical/compliance content after the core funnel shape exists:** FEATURES.md explicitly recommends starting with shared/generic questionnaire copy and light vertical branching, only expanding to dedicated vertical pages once early traction data shows which verticals are converting — Phase 5 reflects that "don't build 4x content before validating 1x funnel" sequencing.
-- **A dedicated hardening phase, not an assumed byproduct:** every "looks done but isn't" item in PITFALLS.md (spend caps, key isolation, adversarial testing, analytics, non-technical user testing) is the kind of thing that quietly gets skipped when treated as part of each feature phase instead of an explicit gate — Phase 6 exists specifically so launch doesn't happen without these being checked off.
+- Copy/positioning must be finished and cleaned up (Pitfall 1) before the redesign restyles it and before blog content extends its vocabulary — doing this out of order risks restyling or extending content that changes underneath the later work.
+- The demo is deliberately last: it's the only phase touching a paid external API and carrying real day-one financial risk, and it has one unresolved architecture question (Pattern 3) that benefits from being spiked in isolation rather than entangled with content/design work.
+- Content (blog) and redesign could in principle be reordered relative to each other — the roadmapper should feel free to swap Phases 2 and 3 if it's more efficient to build the content pipeline before finalizing visual polish — but both must follow Phase 1 and both must precede or run parallel to, never depend on, Phase 4.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 4 (Audit Funnel):** Structured-output schema design for the Claude-drafted report and the founder-review checklist mechanics are product-specific, not off-the-shelf patterns — STACK.md and PITFALLS.md give strong direction (forced tool-use, Zod validation, traceable-claims checklist) but the actual schema/checklist needs to be designed during phase planning, not assumed from research alone.
-- **Phase 5 (Vertical/Compliance):** HIPAA-adjacent and state-bar AI-disclosure specifics were only lightly verified (WebSearch-aggregated, not primary legal-source review per PITFALLS.md sourcing) — worth a targeted research pass specifically on medical/dental and legal-vertical disclosure language before that content ships.
+- **Demo phase (Phase 4):** Needs `--research-phase` validation specifically for the Netlify-native vs. Upstash rate-limiting question (Architecture Pattern 3, MEDIUM confidence, explicitly flagged as unverified against the Next.js Runtime v5/OpenNext internals) — spike Option A, confirm or fall back before committing the phase plan.
+- **Blog/content-engine phase (Phase 3):** MEDIUM confidence on Netlify + App Router + MDX production-build specifics (Pitfall 5) — worth a targeted check of current `@netlify/plugin-nextjs`/Runtime v5 compatibility before implementation, since this is exactly the kind of "works in `next dev`, breaks in production" risk that benefits from a pre-build spike.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Marketing Foundation):** Standard Next.js/Tailwind marketing-site build; no novel technical risk.
-- **Phase 2 (Claude Integration Layer):** ARCHITECTURE.md and STACK.md already provide verified, code-level patterns (proxy, Upstash rate limiting, spend caps) — implementation-ready as researched.
-- **Phase 3 (Missed-Call Demo):** Well-documented "simulate in the UI, single Claude call, stream the response" pattern — no live telephony integration needed (explicitly an anti-pattern to avoid, per ARCHITECTURE.md).
-- **Phase 6 (Launch Hardening):** Checklist-driven verification work, not new technical build — standard QA/launch-readiness practice.
+- **Landing page / positioning phase (Phase 1):** Copy/IA/pricing patterns are well-documented consulting-landing-page conventions (CXL, Unbounce, B2B SaaS best practices), cross-referenced across multiple sources — standard execution, not novel technical risk.
+- **Visual redesign (Phase 2):** `motion`/`gsap` integration patterns are HIGH-confidence, officially documented (Context7-verified for Motion; GSAP's free-license status independently confirmed) — implementation is a design-judgment exercise, not a technical-research gap.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Framework/hosting/API integration patterns verified against official docs (Vercel, Netlify, Claude Platform Docs, npm registry); free-tier exact numbers are MEDIUM (shift over time, flagged for re-verification) |
-| Features | MEDIUM-HIGH | WebSearch-verified across many current sources and cross-referenced competitor sites; no Context7-eligible libraries apply to this marketing/positioning question, so no primary-doc-level confidence ceiling is available |
-| Architecture | HIGH | Core patterns (proxy, rate limiting, HITL review gate) verified against official docs and current multi-source consensus; exact vendor free-tier limits are MEDIUM |
-| Pitfalls | MEDIUM-HIGH | Technical/cost/security findings verified across multiple current sources including official Claude docs; conversion/positioning findings are well-supported general patterns, not project-specific A/B data (none exists yet) |
+| Stack | HIGH | Context7 + official Next.js docs for MDX/Metadata/OG; npm registry ground-truth for every version; only animation-library tradeoffs (Motion vs. GSAP judgment) are MEDIUM, and that's inherently a taste call, not a fact gap |
+| Features | MEDIUM | Consultancy/SaaS landing-page and content patterns are well cross-verified across multiple sources; FDE-specific *solo-practice* examples are scarce (existing FDE web presence is enterprise-only: Deloitte, Fujitsu), so that slice is triangulated from adjacent domains (solo consultants, B2B SaaS, AI automation agencies) rather than directly observed |
+| Architecture | HIGH for MDX/metadata APIs (official docs, current); MEDIUM for the Netlify Next.js Runtime v5 rate-limiting compatibility question — explicitly flagged as WebSearch/docs-aggregated, not hands-on verified |
+| Pitfalls | MEDIUM-HIGH | Mix of official docs (Anthropic rate-limit scoping), the project's own PROJECT.md/PIVOT-BRIEF.md constraints (HIGH confidence, primary source), and aggregated WebSearch on rebrand-SEO-risk, CWV-vs-conversion, and B2B trust-signal literature (MEDIUM, directionally consistent across sources but not independently audited) |
 
 **Overall confidence:** MEDIUM-HIGH
 
 ### Gaps to Address
 
-- **Exact free-tier limits** (Netlify function credits, Supabase 500MB/7-day-auto-pause, Resend 100/day cap, Upstash 500K commands/mo) were sourced via WebSearch aggregation, not primary billing-page fetches at commit time — re-verify each before locking in the persistence/email/rate-limit implementation in Phase 2/4.
-- **Netlify's Next.js Runtime v5 App Router/Server Actions coverage** is MEDIUM confidence (WebSearch-aggregated, not a direct doc fetch) — confirm streaming responses and Server Actions work as expected on Netlify specifically before deep build-out in Phase 2, since this is the one deviation from the "obvious default" (Vercel) stack choice.
-- **Supabase vs. Airtable persistence decision** was left as an explicit either/or in STACK.md depending on how much custom admin-UI surface the founder wants to maintain pre-launch — resolve this concretely during Phase 4 planning rather than deferring it further.
-- **Vertical-specific compliance language** (HIPAA-adjacent framing for medical/dental, AI-disclosure rules for legal) needs a dedicated, more authoritative research pass before Phase 5 content ships — current sourcing is general-pattern-level, not jurisdiction-specific legal research.
-- **No real conversion/usability data exists yet** for this specific site (no A/B history, no target-vertical user testing) — Phase 3 and Phase 6 both call for non-technical/target-vertical user testing specifically because research patterns (interactive demo conversion rates, form-length conversion) are industry-general, not validated for this exact funnel.
+- **Netlify-native vs. Upstash rate limiting for the demo route (Architecture Pattern 3):** Unresolved whether Netlify's native `config.rateLimit` can gate a Next.js Runtime v5 (OpenNext) Route Handler directly. Handle by spiking Option A early in the demo phase; fall back to the already-proven Upstash pattern immediately if it doesn't work. Do not treat this as resolved by assumption.
+- **Re-ideated demo concept itself is still undecided** ("Open Questions" in PIVOT-BRIEF.md) — whether it's single-turn/structured-output (reuse v1's `@anthropic-ai/sdk` pattern unchanged) or multi-step/agentic (adopt the `ai`/`@ai-sdk/anthropic`/`@ai-sdk/react` stack). This is a product-design decision, not a research gap, but it directly determines which stack path Phase 4 takes — resolve during Phase 4 planning, not before.
+- **In-repo MDX vs. alternative content implementation** was flagged as open in PIVOT-BRIEF.md; this research resolves it with a clear recommendation (native `@next/mdx`, not Contentlayer/`next-mdx-remote`) but the roadmapper/planner should treat that recommendation as the default to confirm, not re-litigate from scratch.
+- **95%-failure-stat exact framing language** — MEDIUM confidence on the MIT NANDA report's precise scope; re-verify the primary source before finalizing the landing page's citation copy in Phase 1.
+- **FDE solo-practice competitive examples are thin** — no direct solo/anonymous FDE consultancy site was found to benchmark against; feature and trust-signal recommendations are triangulated from adjacent domains (solo consulting, B2B SaaS, AI automation agencies) rather than a direct competitor audit. Treat as a reasonable, well-triangulated bet rather than a validated pattern.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Vercel Docs — `/docs/plans/hobby`, `/docs/limits/fair-use-guidelines` — commercial-use restriction on Hobby plan
-- Claude Platform Docs — `/docs/en/manage-claude/rate-limits-api` — rate limits are org/workspace-scoped, not per-visitor
-- Claude Help Center — API Key Best Practices — server-side-only key handling
-- npm registry (`npm view <pkg> version`) — ground-truth current package versions
-- Context7 — `/vercel/next.js`, `/anthropics/anthropic-sdk-typescript` — ecosystem/maintenance signal
+- Next.js official docs — `nextjs.org/docs/app/guides/mdx`, `/mdx-components`, `/generate-sitemaps`, `/guides/json-ld` (fetched 2026-07-20, current as of 2026-06-23) — MDX setup, file conventions, sitemap/JSON-LD patterns
+- npm registry (`npm view <pkg> version`, fetched 2026-07-20) — ground-truth current versions for every new package
+- Context7 `/websites/motion_dev` — React 19/Next.js App Router installation and RSC compatibility
+- Webflow / GreenSock (`webflow.com/updates/gsap-becomes-free`, `gsap.com/pricing`) — GSAP's April 2025 shift to a fully free license, cross-referenced across vendor announcement + independent coverage
+- Anthropic Platform Docs — `/docs/en/api/rate-limits` — confirms account/workspace-scoped rate limits and Console spend caps as the correct backstop
+- Project's own `.planning/PROJECT.md` and `.planning/PIVOT-BRIEF.md` — primary source for constraints (budget, anonymity, scrapped v1 content, pricing structure)
+- Existing codebase inspection (`src/app/*`, `src/config/site.ts`, `sitemap.ts`, `robots.ts`) — ground truth for what's actually built today
 
 ### Secondary (MEDIUM confidence)
-- Netlify Support Forums / netlify.com pricing — commercial use permitted on Free plan; Next.js Runtime v5 App Router support
-- Cloudflare Developer Docs — Pages/Workers free tier, Turnstile independence from DNS
-- Supabase Docs / billing FAQ — free-tier limits, 7-day auto-pause behavior
-- Upstash Blog / Ratelimit SDK Docs — sliding-window rate limiting pattern for serverless
-- Navattic / Storylane / Chameleon — interactive demo conversion research (industry-general, not project-specific)
-- Ciela AI, Arkeo AI, Execution Point Consulting, Layer3 Labs, Fleece AI, MannVenture — direct competitor feature analysis
+- Netlify Docs — Next.js on Netlify overview, rate-limiting feature docs (fetched 2026-07-20) — confirms Runtime v5 App Router support and native rate-limiting config, but doesn't resolve OpenNext/Route-Handler compatibility for that feature
+- CXL, Unbounce, Flow Agency, SaaS Hero — consulting/B2B SaaS landing-page structure and CTA best practices, cross-referenced across multiple independent sources
+- Search Engine Land, Conductor, Whitehat SEO — topic-cluster/pillar-page SEO structure and minimums
+- Proofmap, Orange Marketing, XY Planning Network, Umbrex — anonymous-case-study and solo-practitioner trust-signal techniques
+- Layer3Labs, Taskip — AI automation agency pricing benchmarks used to validate the <$10k/<$2k pricing as a genuine differentiator
+- Sitebulb, Numen Technology, Lantern Digital, Silverback Strategies — rebrand/migration SEO risk patterns
+- Excellent Presence (citing Deloitte 2023) — pricing-transparency buyer-preference research
+- Wisp CMS + multiple community sources — Contentlayer's unmaintained status since 2024
 
 ### Tertiary (LOW confidence)
-- Anthropic/Claude pricing figures aggregated via WebSearch (cloudzero.com, finout.io, benchlm.ai) — re-verify at platform.claude.com before committing budget
-- HIPAA/legal-advertising vertical-compliance sourcing — general-pattern level, needs jurisdiction-specific follow-up before Phase 5 content ships
+- HRBrain, Chatarmin, CNAX, eMediaAI (aggregated) — ROI-calculator pattern survey, not deep-dived individually
+- "AI-native transformation" as a lower-competition SEO term — unverified ranking-difficulty claim, treated as a reasonable bet not a guarantee
+- Refentry, Trajectory Web Design, Square Root SEO — general B2B trust-signal literature applied by inference, not FDE/consultancy-specific
 
 ---
-*Research completed: 2026-07-19*
+*Research completed: 2026-07-20*
 *Ready for roadmap: yes*
