@@ -1,30 +1,34 @@
 import type { Metadata } from "next";
 
-import { EngagementFlow } from "@/components/sections/engagement-flow";
 import { FinalCta } from "@/components/sections/final-cta";
-import { FounderStrip } from "@/components/sections/founder-strip";
 import { Hero } from "@/components/sections/hero";
+import { Offer } from "@/components/sections/offer";
 import { Outcomes } from "@/components/sections/outcomes";
-import { VerticalsTeaser } from "@/components/sections/verticals-teaser";
+import { ProcessTransparency } from "@/components/sections/process-transparency";
+import { RoiCalculator } from "@/components/sections/roi-calculator";
+import { TheFix } from "@/components/sections/the-fix";
 
 export const metadata: Metadata = {
-  title: "Recover the time and money your business is losing",
+  title: "Forward-deployed AI engineering for small and medium businesses",
   description:
-    "Free workflow audits and custom-built tools that catch missed calls, slow follow-ups, and manual busywork — so you recover real hours and real dollars.",
+    "95% of AI projects never deliver ROI — not because the models are weak, but because nobody embeds deep enough in the real workflow. A forward-deployed engineer closes that gap: AI agents and automation built into your actual workflows, priced for SMBs. Start with a free audit.",
 };
 
 /**
- * Home route (D-09 section order): Hero (headline + demo-placeholder focal
- * point), Outcomes, EngagementFlow, VerticalsTeaser, FounderStrip, FinalCta.
+ * Home route (LAND-01 section order, locked): Hero (the gap) -> TheFix (the
+ * fix) -> Outcomes (TIME/EFFICIENCY/PROFIT) -> RoiCalculator (proof) ->
+ * Offer (the pricing) -> ProcessTransparency (how it works) -> FinalCta
+ * (book the free audit).
  */
 export default function Home() {
   return (
     <>
       <Hero />
+      <TheFix />
       <Outcomes />
-      <EngagementFlow />
-      <VerticalsTeaser />
-      <FounderStrip />
+      <RoiCalculator />
+      <Offer />
+      <ProcessTransparency />
       <FinalCta />
     </>
   );
