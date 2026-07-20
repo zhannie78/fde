@@ -41,6 +41,39 @@
   @keyframes glow-breathe { 0%, 100% { transform: scale(1); opacity: 0.45; } 50% { transform: scale(1.08); opacity: 0.65; } }
   .nav-glow::before { inset: -2px; filter: blur(8px); opacity: 0.5; }
 
+  /* Elevated final-CTA button — matches the homepage's "Book Free Audit" treatment exactly:
+     static dual-layer glow (no rotation, always visible), a periodic shine sweep, and an
+     arrow that slides on hover. */
+  .glow-wrap-final { position: relative; display: inline-block; margin-top: var(--space-8); }
+  .glow-wrap-final::before {
+    content: ""; position: absolute; inset: -5px; border-radius: 15px; z-index: -1;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(16px); opacity: 0.7;
+  }
+  .glow-wrap-final::after {
+    content: ""; position: absolute; inset: -26px; border-radius: 26px; z-index: -2;
+    background: radial-gradient(circle, rgba(53,82,255,0.4), transparent 72%);
+    filter: blur(28px); opacity: 0.7;
+  }
+  .glow-wrap-final:hover::before { opacity: 0.95; filter: blur(20px); }
+
+  .btn-final {
+    position: relative; overflow: hidden;
+    padding: 20px 40px; font-size: var(--text-lg); border-radius: 12px;
+    box-shadow: 0 6px 20px -4px rgba(12,12,13,0.25);
+  }
+  .btn-final::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg);
+    animation: shine-sweep 3s ease-in-out infinite;
+  }
+  @keyframes shine-sweep { 0% { left: -60%; } 40% { left: 130%; } 100% { left: 130%; } }
+  .btn-final:hover { background: var(--accent); box-shadow: 0 16px 34px -8px rgba(53,82,255,0.55); }
+  .btn-final .arrow { display: inline-block; transition: transform 0.25s ease; margin-left: 2px; }
+  .btn-final:hover .arrow { transform: translateX(6px); }
+  .magnetic { display: inline-block; }
+
   .topbar {
     display: flex; justify-content: space-between; align-items: center;
     padding: var(--space-4) var(--space-8); border-bottom: 1px solid var(--border);
@@ -98,11 +131,6 @@
   .credential-pill {
     font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.03em;
     background: var(--accent-soft); color: var(--accent); border-radius: 999px;
-    padding: 7px 14px;
-  }
-  .vertical-pill {
-    font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.03em;
-    background: #fff; border: 1px solid var(--border); color: var(--ink-soft); border-radius: 999px;
     padding: 7px 14px;
   }
   .bio-copy { max-width: 640px; }
@@ -189,9 +217,7 @@
       <div class="bio-title">Forward Deployed Engineer &amp; AI-Native Consultant</div>
       <div class="credential-row">
         <span class="credential-pill">M.S., Georgia Tech — 4.0 GPA</span>
-        <span class="vertical-pill">Supply Chain</span>
-        <span class="vertical-pill">Finance</span>
-        <span class="vertical-pill">Healthcare</span>
+        <span class="credential-pill">Palantir Foundry Certified Application Developer</span>
       </div>
       <p class="body-text bio-copy">I'm an AI-native forward-deployed engineer with a Master's degree from Georgia Tech. I've embedded inside businesses across supply chain, finance, and healthcare — modernizing how they actually work with AI built around their real workflows, not bolted on top of them. Every engagement is judged the same way: time recovered, workflows that run themselves, and profit that shows up on the books.</p>
     </div>
@@ -277,8 +303,8 @@
   <div class="wrap final-cta">
     <h2>Want to see what this looks like for your business?</h2>
     <p style="margin: var(--space-4) auto 0; text-align:center; color: var(--ink-soft);">Book a free audit. No commitment, no cost.</p>
-    <span class="glow-wrap" style="margin-top: var(--space-8); display: inline-block;">
-      <button class="btn btn-primary" onclick="toast(this)">Book a Free Call Now →</button>
+    <span class="glow-wrap-final">
+      <button class="btn btn-primary btn-final magnetic" onclick="toast(this)">Book a Free Call Now <span class="arrow">→</span></button>
     </span>
   </div>
 </section>
@@ -297,6 +323,18 @@ function toast(btn) {
     t.style.transform = 'translateX(-50%) translateY(20px)';
   }, 1800);
 }
+
+document.querySelectorAll('.magnetic').forEach(btn => {
+  const isFinal = btn.classList.contains('btn-final');
+  btn.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) * 0.25;
+    const y = (e.clientY - r.top - r.height / 2) * 0.35;
+    const scale = isFinal ? ' scale(1.05)' : '';
+    btn.style.transform = `translate(${x}px, ${y - 2}px)${scale}`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
 </script>
 
 </body>
