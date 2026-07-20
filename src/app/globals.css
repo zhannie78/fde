@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-ibm-plex-sans);
-  --font-heading: var(--font-fraunces);
+  --font-sans: var(--font-jetbrains-mono);
+  --font-heading: var(--font-jetbrains-mono);
   --color-on-dark: var(--on-dark);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -49,32 +49,36 @@
 }
 
 :root {
-  /* UI-SPEC 60/30/10 palette */
-  --background: #FAF9F6; /* dominant 60% — warm paper, not stark white */
-  --foreground: #1A2432; /* body text on paper */
-  --card: #FAF9F6;
-  --card-foreground: #1A2432;
-  --popover: #FAF9F6;
-  --popover-foreground: #1A2432;
-  --primary: #1F6E4A; /* accent 10% — deep signal green, CTA-only */
-  --primary-foreground: #FAF9F6;
-  --secondary: #101820; /* secondary 30% — ink navy */
-  --secondary-foreground: #F5F3EE;
+  /* UI-SPEC 60/30/10 palette — Phase 6 visual redesign (indigo/mono system) */
+  --background: #FBFAF7; /* dominant 60% — warm paper, not stark white */
+  --foreground: #0C0C0D; /* body text on paper — near-black, softened warm */
+  --card: #FFFFFF;
+  --card-foreground: #0C0C0D;
+  --popover: #FFFFFF;
+  --popover-foreground: #0C0C0D;
+  --primary: #3552FF; /* accent 10% — indigo, CTA-only */
+  --primary-foreground: #FBFAF7;
+  --secondary: #0C0C0D; /* secondary 30% — ink */
+  --secondary-foreground: #F4F3EE;
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: #1F6E4A;
-  --accent-foreground: #FAF9F6;
+  --muted-foreground: #46484C;
+  --accent: #3552FF;
+  --accent-foreground: #FBFAF7;
   --destructive: #B3261E;
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #E4E2DB;
+  --input: #E4E2DB;
+  --ring: #3552FF;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.5rem; /* single restrained radius — SITE-06 anti-pattern gate */
-  --on-dark: #F5F3EE; /* supporting token: body text on ink-navy bands */
+  --radius: 0.875rem; /* 14px card language — SITE-06 anti-pattern gate, still a single restrained radius */
+  --on-dark: #F4F3EE; /* supporting token: body text on ink bands */
+  --accent-soft: #EEF1FF; /* tinted backgrounds — stat-card hover fill, credential pills, FinalCta panel */
+  --lime: #C8FF4D; /* RARE detail accent only — glow-gradient stop, dark-band section labels */
+  --pink-glow: #FF6AC1; /* glow-gradient stop only — never a flat UI color */
+  --ink-soft: #46484C; /* secondary text on light surfaces */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -125,6 +129,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    line-height: 1.75;
   }
   html {
     @apply font-sans;
@@ -135,6 +140,18 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-semibold;
+    @apply font-heading font-bold;
+    letter-spacing: -0.02em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
