@@ -289,6 +289,51 @@
     0%, 100% { transform: scale(1); opacity: 0.45; }
     50% { transform: scale(1.08); opacity: 0.65; }
   }
+
+  /* ============ Elevated final-CTA button — the last conversion moment gets
+     extra visual weight: bigger size, a tri-color rotating ring PLUS a slower
+     ambient breathing halo behind it, a periodic shine sweep across the face,
+     and an arrow that slides on hover. ============ */
+  .variant-b2 .glow-wrap-final { position: relative; display: inline-block; margin-top: var(--space-8); }
+  .variant-b2 .glow-wrap-final::before {
+    content: ""; position: absolute; inset: -5px; border-radius: 15px; z-index: -1;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(16px); opacity: 0.7;
+    animation: glow-final-spin 3s linear infinite;
+  }
+  .variant-b2 .glow-wrap-final::after {
+    content: ""; position: absolute; inset: -26px; border-radius: 26px; z-index: -2;
+    background: radial-gradient(circle, rgba(53,82,255,0.4), transparent 72%);
+    filter: blur(28px);
+    animation: glow-final-breathe 3.6s ease-in-out infinite;
+  }
+  .variant-b2 .glow-wrap-final:hover::before { opacity: 0.95; filter: blur(20px); }
+  @keyframes glow-final-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes glow-final-breathe {
+    0%, 100% { transform: scale(0.9); opacity: 0.55; }
+    50% { transform: scale(1.18); opacity: 0.9; }
+  }
+
+  .variant-b2 .btn-final {
+    position: relative; overflow: hidden;
+    padding: 20px 40px; font-size: var(--text-lg); border-radius: 12px;
+    box-shadow: 0 6px 20px -4px rgba(12,12,13,0.25);
+  }
+  .variant-b2 .btn-final::after {
+    /* diagonal shine sweep, loops periodically */
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg);
+    animation: shine-sweep 3s ease-in-out infinite;
+  }
+  @keyframes shine-sweep {
+    0% { left: -60%; }
+    40% { left: 130%; }
+    100% { left: 130%; }
+  }
+  .variant-b2 .btn-final:hover { background: var(--accent); box-shadow: 0 16px 34px -8px rgba(53,82,255,0.55); }
+  .variant-b2 .btn-final .arrow { display: inline-block; transition: transform 0.25s ease; margin-left: 2px; }
+  .variant-b2 .btn-final:hover .arrow { transform: translateX(6px); }
   .variant-b2 .btn-ghost {
     background: transparent; color: var(--ink); border: 1px solid var(--border);
     padding: 14px 29px; border-radius: 8px;
@@ -325,13 +370,27 @@
      fades in + starts rotating on hover — not a constant idle animation. */
   .variant-b2 .glow-box { position: relative; border-radius: 14px; height: 100%; }
   .variant-b2 .glow-box::before {
-    content: ""; position: absolute; inset: -2.5px; border-radius: inherit; z-index: 0;
-    background: conic-gradient(from 0deg, var(--accent), var(--lime), var(--accent) 60%, var(--lime) 100%);
-    filter: blur(11px); opacity: 0;
+    /* Larger bleed (-11px vs the card's own -2.5px edge) gives the organic
+       border-radius morph room to visibly bulge/recede as it animates —
+       tight insets just look like a rotating rectangle silhouette. */
+    content: ""; position: absolute; inset: -11px; border-radius: 14px; z-index: 0;
+    background: conic-gradient(from 0deg, var(--accent), var(--lime), #ff6ac1, var(--accent));
+    filter: blur(14px); opacity: 0;
     transition: opacity 0.35s ease;
   }
-  .variant-b2 .glow-box:hover::before { opacity: 0.65; animation: glow-box-spin 3.2s linear infinite; }
-  @keyframes glow-box-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .variant-b2 .glow-box:hover::before {
+    opacity: 0.6;
+    animation: glow-box-blob 4.5s ease-in-out infinite;
+  }
+  /* Rotates AND morphs border-radius through asymmetric blob shapes each quarter-turn —
+     "gradually changes shape as it rotates" instead of a rigid spinning rectangle. */
+  @keyframes glow-box-blob {
+    0%   { transform: rotate(0deg);   border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+    25%  { transform: rotate(90deg);  border-radius: 62% 38% 30% 70% / 60% 65% 35% 40%; }
+    50%  { transform: rotate(180deg); border-radius: 35% 65% 58% 42% / 40% 55% 45% 60%; }
+    75%  { transform: rotate(270deg); border-radius: 68% 32% 45% 55% / 55% 35% 65% 45%; }
+    100% { transform: rotate(360deg); border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%; }
+  }
   .variant-b2 .glow-box-inner {
     position: relative; z-index: 1; height: 100%; box-sizing: border-box;
     background: #fff; border: 1px solid var(--border); border-radius: inherit;
@@ -369,9 +428,8 @@
   .variant-b2 .process-body h3 { font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.01em; }
   .variant-b2 .process-body p { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--ink-soft); }
 
-  .variant-b2 .final-cta { background: var(--accent-soft); border-radius: 20px; padding: var(--space-24); text-align: center; position: relative; overflow: hidden; }
+  .variant-b2 .final-cta { background: var(--accent-soft); border-radius: 20px; padding: var(--space-24); text-align: center; position: relative; }
   .variant-b2 .final-cta h2 { margin: 0 auto; text-align: center; max-width: 640px; }
-  .variant-b2 .final-cta .btn-primary { margin-top: var(--space-8); }
   .variant-b2 footer { text-align: center; font-size: var(--text-xs); padding: var(--space-8); color: var(--ink-soft); }
   .variant-b2 footer .sig::before { content: "// "; color: var(--accent); }
 
@@ -791,8 +849,8 @@
     <div class="wrap final-cta reveal">
       <h2>Ready to close your AI gap?</h2>
       <p style="margin: var(--space-4) auto 0; text-align:center; color: var(--ink-soft);">Book a free audit. No commitment, no cost.</p>
-      <span class="glow-wrap">
-        <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+      <span class="glow-wrap-final">
+        <button class="btn btn-primary btn-final magnetic" onclick="toast(this)">Book Free Audit <span class="arrow">→</span></button>
       </span>
     </div>
   </section>
@@ -840,11 +898,13 @@ document.querySelectorAll('#variant-b2 .reveal').forEach(el => revealObserver.ob
 
 /* B2 polish: magnetic button (cursor-follow within bounds) */
 document.querySelectorAll('#variant-b2 .magnetic').forEach(btn => {
+  const isFinal = btn.classList.contains('btn-final');
   btn.addEventListener('mousemove', (e) => {
     const r = btn.getBoundingClientRect();
     const x = (e.clientX - r.left - r.width / 2) * 0.25;
     const y = (e.clientY - r.top - r.height / 2) * 0.35;
-    btn.style.transform = `translate(${x}px, ${y - 2}px)`;
+    const scale = isFinal ? ' scale(1.05)' : '';
+    btn.style.transform = `translate(${x}px, ${y - 2}px)${scale}`;
   });
   btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
 });
