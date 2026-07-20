@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: FDE Pivot
-status: ready_to_plan
-stopped_at: Phase 05 complete (6/6) — ready to discuss Phase 6
-last_updated: 2026-07-20T13:35:18.244Z
-last_activity: 2026-07-20 -- Phase 05 execution started
+status: executing
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-07-20T20:27:39.328Z"
+last_activity: 2026-07-20
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 6
-  completed_plans: 6
-  percent: 0
+  completed_phases: 1
+  total_plans: 13
+  completed_plans: 7
+  percent: 25
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-20)
 
 **Core value:** A skeptical SMB owner-operator lands on the site, immediately understands the gap (95% of AI projects fail to deliver ROI), the fix (forward-deployed engineering, embedded in *their* workflows), and the outcomes (TIME, EFFICIENCY, PROFIT) — and is convinced enough to book the free audit.
-**Current focus:** Phase 6 — visual redesign
+**Current focus:** Phase 06 — visual-redesign
 
 ## Current Position
 
-Phase: 6
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-07-20 - Completed quick task 260720-op6: Integrate animated glow-effect CTA button
+Phase: 06 (visual-redesign) — EXECUTING
+Plan: 2 of 7
+Status: Ready to execute
+Last activity: 2026-07-20
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 54%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 06 P01 | 15min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,7 @@ Recent decisions affecting current work:
 - [Roadmap v2.0]: The research-suggested "re-ideated demo" phase (Claude-backed mini-audit) was descoped from this milestone per REQUIREMENTS.md — only the client-side ROI calculator (PROOF-02, PROOF-03) ships in v2.0, folded into Phase 5 since it has no API surface, no rate-limiting/Turnstile/spend-cap infra needs, and belongs to the landing-page experience.
 - [Roadmap v2.0]: v1.0's Phase 1 (Marketing Foundation) is marked Superseded, not Complete — 5/6 plans landed but its copy/IA is being replaced by Phase 5; reusable groundwork (Netlify config, Cal.com booking, design tokens, GSD infra) carries forward per PROJECT.md "Kept from v1."
 - [PROJECT v2.0]: Pivoted from missed-call-recovery/4-vertical positioning to forward-deployed AI engineering for SMBs — see PROJECT.md Key Decisions for full rationale.
+- [Phase 06]: Left --muted/--chart-*/--sidebar-* oklch tokens unchanged in globals.css — Only palette values explicitly enumerated in the UI-SPEC Color section were replaced with the new 60/30/10 indigo system, avoiding unscoped drift into shadcn internals not touched by this phase
 
 ### Pending Todos
 
@@ -75,12 +77,6 @@ None yet.
 - [Phase 6]: Research flags Motion vs. GSAP+ScrollTrigger as a taste call requiring design judgment during planning, not a resolved technical decision — confirm choice when Phase 6 is planned.
 - [Phase 8]: SEO phase depends on both Phase 5 and Phase 7 being content-complete before it can meaningfully cover buyer-vocabulary placement and structured data — do not plan Phase 8 until Phase 7 lands.
 
-### Quick Tasks Completed
-
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260720-op6 | Integrate animated glow-effect CTA button (GlowButton, rotate mode) into BookCta, applied at Hero + FinalCta | 2026-07-20 | b21b7f7 | [260720-op6-integrate-an-animated-glow-effect-cta-bu](./quick/260720-op6-integrate-an-animated-glow-effect-cta-bu/) |
-
 ## Deferred Items
 
 Items acknowledged and carried forward from previous milestone close:
@@ -91,7 +87,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-20T04:04:23.811Z
-Stopped at: Phase 5 UI-SPEC approved
-Resume file: .planning/phases/05-fde-landing-page/05-UI-SPEC.md
+Last session: 2026-07-20T20:27:39.323Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None
 </content>

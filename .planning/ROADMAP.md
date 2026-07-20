@@ -88,7 +88,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Design-token & font foundation (globals.css palette/radius/reduced-motion, JetBrains Mono, GlowBox + ElevatedCta primitives)
+- [x] 06-01-PLAN.md — Design-token & font foundation (globals.css palette/radius/reduced-motion, JetBrains Mono, GlowBox + ElevatedCta primitives)
 
 **Wave 2** *(blocked on Wave 1)*
 
@@ -170,7 +170,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
 | 5. FDE Landing Page | v2.0 | 6/6 | Complete   | 2026-07-20 |
-| 6. Visual Redesign | v2.0 | 0/TBD | Not started | - |
+| 6. Visual Redesign | v2.0 | 1/7 | In Progress|  |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |
 </content>
