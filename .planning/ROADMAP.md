@@ -47,7 +47,14 @@ Old missed-call-recovery / vertical-strategy positioning. Phase 1 (Marketing Fou
   3. Visitor sees a step-by-step process-transparency section near the CTA explaining how the audit and engagement work
   4. Visitor can enter hours/week and hourly cost into a client-side ROI calculator with no signup and no API cost, and see TIME/EFFICIENCY/PROFIT-framed annual hours/dollars-recovered results that route back to the audit CTA
   5. A full-repo grep for retired v1 vocabulary (missed-call, intake triage, vertical pages) and routes returns zero matches in shipped copy, routes, and metadata
-**Plans**: TBD
+**Plans**: 6 plans in 3 waves
+Plans:
+- [ ] 05-01-PLAN.md — Hero (gap) + TheFix (fix) sections
+- [ ] 05-02-PLAN.md — Outcomes (TIME/EFFICIENCY/PROFIT + worst-case) + Offer (scope-qualified pricing)
+- [ ] 05-03-PLAN.md — Client-side ROI calculator (PROOF-02/03)
+- [ ] 05-04-PLAN.md — ProcessTransparency + FinalCta (dark-band, bottom CTA)
+- [ ] 05-05-PLAN.md — page.tsx integration (locked order) + v1 section teardown
+- [ ] 05-06-PLAN.md — Route/nav/anonymity teardown + LAND-06 grep gate
 **UI hint**: yes
 
 ### Phase 6: Visual Redesign
@@ -97,7 +104,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Missed-Call Demo & Secure AI Infrastructure | v1.0 | 0/TBD | Superseded | - |
 | 3. Workflow Audit Funnel | v1.0 | 0/TBD | Superseded | - |
 | 4. Vertical-Aware Landing Pages | v1.0 | 0/TBD | Superseded | - |
-| 5. FDE Landing Page | v2.0 | 0/TBD | Not started | - |
+| 5. FDE Landing Page | v2.0 | 0/6 | Not started | - |
 | 6. Visual Redesign | v2.0 | 0/TBD | Not started | - |
 | 7. Blog / Content Engine | v2.0 | 0/TBD | Not started | - |
 | 8. SEO & Metadata Layer | v2.0 | 0/TBD | Not started | - |
