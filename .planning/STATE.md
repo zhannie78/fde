@@ -1,16 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-stopped_at: "01-06 Task 3 checkpoint:human-verify pending (LAUNCH-CHECKLIST.md created, cloudflare-dns decision recorded)"
-last_updated: "2026-07-19T18:32:24.380Z"
-last_activity: 2026-07-19
+milestone: v2.0
+milestone_name: FDE Pivot
+status: planning
+last_updated: "2026-07-20T01:09:46.018Z"
+last_activity: 2026-07-20
 progress:
-  total_phases: 4
+  total_phases: 0
   completed_phases: 0
-  total_plans: 6
-  completed_plans: 5
+  total_plans: 0
+  completed_plans: 0
   percent: 0
 ---
 
@@ -25,12 +24,10 @@ See: .planning/PROJECT.md (updated 2026-07-19)
 
 ## Current Position
 
-Phase: 01 (marketing-foundation) — EXECUTING
-Plan: 6 of 6
-Status: Ready to execute
-Last activity: 2026-07-19
-
-Progress: [████████░░] 83%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-07-20 — Milestone v2.0 started
 
 ## Performance Metrics
 
