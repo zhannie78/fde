@@ -1,7 +1,8 @@
 ---
 phase: 5
 slug: fde-landing-page
-status: draft
+status: approved
+reviewed_at: 2026-07-20
 shadcn_initialized: true
 preset: "style=radix-nova, baseColor=neutral, cssVariables=true, iconLibrary=lucide-react (detected from components.json, not re-selected — no changes for this phase)"
 created: 2026-07-20
