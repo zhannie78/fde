@@ -273,6 +273,22 @@
     font-size: var(--text-base); box-shadow: 0 1px 2px rgba(0,0,0,0.06);
   }
   .variant-b2 .btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(53,82,255,0.45); }
+
+  /* Glow-CTA preview — approximates the motion/GlowButton effect for the two highest-impact
+     placements (hero + final CTA). Restrained duotone (indigo/violet), soft "breathe" pulse —
+     not the loud default rainbow "rotate" mode, to match B2's one-accent polish direction. */
+  .variant-b2 .glow-wrap { position: relative; display: inline-block; }
+  .variant-b2 .glow-wrap::before {
+    content: ""; position: absolute; inset: -3px; border-radius: 11px; z-index: -1;
+    background: conic-gradient(from 0deg, #3552ff, #8f6fff, #3552ff 60%, #8f6fff 100%);
+    filter: blur(14px); opacity: 0.55;
+    animation: glow-breathe 4.5s ease-in-out infinite;
+  }
+  .variant-b2 .glow-wrap:hover::before { opacity: 0.85; filter: blur(18px); }
+  @keyframes glow-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.45; }
+    50% { transform: scale(1.08); opacity: 0.65; }
+  }
   .variant-b2 .btn-ghost {
     background: transparent; color: var(--ink); border: 1px solid var(--border);
     padding: 14px 29px; border-radius: 8px;
@@ -691,7 +707,9 @@
       </h1>
       <p class="lede reveal in">95% of enterprise generative-AI pilots fail to show measurable ROI (MIT NANDA, 2025). I close that gap — embedded, workflow-first, white-glove.</p>
       <div class="reveal in" style="margin-top: var(--space-8); display:flex; gap: var(--space-4);">
-        <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+        <span class="glow-wrap">
+          <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+        </span>
         <button class="btn btn-ghost" onclick="toast(this)">See Process</button>
       </div>
     </div>
@@ -755,7 +773,9 @@
     <div class="wrap final-cta reveal">
       <h2>Ready to close your AI gap?</h2>
       <p style="margin: var(--space-4) auto 0; text-align:center; color: var(--ink-soft);">Book a free audit. No commitment, no cost.</p>
-      <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+      <span class="glow-wrap">
+        <button class="btn btn-primary magnetic" onclick="toast(this)">Book Free Audit →</button>
+      </span>
     </div>
   </section>
   <footer><span class="sig">built solo, deployed forward</span> — SKETCH, NOT PRODUCTION — variant B2</footer>
