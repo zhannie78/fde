@@ -1,4 +1,5 @@
 import { BookCta } from "@/components/book-cta";
+import { GlowBox } from "@/components/ui/glow-box";
 
 const steps = [
   {
@@ -31,37 +32,48 @@ const steps = [
  */
 export function Offer() {
   return (
-    <section id="offer" className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <section
+      id="offer"
+      className="offer-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
+    >
       <ol className="flex flex-col gap-12 md:grid md:grid-cols-[1.6fr_1fr_1fr] md:items-start md:gap-8">
         {steps.map((step, index) => (
-          <li key={step.number} className="flex flex-col gap-4">
-            <div className="flex items-baseline gap-3">
-              <span className="font-heading text-sm font-semibold text-muted-foreground">
-                {step.number}
-              </span>
-              <span
-                className={
-                  index === 0
-                    ? "font-heading text-lg font-semibold text-primary"
-                    : "font-heading text-lg font-semibold text-foreground"
-                }
-              >
-                {step.price}
-              </span>
-            </div>
-            <h3
-              className={
-                index === 0
-                  ? "font-heading leading-[1.2] font-semibold text-foreground"
-                  : "font-heading text-xl leading-[1.2] font-semibold text-foreground"
-              }
-              style={index === 0 ? { fontSize: "28px" } : undefined}
-            >
-              {step.title}
-            </h3>
-            <p className="max-w-md text-base leading-[1.6] text-foreground/90">
-              {step.body}
-            </p>
+          <li
+            key={step.number}
+            data-offer-card
+            {...(index === 0 ? { "data-offer-lead": true } : {})}
+          >
+            <GlowBox className="h-full">
+              <div className="flex h-full flex-col gap-4 p-8">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-heading text-sm font-bold text-muted-foreground">
+                    {step.number}
+                  </span>
+                  <span
+                    className={
+                      index === 0
+                        ? "font-heading text-lg font-bold text-primary"
+                        : "font-heading text-lg font-bold text-foreground"
+                    }
+                  >
+                    {step.price}
+                  </span>
+                </div>
+                <h3
+                  className={
+                    index === 0
+                      ? "font-heading leading-[1.75] font-bold text-foreground"
+                      : "font-heading text-xl leading-[1.75] font-bold text-foreground"
+                  }
+                  style={index === 0 ? { fontSize: "28px" } : undefined}
+                >
+                  {step.title}
+                </h3>
+                <p className="max-w-md text-base leading-[1.75] text-foreground/90">
+                  {step.body}
+                </p>
+              </div>
+            </GlowBox>
           </li>
         ))}
       </ol>
