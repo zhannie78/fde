@@ -12,6 +12,11 @@
 export const siteConfig = {
   name: "AI Deployed",
 
+  // Locked copy per the Phase 6 UI-SPEC Copywriting Contract — the single
+  // source of truth every BookCta/ElevatedCta call site reads from so the
+  // label never drifts between instances.
+  bookCtaLabel: "Book a Free Call Now",
+
   // NEEDS-FOUNDER (D-13): confirm the publicly-presented founder name.
   // "Annie" is an acceptable placeholder during development.
   founderName: "Annie",
