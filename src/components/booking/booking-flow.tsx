@@ -129,7 +129,7 @@ export function BookingFlow() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="booking-note">What's going on?</Label>
+          <Label htmlFor="booking-note">What&apos;s going on?</Label>
           <Textarea
             id="booking-note"
             value={note}
