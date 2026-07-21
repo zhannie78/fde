@@ -152,10 +152,12 @@ export function ScrollStoryProvider({
             }),
         });
 
-        // --- Act 5a-typewriter: "Build & Deploy" types itself out ---
+        // --- Act 5a-typewriter: "Build & Deploy" types itself out, looping ---
         // Reads each [data-typewriter] element's own SSR-rendered text (same
         // "capture before animating" approach as the Act 3a countup suffix)
         // so the animated string never has to be duplicated/hardcoded here.
+        // yoyo + repeat: -1 types it out, holds, erases, holds, retypes —
+        // forever, once the section has first scrolled into view.
         document.querySelectorAll<HTMLElement>("[data-typewriter]").forEach((el) => {
           const fullText = el.textContent ?? "";
           gsap.fromTo(
@@ -166,6 +168,9 @@ export function ScrollStoryProvider({
               duration: 1.1,
               delay: 0.8, // lands after this step's own stagger-in above
               ease: "none",
+              repeat: -1,
+              yoyo: true,
+              repeatDelay: 1.2,
               scrollTrigger: {
                 trigger: ".process-section",
                 start: "top 75%",
