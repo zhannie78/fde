@@ -56,11 +56,11 @@ export function SiteHeader() {
             <span className="text-primary">.</span>
             {brandSuffix}
           </Link>
-          {/* Mobile gets the persistent StickyCtaBar instead — same
-              convention as the standard header below. */}
-          <div className="hidden md:block">
-            <BookCta glow label="Contact" href="/contact" className="px-6 py-3 text-sm" />
-          </div>
+          {/* Visible at every width — this page's topbar has no hamburger
+              nav (nothing to show but a back-link + brand) and, since the
+              floating bottom CTA bar was removed, this sticky top header is
+              mobile's only persistent path to Contact here. */}
+          <BookCta glow label="Contact" href="/contact" className="px-4 py-2.5 text-sm sm:px-6 sm:py-3" />
         </div>
       </header>
     );

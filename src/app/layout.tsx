@@ -3,7 +3,6 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { StickyCtaBar } from "@/components/sticky-cta-bar";
 import { siteConfig } from "@/config/site";
 
 const jetBrainsMono = JetBrains_Mono({
@@ -38,9 +37,8 @@ export default function RootLayout({
     <html lang="en" className={`${jetBrainsMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <SiteHeader />
-        <main className="flex flex-1 flex-col pb-14 md:pb-0">{children}</main>
+        <main className="flex flex-1 flex-col">{children}</main>
         <SiteFooter />
-        <StickyCtaBar />
       </body>
     </html>
   );

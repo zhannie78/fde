@@ -399,7 +399,16 @@
 /* Dark ink-band sections (MarketGapBand, ProcessTransparency) — a subtle
    blue ambient light in the top-right corner so the band doesn't read as a
    flat black rectangle. Content wrapper must be `position: relative` with a
-   higher z-index so the glow sits behind it, not on top. */
+   higher z-index so the glow sits behind it, not on top.
+   `ellipse` (not `circle`) is required: the pseudo-element box is
+   deliberately non-square (55% wide / 130% tall) so the glow reads as
+   off-center. A forced circle sizes its radius to the box's farthest
+   corner, which on mobile — where these sections stack much taller
+   relative to their width — balloons the radius so far past the box's
+   own width that the "transparent 70%" fade never really happens before
+   the box's `overflow: hidden` clips it, leaving a hard-edged patch
+   instead of a soft glow. An ellipse fits both axes independently and
+   fades correctly regardless of the section's aspect ratio. */
 .dark-band-glow {
   position: relative;
   overflow: hidden;
@@ -412,7 +421,7 @@
   right: -15%;
   width: 55%;
   height: 130%;
-  background: radial-gradient(circle, rgba(53, 82, 255, 0.35), transparent 70%);
+  background: radial-gradient(ellipse, rgba(53, 82, 255, 0.35), transparent 70%);
   pointer-events: none;
 }
 
