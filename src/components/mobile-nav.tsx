@@ -32,7 +32,7 @@ export function MobileNav() {
           variant="ghost"
           size="icon"
           aria-label="Open menu"
-          className="h-11 w-11 text-secondary-foreground hover:bg-secondary-foreground/10 hover:text-secondary-foreground"
+          className="h-11 w-11 text-foreground hover:bg-foreground/10 hover:text-foreground"
         >
           <Menu className="size-6" aria-hidden="true" />
         </Button>

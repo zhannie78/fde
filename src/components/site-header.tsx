@@ -17,17 +17,19 @@ const navLinks = [
 ];
 
 /**
- * Sticky ink-navy header rendered in the root layout so it wraps every
- * route: wordmark, desktop nav (Services, About per D-08), and the primary
- * BookCta. Mobile visitors get the hamburger-triggered MobileNav instead.
+ * Sticky light frosted-glass header rendered in the root layout so it wraps
+ * every route: wordmark, desktop nav (Services, About per D-08), and the
+ * primary BookCta. Mobile visitors get the hamburger-triggered MobileNav
+ * instead. Only ProcessTransparency uses the dark ink band in this system —
+ * chrome stays on the light paper surface with a border-bottom hairline.
  */
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-secondary text-secondary-foreground">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 text-foreground backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
         <Link
           href="/"
-          className="font-heading text-lg font-bold text-secondary-foreground"
+          className="font-heading text-lg font-bold text-foreground"
         >
           {siteConfig.name}
         </Link>
@@ -39,7 +41,7 @@ export function SiteHeader() {
                 <NavigationMenuItem key={link.href}>
                   <NavigationMenuLink
                     asChild
-                    className="rounded-none border-b-2 border-transparent bg-transparent p-0 pb-1 text-secondary-foreground hover:border-primary hover:bg-transparent hover:text-primary focus:bg-transparent data-active:bg-transparent"
+                    className="rounded-none border-b-2 border-transparent bg-transparent p-0 pb-1 text-muted-foreground hover:border-primary hover:bg-transparent hover:text-primary focus:bg-transparent data-active:bg-transparent"
                   >
                     <Link href={link.href}>{link.label}</Link>
                   </NavigationMenuLink>
