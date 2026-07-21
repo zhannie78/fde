@@ -244,10 +244,13 @@
 .btn-final {
   position: relative;
   overflow: hidden;
+  background: var(--foreground);
+  color: var(--background);
   padding: 20px 40px;
   font-size: 1.125rem; /* var(--text-lg) */
   border-radius: 12px;
   box-shadow: 0 6px 20px -4px rgba(12, 12, 13, 0.25);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-final::after {
   content: "";

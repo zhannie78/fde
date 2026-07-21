@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 
-import { BookCta } from "@/components/book-cta";
-
 // Conservative — excludes ~2 weeks holiday/slow periods, reinforcing the
 // worst-case/conservative framing requirement (LAND-05) inside the
-// calculator's own output, not just the Outcomes section.
+// calculator's own output, not just the worst-case line.
 const WEEKS_PER_YEAR = 50;
 
 /**
@@ -15,7 +13,12 @@ const WEEKS_PER_YEAR = 50;
  * persistence. Keeps the same small-client-boundary discipline as
  * `CalEmbed` (the only other Client Component in the codebase).
  *
- * `roi-calculator-section` on the root is the stable GSAP selector hook the
+ * Embedded directly inside TheFix's section (per user decision 2026-07-21 —
+ * replaces the stat-row boxes there), not its own top-level section, so no
+ * outer `<section>`/padding/CTA here — `#calculator` is a plain anchor
+ * target and TheFix (a Server Component) renders this as a child.
+ *
+ * `roi-calculator-section` is the stable GSAP selector hook the
  * scroll-story provider (plan 06) uses for a one-shot container fade/scale-in
  * — no logic changes, no count-up tween on the reactive result numerals
  * (those are keystroke-driven, a tween would fight React state).
@@ -28,10 +31,7 @@ export function RoiCalculator() {
   const annualDollars = annualHours * hourlyCost;
 
   return (
-    <section
-      id="calculator"
-      className="roi-calculator-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
-    >
+    <div id="calculator" className="roi-calculator-section mt-12">
       <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
         See it for yourself
       </p>
@@ -105,10 +105,6 @@ export function RoiCalculator() {
           </p>
         )}
       </div>
-
-      <div className="mt-8">
-        <BookCta />
-      </div>
-    </section>
+    </div>
   );
 }

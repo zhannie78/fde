@@ -6,7 +6,6 @@ import { Hero } from "@/components/sections/hero";
 import { MarketGapBand } from "@/components/sections/market-gap-band";
 import { Offer } from "@/components/sections/offer";
 import { ProcessTransparency } from "@/components/sections/process-transparency";
-import { RoiCalculator } from "@/components/sections/roi-calculator";
 import { TheFix } from "@/components/sections/the-fix";
 import { Ticker } from "@/components/sections/ticker";
 
@@ -19,9 +18,9 @@ export const metadata: Metadata = {
 /**
  * Home route, ported to match the Phase 6 sketch's section order: Hero (the
  * gap) -> Ticker -> MarketGapBand (the access gap) -> TheFix (the fix,
- * including the TIME/EFFICIENCY/PROFIT stat row per the sketch) ->
- * RoiCalculator (proof) -> Offer (the pricing) -> ProcessTransparency (how
- * it works) -> FinalCta (book the free audit).
+ * including the embedded RoiCalculator in place of the sketch's stat row,
+ * per user decision 2026-07-21) -> Offer (the pricing) -> ProcessTransparency
+ * (how it works) -> FinalCta (book the free audit).
  */
 export default function Home() {
   return (
@@ -30,7 +29,6 @@ export default function Home() {
       <Ticker />
       <MarketGapBand />
       <TheFix />
-      <RoiCalculator />
       <Offer />
       <ProcessTransparency />
       <FinalCta />
