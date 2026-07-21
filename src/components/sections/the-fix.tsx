@@ -25,9 +25,9 @@ export function TheFix() {
           engineering does.
         </p>
         <p className="mt-4 max-w-2xl text-base leading-[1.75] text-foreground">
-          I actually audit your business&apos; specific workflows first
-          before building the automation and AI that actually fits — not a
-          generic SaaS product bolt-on.
+          I will audit your business&apos; specific workflows first before
+          building the AI automation that actually fits — not a generic
+          SaaS product bolt-on.
         </p>
       </div>
       <RoiCalculator />
