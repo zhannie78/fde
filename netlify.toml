@@ -8,6 +8,15 @@
   # environment's default matching (RESEARCH: Environment Availability).
   NODE_VERSION = "20"
 
+  # Netlify's secret-scanning fails the build if it finds an env var's value
+  # inside the compiled output. NEXT_PUBLIC_* vars are *supposed* to end up
+  # in the client bundle — that's the whole point of the prefix — so every
+  # NEXT_PUBLIC_ var that's genuinely non-secret needs to be listed here or
+  # every build silently fails (and Netlify keeps serving the last
+  # successful deploy with no obvious error on the site itself). Add new
+  # NEXT_PUBLIC_ keys to this comma-separated list as they're introduced.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CF_BEACON_TOKEN"
+
 # Do NOT pin @netlify/plugin-nextjs here — Netlify's Next.js Runtime v5
 # (OpenNext-based) is zero-config and Netlify advises tracking latest,
 # not locking a version (RESEARCH Alternatives Considered).
