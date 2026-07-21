@@ -23,12 +23,9 @@ export const siteConfig = {
   // "Annie" is an acceptable placeholder during development.
   founderName: "Annie",
 
-  // NEEDS-FOUNDER (D-04 / D-05): obvious placeholder — launch blocker.
-  // Resolve once the production domain + email forwarding route are set up.
-  founderEmail: "PLACEHOLDER_LAUNCH_BLOCKER@example.invalid",
+  founderEmail: "anniezhang@gatech.edu",
 
-  // NEEDS-FOUNDER (D-13): founder's presented region/service area.
-  region: "PLACEHOLDER_REGION",
+  region: "Miami, United States",
 
   // Real domain, confirmed by user decision 2026-07-21 (matches the
   // wordmark above).

@@ -21,11 +21,11 @@ import { siteConfig } from "@/config/site";
  */
 export function Hero() {
   return (
-    <section className="hero-section mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
+    <section className="hero-section mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
       <span className="status-pill w-fit">
         <span className="ping" /> Available for new engagements
       </span>
-      <p className="text-lg text-foreground">
+      <p className="text-lg font-bold text-foreground">
         Hello, I&apos;m{" "}
         <Link
           href="/about"
@@ -51,13 +51,14 @@ export function Hero() {
         95% of enterprise AI pilots fail to show measurable ROI, a failure
         rate rooted not in flawed models but in poor integration. I help
         close that gap for small businesses — workflow-first, white-glove
-        implementation to save time and increase profit.
+        implementation to <strong className="lede-highlight">save time</strong>{" "}
+        and <strong className="lede-highlight">increase profit</strong>.
       </p>
       <div className="flex flex-wrap items-center gap-4">
         <BookCta glow />
         <Link
           href="/#process"
-          className="rounded-lg border border-border px-[29px] py-[14px] text-base font-bold text-foreground transition-transform hover:-translate-y-0.5 hover:border-foreground"
+          className="rounded-[8px] border border-border px-[29px] py-[14px] text-base font-semibold text-foreground transition-transform hover:-translate-y-0.5 hover:border-foreground"
         >
           See Process
         </Link>

@@ -19,9 +19,7 @@ export function TheFix() {
       className="thefix-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
     >
       <div data-thefix-card>
-        <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
-          The Fix
-        </p>
+        <p className="section-label">The Fix</p>
         <p className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
           Off-the-shelf tools don&apos;t fit your workflow. Forward-deployed
           engineering does.

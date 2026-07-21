@@ -80,24 +80,24 @@ export default function About() {
   return (
     <>
       <section className="mx-auto w-full max-w-6xl px-4 pt-16 pb-8 sm:px-6 sm:pt-20">
-        <div className="grid grid-cols-1 items-start gap-10 text-center sm:gap-12 md:grid-cols-[220px_1fr] md:text-left">
-          <div className="mx-auto md:mx-0">
+        <div className="grid grid-cols-1 items-center gap-10 text-center sm:gap-12">
+          <div className="mx-auto">
             <Avatar />
           </div>
-          <div>
+          <div className="mx-auto">
             <h1 className="font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[2.75rem]">
               Hello, I&apos;m {siteConfig.founderName}
             </h1>
             <p className="mt-2 text-lg font-bold text-primary">
               Forward Deployed Engineer &amp; AI-Native Consultant
             </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
               <span className="credential-pill">M.S., Georgia Tech — 4.0 GPA</span>
               <span className="credential-pill">
                 Palantir Foundry Certified Application Developer
               </span>
             </div>
-            <p className="mt-6 max-w-xl text-base leading-[1.75] text-foreground">
+            <p className="mx-auto mt-6 max-w-xl text-base leading-[1.75] text-foreground">
               I&apos;m an AI-native forward-deployed engineer with a
               Master&apos;s degree from Georgia Tech. I&apos;ve embedded
               inside businesses across supply chain, finance, and
@@ -111,9 +111,7 @@ export default function About() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
-          Demos
-        </p>
+        <p className="section-label">Demos</p>
         <p className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
           See it in action.
         </p>
@@ -130,7 +128,7 @@ export default function About() {
                 </p>
                 <Link
                   href={demo.href}
-                  className="mt-2 inline-flex w-fit items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-bold text-foreground transition-colors hover:border-foreground"
+                  className="mt-2 inline-flex w-fit items-center gap-2 rounded-[8px] border border-border px-4 py-2 text-sm font-bold text-foreground transition-colors hover:border-foreground"
                 >
                   {demo.cta} →
                 </Link>
@@ -141,9 +139,7 @@ export default function About() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
-          Portfolio
-        </p>
+        <p className="section-label">Portfolio</p>
         <p className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
           Selected builds.
         </p>

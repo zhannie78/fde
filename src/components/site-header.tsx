@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { BookCta } from "@/components/book-cta";
 import { MobileNav } from "@/components/mobile-nav";
@@ -25,8 +28,44 @@ const navLinks = [
  * primary BookCta. Mobile visitors get the hamburger-triggered MobileNav
  * instead. Only ProcessTransparency uses the dark ink band in this system —
  * chrome stays on the light paper surface with a border-bottom hairline.
+ *
+ * The About page (sources/002-about-page) swaps this for a simpler
+ * back-link + brand + CTA topbar per the sketch's locked HTML structure —
+ * there's no site nav to show there, just a way back to the homepage.
  */
 export function SiteHeader() {
+  const pathname = usePathname();
+
+  if (pathname === "/about") {
+    return (
+      <header className="sticky top-0 z-40 border-b border-border bg-background/85 text-foreground backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+          >
+            <span aria-hidden="true">←</span>
+            <span className="hidden sm:inline">Back to AI Deployed</span>
+            <span className="sm:hidden">Back</span>
+          </Link>
+          <Link
+            href="/"
+            className="font-heading text-lg font-bold text-foreground"
+          >
+            {brandPrefix}
+            <span className="text-primary">.</span>
+            {brandSuffix}
+          </Link>
+          {/* Mobile gets the persistent StickyCtaBar instead — same
+              convention as the standard header below. */}
+          <div className="hidden md:block">
+            <BookCta glow />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 text-foreground backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">

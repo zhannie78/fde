@@ -243,6 +243,8 @@
 }
 .btn-final {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   overflow: hidden;
   background: var(--foreground);
   color: var(--background);
@@ -325,7 +327,7 @@
 /* Credential pill (About page) */
 .credential-pill {
   font-size: 0.75rem; /* var(--text-xs) */
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.03em;
   background: var(--accent-soft);
   color: var(--accent);
@@ -335,6 +337,7 @@
 
 /* Demo card badge (About page) */
 .demo-badge {
+  align-self: flex-start;
   font-size: 0.75rem; /* var(--text-xs) */
   font-weight: 700;
   text-transform: uppercase;
@@ -354,6 +357,76 @@
 .case-result p {
   color: var(--foreground);
   font-weight: 600;
+}
+
+/* Inline copy emphasis ("save time", "increase profit") — weight + the
+   single brand accent color + a low-opacity underline rule, not a second
+   color, so it reads as a deliberate callout rather than a broken link. */
+.lede-highlight {
+  color: var(--foreground);
+  font-weight: 700;
+  background: linear-gradient(transparent 72%, var(--accent-soft) 72%);
+  box-shadow: inset 0 -2px 0 0 var(--accent);
+  padding-bottom: 1px;
+}
+
+/* Section eyebrow label (e.g. "THE FIX", "THE OFFER") — small leading tick
+   mark before the uppercase label text. `.on-dark` variant recolors both
+   the text and tick lime for the dark ink-band sections. */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+.section-label::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: var(--accent);
+}
+.section-label.on-dark {
+  color: var(--lime);
+}
+.section-label.on-dark::before {
+  background: var(--lime);
+}
+
+/* Dark ink-band sections (MarketGapBand, ProcessTransparency) — a subtle
+   blue ambient light in the top-right corner so the band doesn't read as a
+   flat black rectangle. Content wrapper must be `position: relative` with a
+   higher z-index so the glow sits behind it, not on top. */
+.dark-band-glow {
+  position: relative;
+  overflow: hidden;
+}
+.dark-band-glow::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: -30%;
+  right: -15%;
+  width: 55%;
+  height: 130%;
+  background: radial-gradient(circle, rgba(53, 82, 255, 0.35), transparent 70%);
+  pointer-events: none;
+}
+
+/* ROI calculator — distinguished from surrounding prose as its own
+   interactive widget: bordered card + a graph-paper grid background. */
+.calculator-box {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  background-color: var(--card);
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 /* Hero status pill ("Available for new engagements") */

@@ -26,15 +26,10 @@ const steps = [
  */
 export function ProcessTransparency() {
   return (
-    <section id="process" className="bg-secondary text-secondary-foreground">
-      <div className="process-section mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:px-6 sm:py-20">
+    <section id="process" className="dark-band-glow bg-secondary text-secondary-foreground">
+      <div className="process-section relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:px-6 sm:py-20">
         <div>
-          <p
-            className="text-sm font-bold tracking-[0.02em] uppercase"
-            style={{ color: "var(--lime)" }}
-          >
-            How It Works
-          </p>
+          <p className="section-label on-dark">How It Works</p>
           <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-secondary-foreground sm:text-[1.75rem]">
             Three steps. No black box.
           </h2>

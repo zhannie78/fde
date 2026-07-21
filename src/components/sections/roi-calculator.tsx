@@ -31,10 +31,8 @@ export function RoiCalculator() {
   const annualDollars = annualHours * hourlyCost;
 
   return (
-    <div id="calculator" className="roi-calculator-section mt-12">
-      <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
-        See it for yourself
-      </p>
+    <div id="calculator" className="roi-calculator-section calculator-box mt-12">
+      <p className="section-label">See it for yourself</p>
       <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-3xl">
         What&apos;s manual work actually costing you?
       </h2>
