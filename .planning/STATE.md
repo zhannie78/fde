@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 Phase: 06 (visual-redesign) — EXECUTING
 Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-07-20
+Last activity: 2026-07-21 - Completed quick task 260721-b89: Footer CTA, /contact page, native /book booking flow
 
 Progress: [█████████░] 92%
 
@@ -86,9 +86,17 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 5]: Carried from v1 Phase 01-06 (unfinished, superseded) — founder still needs to: create/confirm Netlify site + connect repo, create Cal.com Free Audit Call event + set calLink, decide on domain/DNS-vs-email path, set up brand email routing. Revisit as part of Phase 5 or a launch-checklist pass since the FDE landing page depends on a working Cal.com CTA.
+- [Phase 5]: Carried from v1 Phase 01-06 (unfinished, superseded) — founder still needs to: create/confirm Netlify site + connect repo, decide on domain/DNS-vs-email path, set up brand email routing. Revisit as part of Phase 5 or a launch-checklist pass. (Cal.com dependency resolved by quick task 260721-b89 — /book now uses a native booking flow; no Cal.com account needed.)
+- [quick-260721-b89]: `/book`'s native booking flow depends on `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` being set in production (Netlify env vars) before booking notifications actually fire — see `.env.local.example` for setup steps. Fails safely (generic 500 to visitor, specific reason logged server-side) if unset, but should be resolved before launch.
 - [Phase 6]: Research flags Motion vs. GSAP+ScrollTrigger as a taste call requiring design judgment during planning, not a resolved technical decision — confirm choice when Phase 6 is planned.
 - [Phase 8]: SEO phase depends on both Phase 5 and Phase 7 being content-complete before it can meaningfully cover buyer-vocabulary placement and structured data — do not plan Phase 8 until Phase 7 lands.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260720-op6 | Integrate animated glow-effect CTA button (GlowButton, rotate mode) into BookCta, applied at Hero + FinalCta | 2026-07-20 | b21b7f7 | [260720-op6-integrate-an-animated-glow-effect-cta-bu](./quick/260720-op6-integrate-an-animated-glow-effect-cta-bu/) |
+| 260721-b89 | Footer Contact Me CTA + copyright line, new Formspree-backed /contact page, native 5-step /book booking flow (Cal.com removed) with Telegram notification | 2026-07-21 | 38c608c | [260721-b89-footer-cta-contact-link-updates-native-c](./quick/260721-b89-footer-cta-contact-link-updates-native-c/) |
 
 ## Deferred Items
 
@@ -100,7 +108,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T00:57:00.823Z
-Stopped at: Phase 6 complete (7/7 plans) — DSGN-04 CWV spot-check optional follow-up
-Resume file: .planning/phases/06-visual-redesign/06-07-SUMMARY.md
+Last session: 2026-07-21T06:20:22Z
+Stopped at: Completed quick task 260721-b89 (footer/contact/booking); Phase 6 still complete (7/7 plans) — DSGN-04 CWV spot-check optional follow-up
+Resume file: .planning/quick/260721-b89-footer-cta-contact-link-updates-native-c/260721-b89-SUMMARY.md
 </content>
