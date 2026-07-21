@@ -8,10 +8,11 @@ const steps = [
     number: "02",
     title: "Build & Deploy",
     body: "I build the custom solution, embedded in how you already work.",
-    // Typed out letter-by-letter (GSAP TextPlugin, scroll-story-provider.tsx
-    // Act 5) once this step fades into view — the one "build" step gets the
-    // build-in-progress motif, the other two stay static.
+    // "Deploy" is typed out letter-by-letter (GSAP TextPlugin,
+    // scroll-story-provider.tsx Act 5) once this step fades into view —
+    // "Build & " stays static, only the word that follows animates.
     typewriter: true,
+    typewriterWord: "Deploy",
   },
   {
     number: "03",
@@ -66,8 +67,9 @@ export function ProcessTransparency() {
               <p className="font-heading text-xl leading-[1.75] font-bold text-secondary-foreground">
                 {"typewriter" in step && step.typewriter ? (
                   <>
-                    <span data-typewriter>{step.title}</span>
-                    <span className="typewriter-cursor" aria-hidden="true" />
+                    {step.title.slice(0, step.title.length - step.typewriterWord.length)}
+                    <span data-typewriter>{step.typewriterWord}</span>
+                    <span className="typewriter-cursor on-dark" aria-hidden="true" />
                   </>
                 ) : (
                   step.title

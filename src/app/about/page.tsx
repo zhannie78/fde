@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AnimatedName } from "@/components/about/animated-name";
 import { Avatar } from "@/components/about/avatar";
 import { ElevatedCta } from "@/components/ui/elevated-cta";
 import { GlowBox } from "@/components/ui/glow-box";
@@ -86,7 +87,7 @@ export default function About() {
           </div>
           <div>
             <h1 className="font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[2.75rem]">
-              Hello, I&apos;m {siteConfig.founderName}
+              Hello, I&apos;m <AnimatedName name={siteConfig.founderName} />
             </h1>
             <p className="mt-2 text-lg font-bold text-primary">
               Forward Deployed Engineer &amp; AI-Native Consultant

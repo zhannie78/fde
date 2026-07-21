@@ -59,7 +59,7 @@ export function SiteHeader() {
           {/* Mobile gets the persistent StickyCtaBar instead — same
               convention as the standard header below. */}
           <div className="hidden md:block">
-            <BookCta glow label="Contact" className="px-6 py-3 text-sm" />
+            <BookCta glow label="Contact" href="/contact" className="px-6 py-3 text-sm" />
           </div>
         </div>
       </header>
@@ -93,7 +93,7 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <BookCta glow label="Contact" className="px-6 py-3 text-sm" />
+          <BookCta glow label="Contact" href="/contact" className="px-6 py-3 text-sm" />
         </div>
 
         <div className="md:hidden">

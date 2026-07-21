@@ -422,6 +422,10 @@
    card. Radius stays the single site-wide 14px token (SITE-06 anti-
    pattern gate) — no new radius values here. */
 .calculator-box {
+  /* Clears the 64px sticky site header (+ breathing room) when jumped to via
+     the About page's "Try it" anchor (#calculator), so the whole box lands
+     in view instead of docking flush under the header. */
+  scroll-margin-top: 96px;
   border: 1px solid rgba(12, 12, 13, 0.08);
   border-radius: 14px;
   padding: 32px;
@@ -521,19 +525,23 @@
   }
 }
 
-/* ProcessTransparency — blinking caret next to the [data-typewriter] title
-   (scroll-story-provider.tsx types the text into that span via GSAP
-   TextPlugin). Lime, per the existing "rare accent" usage on this section's
-   step numbers. Sits inside the same fade-in <li> as the rest of the step,
-   so it's invisible until that step has scrolled into view. */
+/* Blinking caret paired with any [data-typewriter] span animated via GSAP
+   TextPlugin (scroll-story-provider.tsx's ProcessTransparency effect, and
+   the About page's AnimatedName). Defaults to --primary indigo for use on
+   light surfaces; add `on-dark` (mirrors .section-label's own modifier) to
+   switch to --lime, the codebase's existing "rare accent... dark-band"
+   color, when used on the ink band. */
 .typewriter-cursor {
   display: inline-block;
   width: 2px;
   height: 1em;
   margin-left: 2px;
   vertical-align: -0.15em;
-  background: var(--lime);
+  background: var(--primary);
   animation: typewriter-blink 0.9s step-end infinite;
+}
+.typewriter-cursor.on-dark {
+  background: var(--lime);
 }
 @keyframes typewriter-blink {
   0%,
