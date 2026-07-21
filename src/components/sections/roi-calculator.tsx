@@ -10,8 +10,8 @@ const WEEKS_PER_YEAR = 50;
 /**
  * "RoiCalculator" (PROOF-02/PROOF-03): an isolated `"use client"` island —
  * two numeric inputs, plain-arithmetic derivation, zero network calls, zero
- * persistence. Keeps the same small-client-boundary discipline as
- * `CalEmbed` (the only other Client Component in the codebase).
+ * persistence. Keeps the same small-client-boundary discipline as the
+ * site's other Client Components (e.g. ContactForm, BookingFlow).
  *
  * Embedded directly inside TheFix's section (per user decision 2026-07-21 —
  * replaces the stat-row boxes there), not its own top-level section, so no

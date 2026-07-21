@@ -30,10 +30,4 @@ export const siteConfig = {
   // Real domain, confirmed by user decision 2026-07-21 (matches the
   // wordmark above).
   domain: "aideployed.dev",
-
-  // NEEDS-FOUNDER (D-01): set once the Cal.com "Free Audit Call" event type
-  // is created under the founder's real Cal.com account.
-  calLink: "PLACEHOLDER/free-audit-call",
-
-  calNamespace: "free-audit-call",
 } as const;
