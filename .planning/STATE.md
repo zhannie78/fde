@@ -97,7 +97,7 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260720-op6 | Integrate animated glow-effect CTA button (GlowButton, rotate mode) into BookCta, applied at Hero + FinalCta | 2026-07-20 | b21b7f7 | [260720-op6-integrate-an-animated-glow-effect-cta-bu](./quick/260720-op6-integrate-an-animated-glow-effect-cta-bu/) |
 | 260721-b89 | Footer Contact Me CTA + copyright line, new Formspree-backed /contact page, native 5-step /book booking flow (Cal.com removed) with Telegram notification | 2026-07-21 | 38c608c | [260721-b89-footer-cta-contact-link-updates-native-c](./quick/260721-b89-footer-cta-contact-link-updates-native-c/) |
-| 260721-bwa | Graph-paper visual polish for ROI calculator box: two-tier indigo-tinted grid + elevation shadow replacing flat grey grid/border | 2026-07-21 | (pending) | [260721-bwa-graph-paper-visual-polish-for-roi-calcul](./quick/260721-bwa-graph-paper-visual-polish-for-roi-calcul/) |
+| 260721-bwa | Graph-paper visual polish for ROI calculator box: two-tier indigo-tinted grid + elevation shadow replacing flat grey grid/border | 2026-07-21 | 946c894 | [260721-bwa-graph-paper-visual-polish-for-roi-calcul](./quick/260721-bwa-graph-paper-visual-polish-for-roi-calcul/) |
 
 ## Deferred Items
 
