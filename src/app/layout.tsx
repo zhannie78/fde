@@ -50,7 +50,8 @@ export default function RootLayout({
         <SiteFooter />
         {cfBeaconToken && (
           <Script
-            src="https://static.cloudflare.com/beacon.min.js"
+            type="module"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
             data-cf-beacon={`{"token": "${cfBeaconToken}"}`}
             strategy="afterInteractive"
           />
