@@ -521,6 +521,30 @@
   }
 }
 
+/* ProcessTransparency — blinking caret next to the [data-typewriter] title
+   (scroll-story-provider.tsx types the text into that span via GSAP
+   TextPlugin). Lime, per the existing "rare accent" usage on this section's
+   step numbers. Sits inside the same fade-in <li> as the rest of the step,
+   so it's invisible until that step has scrolled into view. */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--lime);
+  animation: typewriter-blink 0.9s step-end infinite;
+}
+@keyframes typewriter-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

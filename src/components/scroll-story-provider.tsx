@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
 
 /**
  * ScrollStoryProvider — the single `"use client"` wrapper housing every
@@ -33,7 +34,7 @@ export function ScrollStoryProvider({
 
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
       const mm = gsap.matchMedia();
 
@@ -136,6 +137,42 @@ export function ScrollStoryProvider({
               stagger: 0.12,
               duration: 0.6,
             }),
+        });
+
+        // --- Act 5a: ProcessTransparency — steps load in sequentially ---
+        ScrollTrigger.batch("[data-process-step]", {
+          start: "top 75%",
+          once: true,
+          onEnter: (batch) =>
+            gsap.from(batch, {
+              opacity: 0,
+              y: 18,
+              stagger: 0.35,
+              duration: 0.6,
+            }),
+        });
+
+        // --- Act 5a-typewriter: "Build & Deploy" types itself out ---
+        // Reads each [data-typewriter] element's own SSR-rendered text (same
+        // "capture before animating" approach as the Act 3a countup suffix)
+        // so the animated string never has to be duplicated/hardcoded here.
+        document.querySelectorAll<HTMLElement>("[data-typewriter]").forEach((el) => {
+          const fullText = el.textContent ?? "";
+          gsap.fromTo(
+            el,
+            { text: "" },
+            {
+              text: fullText,
+              duration: 1.1,
+              delay: 0.8, // lands after this step's own stagger-in above
+              ease: "none",
+              scrollTrigger: {
+                trigger: ".process-section",
+                start: "top 75%",
+                once: true,
+              },
+            }
+          );
         });
 
         // --- Act 5a: ProcessTransparency — scrub-fill progress line ---
