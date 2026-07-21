@@ -10,14 +10,15 @@ const footerLinks = [
   { href: "/#fix", label: "Approach" },
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "Process" },
-  { href: "/book", label: "Book" },
+  { href: "/about", label: "About" },
 ];
 
 /**
- * Light footer on the paper surface: page links, founder region + mailto
- * contact (D-10 — no separate contact page), and a repeated BookCta. All
- * identity values come from siteConfig, never hardcoded literals. Only
- * ProcessTransparency uses the dark ink band in this system.
+ * Light footer on the paper surface: wordmark, page nav links (including
+ * About), a "Questions?" + "Contact Me" CTA pair pointing to /contact, and a
+ * siteConfig.domain-derived copyright line. All identity values come from
+ * siteConfig, never hardcoded literals. Only ProcessTransparency uses the
+ * dark ink band in this system.
  */
 export function SiteFooter() {
   return (
@@ -29,13 +30,6 @@ export function SiteFooter() {
             <span className="text-primary">.</span>
             {brandSuffix}
           </p>
-          <p className="text-sm text-muted-foreground">{siteConfig.region}</p>
-          <a
-            href={`mailto:${siteConfig.founderEmail}`}
-            className="inline-block text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-          >
-            {siteConfig.founderEmail}
-          </a>
         </div>
 
         <nav aria-label="Footer" className="flex flex-col gap-2 text-sm">
@@ -50,8 +44,17 @@ export function SiteFooter() {
           ))}
         </nav>
 
-        <div>
-          <BookCta label="Contact" />
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Questions?</span>
+          <BookCta label="Contact Me" href="/contact" />
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {siteConfig.domain}
+          </p>
         </div>
       </div>
     </footer>

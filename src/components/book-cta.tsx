@@ -23,6 +23,12 @@ type BookCtaProps = {
    * (e.g. header/footer "Contact" vs. the default "Book a Free Call Now").
    */
   label?: string;
+  /**
+   * Override the shared `/book` destination for a single call site — e.g.
+   * the footer's `/contact` link — every other call site is unaffected and
+   * keeps linking to `/book` since this defaults to `"/book"` when omitted.
+   */
+  href?: string;
 };
 
 /**
@@ -31,8 +37,9 @@ type BookCtaProps = {
  * mobile bar — renders through this component so the copy and destination
  * never drift, unless a call site explicitly opts into a different `label`.
  */
-export function BookCta({ variant = "primary", className, glow, label }: BookCtaProps) {
+export function BookCta({ variant = "primary", className, glow, label, href }: BookCtaProps) {
   const displayLabel = label ?? siteConfig.bookCtaLabel;
+  const destination = href ?? "/book";
 
   if (glow) {
     return (
@@ -41,7 +48,7 @@ export function BookCta({ variant = "primary", className, glow, label }: BookCta
         size={variant === "sticky" ? "lg" : "default"}
         className={cn(variant === "sticky" && "h-11 w-full text-base", className)}
       >
-        <Link href="/book">{displayLabel}</Link>
+        <Link href={destination}>{displayLabel}</Link>
       </GlowButton>
     );
   }
@@ -52,7 +59,7 @@ export function BookCta({ variant = "primary", className, glow, label }: BookCta
       size={variant === "sticky" ? "lg" : "default"}
       className={cn(variant === "sticky" && "h-11 w-full text-base", className)}
     >
-      <Link href="/book">{displayLabel}</Link>
+      <Link href={destination}>{displayLabel}</Link>
     </Button>
   );
 }
