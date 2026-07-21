@@ -93,7 +93,7 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <BookCta glow className="px-6 py-3 text-sm" />
+          <BookCta glow label="Contact" className="px-6 py-3 text-sm" />
         </div>
 
         <div className="md:hidden">
