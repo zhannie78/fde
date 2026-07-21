@@ -17,7 +17,7 @@ export default function BookPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16 sm:px-8 sm:py-24">
       <div className="flex flex-col gap-4 text-center sm:text-left">
-        <h1 className="text-[1.75rem] leading-[1.2] font-heading font-semibold text-foreground">
+        <h1 className="text-[1.75rem] leading-[1.2] font-heading font-bold text-foreground">
           Book Your Free Audit Call
         </h1>
         <p className="text-base leading-[1.6] text-foreground">

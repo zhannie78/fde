@@ -31,7 +31,7 @@ export function CalEmbed() {
           theme: "light",
           hideEventTypeDetails: false,
           layout: "month_view",
-          styles: { branding: { brandColor: "#1F6E4A" } },
+          styles: { branding: { brandColor: "#3552FF" } },
         });
       } catch {
         if (!cancelled) setFailed(true);
