@@ -417,16 +417,25 @@
 }
 
 /* ROI calculator — distinguished from surrounding prose as its own
-   interactive widget: bordered card + a graph-paper grid background. */
+   interactive widget: a lifted sheet of graph paper (minor + major
+   indigo-tinted ruling, elevation shadow) rather than a flat bordered
+   card. Radius stays the single site-wide 14px token (SITE-06 anti-
+   pattern gate) — no new radius values here. */
 .calculator-box {
-  border: 1px solid var(--border);
+  border: 1px solid rgba(12, 12, 13, 0.08);
   border-radius: 14px;
   padding: 32px;
   background-color: var(--card);
   background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 28px 28px;
+    linear-gradient(to right, rgba(53, 82, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(53, 82, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(to right, rgba(53, 82, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(53, 82, 255, 0.08) 1px, transparent 1px);
+  background-size: 56px 56px, 56px 56px, 14px 14px, 14px 14px;
+  box-shadow:
+    0 1px 1px rgba(12, 12, 13, 0.04),
+    0 12px 24px -12px rgba(12, 12, 13, 0.16),
+    0 24px 48px -24px rgba(12, 12, 13, 0.12);
 }
 
 /* Hero status pill ("Available for new engagements") */
