@@ -41,25 +41,23 @@ export function Hero() {
           letterSpacing: "-0.035em",
         }}
       >
-        A powerful AI model is not the same thing as a working system.
+        A <span className="text-primary">Forward Deployed Engineer</span>{" "}
+        &amp; AI Consultant
       </h1>
       <p className="hero-lede max-w-xl text-base leading-[1.75] text-foreground">
-        Most businesses adopting AI agents and automation never see the
-        payoff — not because the models are weak, but because nobody embeds
-        deep enough in the real workflow to make them stick.
+        95% of enterprise AI pilots fail to show measurable ROI, a failure
+        rate rooted not in flawed models but in poor integration. I help
+        close that gap for small businesses — workflow-first, white-glove
+        implementation to save time and increase profit.
       </p>
-      <p className="hero-lede text-sm text-muted-foreground">
-        95% of enterprise generative-AI pilots fail to show measurable ROI
-        (MIT NANDA, 2025).
-      </p>
-      <p className="hero-lede max-w-xl text-base leading-[1.75] text-foreground">
-        Small and medium businesses face the same brittle-workflow problem —
-        worse, because they can&apos;t afford the forward-deployed
-        engineering enterprises use to close it. That&apos;s the gap this
-        practice exists to close.
-      </p>
-      <div>
+      <div className="flex flex-wrap items-center gap-4">
         <BookCta glow />
+        <Link
+          href="/#process"
+          className="rounded-lg border border-border px-[29px] py-[14px] text-base font-bold text-foreground transition-transform hover:-translate-y-0.5 hover:border-foreground"
+        >
+          See Process
+        </Link>
       </div>
     </section>
   );

@@ -10,14 +10,14 @@ const steps = [
   },
   {
     number: "02",
-    title: "One-Time Setup",
-    price: "Under $10k",
-    body: "Most engagements: a one-time setup, scoped during your free audit, that builds the specific fix your business needs and gets it running.",
+    title: "Setup",
+    price: "Under $5k",
+    body: "Or hourly, if you prefer. Scoped during your free audit, this builds the specific fix your business needs and gets it running.",
   },
   {
     number: "03",
-    title: "Monthly Retainer",
-    price: "Under $2k/mo",
+    title: "Retainer",
+    price: "Under $1,000/mo",
     body: "Once it's working, an ongoing retainer — also scoped during your free audit — keeps it maintained and adds new automations as your business grows.",
   },
 ] as const;

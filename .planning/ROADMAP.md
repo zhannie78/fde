@@ -45,7 +45,7 @@ Old missed-call-recovery / vertical-strategy positioning. Phase 1 (Marketing Fou
 **Requirements**: LAND-01, LAND-02, LAND-03, LAND-04, LAND-05, LAND-06, PROOF-02, PROOF-03
 **Success Criteria** (what must be TRUE):
 
-  1. Visitor scrolling the page encounters the gap (95%-failure stat, properly sourced) → fix (forward-deployed engineering) → outcomes (TIME/EFFICIENCY/PROFIT, including worst-case/conservative framing) → offer (free audit → <$10k setup → <$2k/mo retainer, scope-qualified) → CTA, in that order
+  1. Visitor scrolling the page encounters the gap (95%-failure stat, properly sourced) → fix (forward-deployed engineering) → outcomes (TIME/EFFICIENCY/PROFIT, including worst-case/conservative framing) → offer (free audit → <$5k setup (or hourly) → <$1,000/mo retainer, scope-qualified — corrected 2026-07-21) → CTA, in that order
   2. Visitor can click a "book the free audit" CTA at top, middle, and bottom scroll depth and reach the Cal.com booking flow
   3. Visitor sees a step-by-step process-transparency section near the CTA explaining how the audit and engagement work
   4. Visitor can enter hours/week and hourly cost into a client-side ROI calculator with no signup and no API cost, and see TIME/EFFICIENCY/PROFIT-framed annual hours/dollars-recovered results that route back to the audit CTA

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ScrollStoryProvider } from "@/components/scroll-story-provider";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
+import { MarketGapBand } from "@/components/sections/market-gap-band";
 import { Offer } from "@/components/sections/offer";
 import { Outcomes } from "@/components/sections/outcomes";
 import { ProcessTransparency } from "@/components/sections/process-transparency";
@@ -16,15 +17,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * Home route (LAND-01 section order, locked): Hero (the gap) -> TheFix (the
- * fix) -> Outcomes (TIME/EFFICIENCY/PROFIT) -> RoiCalculator (proof) ->
- * Offer (the pricing) -> ProcessTransparency (how it works) -> FinalCta
- * (book the free audit).
+ * Home route (LAND-01 section order): Hero (the gap) -> MarketGapBand (the
+ * access gap, ported from the Phase 6 sketch) -> TheFix (the fix) ->
+ * Outcomes (TIME/EFFICIENCY/PROFIT) -> RoiCalculator (proof) -> Offer (the
+ * pricing) -> ProcessTransparency (how it works) -> FinalCta (book the free
+ * audit).
  */
 export default function Home() {
   return (
     <ScrollStoryProvider>
       <Hero />
+      <MarketGapBand />
       <TheFix />
       <Outcomes />
       <RoiCalculator />

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { siteConfig } from "@/config/site";
 
+const [brandPrefix, brandSuffix] = siteConfig.name.split(".");
+
 const navLinks = [
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "How It Works" },
@@ -31,7 +33,9 @@ export function SiteHeader() {
           href="/"
           className="font-heading text-lg font-bold text-foreground"
         >
-          {siteConfig.name}
+          {brandPrefix}
+          <span className="text-primary">.</span>
+          {brandSuffix}
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">

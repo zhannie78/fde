@@ -10,7 +10,9 @@
  * the site goes live.
  */
 export const siteConfig = {
-  name: "AI Deployed",
+  // Wordmark/brand name and page-title source, per user decision 2026-07-21
+  // (matches the Phase 6 sketch's domain-style wordmark treatment).
+  name: "aideployed.dev",
 
   // Locked copy per the Phase 6 UI-SPEC Copywriting Contract — the single
   // source of truth every BookCta/ElevatedCta call site reads from so the
@@ -28,9 +30,9 @@ export const siteConfig = {
   // NEEDS-FOUNDER (D-13): founder's presented region/service area.
   region: "PLACEHOLDER_REGION",
 
-  // NEEDS-FOUNDER (D-04): until the production domain is purchased and
-  // connected, the site is built/previewed on the free Netlify subdomain.
-  domain: "PLACEHOLDER_DOMAIN.example.invalid",
+  // Real domain, confirmed by user decision 2026-07-21 (matches the
+  // wordmark above).
+  domain: "aideployed.dev",
 
   // NEEDS-FOUNDER (D-01): set once the Cal.com "Free Audit Call" event type
   // is created under the founder's real Cal.com account.

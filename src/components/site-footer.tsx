@@ -3,6 +3,8 @@ import Link from "next/link";
 import { BookCta } from "@/components/book-cta";
 import { siteConfig } from "@/config/site";
 
+const [brandPrefix, brandSuffix] = siteConfig.name.split(".");
+
 const footerLinks = [
   { href: "/", label: "Home" },
   { href: "/#offer", label: "Pricing" },
@@ -21,7 +23,11 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:flex-row md:items-start md:justify-between md:px-6">
         <div className="space-y-2">
-          <p className="font-heading text-lg font-bold">{siteConfig.name}</p>
+          <p className="font-heading text-lg font-bold">
+            {brandPrefix}
+            <span className="text-primary">.</span>
+            {brandSuffix}
+          </p>
           <p className="text-sm text-muted-foreground">{siteConfig.region}</p>
           <a
             href={`mailto:${siteConfig.founderEmail}`}

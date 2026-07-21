@@ -10,7 +10,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Landing Page
 
 - [ ] **LAND-01**: Visitor sees a single long-scroll FDE landing page carrying the 5-part hierarchy: the gap (cited 95%-failure stat) → the fix (forward-deployed engineering) → outcomes (TIME/EFFICIENCY/PROFIT) → the offer → CTA
-- [ ] **LAND-02**: Visitor sees transparent pricing on the page — free audit → one-time setup under $10k → retainer under $2k/mo — with scope-qualifying language tied to the free audit
+- [ ] **LAND-02**: Visitor sees transparent pricing on the page — free audit → one-time setup under $5k (or hourly) → retainer under $1,000/mo — with scope-qualifying language tied to the free audit *(pricing corrected 2026-07-21 — previous $10k/$2k-mo figures were inaccurate)*
 - [ ] **LAND-03**: Visitor can book the free audit via the Cal.com CTA, repeated at top/mid/bottom scroll depth
 - [ ] **LAND-04**: Visitor sees a process-transparency section ("how the audit and engagement work, step by step") as the trust signal near the CTA
 - [ ] **LAND-05**: Outcomes section includes conservative/worst-case framing ("even in the worst case, you come out ahead")
