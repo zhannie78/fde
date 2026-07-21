@@ -99,6 +99,7 @@ None yet.
 | 260721-b89 | Footer Contact Me CTA + copyright line, new Formspree-backed /contact page, native 5-step /book booking flow (Cal.com removed) with Telegram notification | 2026-07-21 | 38c608c | [260721-b89-footer-cta-contact-link-updates-native-c](./quick/260721-b89-footer-cta-contact-link-updates-native-c/) |
 | 260721-bwa | Graph-paper visual polish for ROI calculator box: two-tier indigo-tinted grid + elevation shadow replacing flat grey grid/border | 2026-07-21 | 946c894 | [260721-bwa-graph-paper-visual-polish-for-roi-calcul](./quick/260721-bwa-graph-paper-visual-polish-for-roi-calcul/) |
 | 260721-c2a | How It Works: sequential (staggered) step reveal + GSAP TextPlugin typewriter effect on "Build & Deploy" title with blinking lime cursor | 2026-07-21 | 3060632 | [260721-c2a-sequential-step-reveal-typewriter-effect](./quick/260721-c2a-sequential-step-reveal-typewriter-effect/) |
+| 260721-fix1 | Header Contact link fix (/contact), calculator anchor scroll-margin, "Annie" typewriter on About, narrowed Build & Deploy typewriter to just "Deploy" | 2026-07-21 | fcd50ea | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 
 ## Deferred Items
 
