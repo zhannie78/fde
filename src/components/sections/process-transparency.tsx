@@ -2,17 +2,17 @@ const steps = [
   {
     number: "01",
     title: "Free Audit",
-    body: "A focused look at how your business actually runs today — where manual work is costing you time and where automation could recover it. No cost, no obligation. You get a personalized findings report, reviewed by a real person, before it ever reaches you.",
+    body: "We map your workflows and find the highest-leverage automation opportunities.",
   },
   {
     number: "02",
     title: "Build & Deploy",
-    body: "We build the specific fix your audit uncovered — a fixed-scope, fixed-price project sized to prove real value fast, not a months-long build.",
+    body: "I build the custom solution, embedded in how you already work.",
   },
   {
     number: "03",
-    title: "Ongoing Retainer",
-    body: "Once it's live, a monthly retainer keeps it maintained, monitored, and growing — new automations added as your business needs them.",
+    title: "Retainer",
+    body: "Ongoing iteration, monitoring, and support as your business changes.",
   },
 ] as const;
 
@@ -28,9 +28,17 @@ export function ProcessTransparency() {
   return (
     <section id="process" className="bg-secondary text-secondary-foreground">
       <div className="process-section mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:px-6 sm:py-20">
-        <h2 className="font-heading text-2xl leading-[1.75] font-bold text-secondary-foreground sm:text-[1.75rem]">
-          How the engagement works
-        </h2>
+        <div>
+          <p
+            className="text-sm font-bold tracking-[0.02em] uppercase"
+            style={{ color: "var(--lime)" }}
+          >
+            How It Works
+          </p>
+          <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-secondary-foreground sm:text-[1.75rem]">
+            Three steps. No black box.
+          </h2>
+        </div>
         <div
           className="process-progress-line"
           aria-hidden="true"

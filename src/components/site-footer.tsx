@@ -7,8 +7,9 @@ const [brandPrefix, brandSuffix] = siteConfig.name.split(".");
 
 const footerLinks = [
   { href: "/", label: "Home" },
+  { href: "/#fix", label: "Approach" },
   { href: "/#offer", label: "Pricing" },
-  { href: "/#process", label: "How It Works" },
+  { href: "/#process", label: "Process" },
   { href: "/book", label: "Book" },
 ];
 

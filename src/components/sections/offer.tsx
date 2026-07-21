@@ -36,7 +36,13 @@ export function Offer() {
       id="offer"
       className="offer-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
     >
-      <ol className="flex flex-col gap-12 md:grid md:grid-cols-[1.6fr_1fr_1fr] md:items-start md:gap-8">
+      <p className="text-sm font-bold tracking-[0.02em] text-primary uppercase">
+        The Offer
+      </p>
+      <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
+        Transparent pricing. No enterprise markup.
+      </h2>
+      <ol className="mt-8 flex flex-col gap-12 md:grid md:grid-cols-[1.6fr_1fr_1fr] md:items-start md:gap-8">
         {steps.map((step, index) => (
           <li
             key={step.number}

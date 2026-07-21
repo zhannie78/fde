@@ -13,8 +13,9 @@ import { siteConfig } from "@/config/site";
 const [brandPrefix, brandSuffix] = siteConfig.name.split(".");
 
 const navLinks = [
+  { href: "/#fix", label: "Approach" },
   { href: "/#offer", label: "Pricing" },
-  { href: "/#process", label: "How It Works" },
+  { href: "/#process", label: "Process" },
   { href: "/about", label: "About" },
 ];
 
@@ -53,7 +54,7 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <BookCta />
+          <BookCta glow />
         </div>
 
         <div className="md:hidden">

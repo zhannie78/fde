@@ -17,12 +17,10 @@ export function FinalCta() {
         style={{ borderRadius: "20px" }}
       >
         <h2 className="font-heading text-2xl leading-[1.75] font-bold sm:text-[1.75rem]">
-          Ready to close the gap?
+          Ready to close your AI gap?
         </h2>
         <p className="max-w-md text-base leading-[1.75] text-foreground/90">
-          Thirty minutes, no pitch — just a plain conversation about where
-          forward-deployed engineering could recover time, efficiency, and
-          profit for your business.
+          Book a free audit. No commitment, no cost.
         </p>
         <ElevatedCta />
       </div>

@@ -22,6 +22,9 @@ import { siteConfig } from "@/config/site";
 export function Hero() {
   return (
     <section className="hero-section mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28">
+      <span className="status-pill w-fit">
+        <span className="ping" /> Available for new engagements
+      </span>
       <p className="text-lg text-foreground">
         Hello, I&apos;m{" "}
         <Link

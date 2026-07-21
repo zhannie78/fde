@@ -35,8 +35,8 @@ type GlowEffectLayerProps = {
 
 function GlowEffectLayer({
   className,
-  colors = ["var(--accent)", "var(--lime)", "#ff6ac1"],
-  mode = "rotate",
+  colors = ["var(--accent)", "#8f6fff"],
+  mode = "breathe",
   blur = "medium",
   duration = 3.5,
   scale = 1,
@@ -130,8 +130,8 @@ type GlowButtonProps = React.ComponentProps<"button"> &
 export function GlowButton({
   className,
   glowClassName,
-  colors = ["var(--accent)", "var(--lime)", "#ff6ac1"],
-  mode = "rotate",
+  colors = ["var(--accent)", "#8f6fff"],
+  mode = "breathe",
   blur = "medium",
   duration = 3.5,
   variant,

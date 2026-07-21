@@ -5,10 +5,10 @@ import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { MarketGapBand } from "@/components/sections/market-gap-band";
 import { Offer } from "@/components/sections/offer";
-import { Outcomes } from "@/components/sections/outcomes";
 import { ProcessTransparency } from "@/components/sections/process-transparency";
 import { RoiCalculator } from "@/components/sections/roi-calculator";
 import { TheFix } from "@/components/sections/the-fix";
+import { Ticker } from "@/components/sections/ticker";
 
 export const metadata: Metadata = {
   title: "Forward-deployed AI engineering for small and medium businesses",
@@ -17,19 +17,19 @@ export const metadata: Metadata = {
 };
 
 /**
- * Home route (LAND-01 section order): Hero (the gap) -> MarketGapBand (the
- * access gap, ported from the Phase 6 sketch) -> TheFix (the fix) ->
- * Outcomes (TIME/EFFICIENCY/PROFIT) -> RoiCalculator (proof) -> Offer (the
- * pricing) -> ProcessTransparency (how it works) -> FinalCta (book the free
- * audit).
+ * Home route, ported to match the Phase 6 sketch's section order: Hero (the
+ * gap) -> Ticker -> MarketGapBand (the access gap) -> TheFix (the fix,
+ * including the TIME/EFFICIENCY/PROFIT stat row per the sketch) ->
+ * RoiCalculator (proof) -> Offer (the pricing) -> ProcessTransparency (how
+ * it works) -> FinalCta (book the free audit).
  */
 export default function Home() {
   return (
     <ScrollStoryProvider>
       <Hero />
+      <Ticker />
       <MarketGapBand />
       <TheFix />
-      <Outcomes />
       <RoiCalculator />
       <Offer />
       <ProcessTransparency />
