@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site";
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "700", "800"],
   display: "swap",
 });
 

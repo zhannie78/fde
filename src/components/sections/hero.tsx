@@ -37,7 +37,7 @@ export function Hero() {
         —
       </p>
       <h1
-        className="font-heading font-bold text-foreground"
+        className="font-heading font-extrabold text-foreground"
         style={{
           fontSize: "clamp(2.75rem, 6.4vw, 5rem)",
           lineHeight: 1,
