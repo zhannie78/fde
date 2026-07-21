@@ -20,7 +20,7 @@ export function TheFix() {
     >
       <div data-thefix-card>
         <p className="section-label">The Fix</p>
-        <p className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
+        <p className="mt-2 font-heading text-3xl leading-[1.2] font-bold text-foreground sm:text-4xl">
           Off-the-shelf tools don&apos;t fit your workflow. Forward-deployed
           engineering does.
         </p>
@@ -32,7 +32,7 @@ export function TheFix() {
       </div>
       <RoiCalculator />
       <p
-        className="mt-8 max-w-xl text-base leading-[1.75] font-bold text-foreground"
+        className="mt-8 max-w-xl text-xl leading-[1.5] font-bold text-foreground"
         style={{ borderLeft: "2px solid var(--lime)", paddingLeft: "16px" }}
       >
         Even in the worst case, you come out ahead.

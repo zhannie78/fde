@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 
 type ElevatedCtaProps = {
   className?: string;
+  /** Override the shared siteConfig.bookCtaLabel for this instance only. */
+  label?: string;
 };
 
 /**
@@ -14,14 +16,14 @@ type ElevatedCtaProps = {
  * important CTA on a page — the homepage FinalCta and the About page's
  * final CTA render the exact same markup so the two match exactly.
  *
- * Reads its label from `siteConfig.bookCtaLabel` rather than a hardcoded
- * string literal so it can never drift from `BookCta`'s own label.
+ * Reads its label from `siteConfig.bookCtaLabel` by default so it can never
+ * drift from `BookCta`'s own label, unless a call site opts into `label`.
  */
-export function ElevatedCta({ className }: ElevatedCtaProps) {
+export function ElevatedCta({ className, label }: ElevatedCtaProps) {
   return (
     <div className="glow-wrap-final">
       <Link href="/book" className={cn("btn-final", className)}>
-        {siteConfig.bookCtaLabel}
+        {label ?? siteConfig.bookCtaLabel}
         <span className="arrow" aria-hidden="true">
           →
         </span>

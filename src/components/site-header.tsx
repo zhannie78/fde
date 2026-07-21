@@ -45,7 +45,7 @@ export function SiteHeader() {
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
             <span aria-hidden="true">←</span>
-            <span className="hidden sm:inline">Back to AI Deployed</span>
+            <span className="hidden sm:inline">Back to Home</span>
             <span className="sm:hidden">Back</span>
           </Link>
           <Link
@@ -59,7 +59,7 @@ export function SiteHeader() {
           {/* Mobile gets the persistent StickyCtaBar instead — same
               convention as the standard header below. */}
           <div className="hidden md:block">
-            <BookCta glow />
+            <BookCta glow label="Contact" className="px-6 py-3 text-sm" />
           </div>
         </div>
       </header>
@@ -93,7 +93,7 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <BookCta glow />
+          <BookCta glow className="px-6 py-3 text-sm" />
         </div>
 
         <div className="md:hidden">

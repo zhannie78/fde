@@ -10,7 +10,7 @@ export function MarketGapBand() {
     <section className="dark-band-glow bg-secondary text-secondary-foreground">
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <p className="section-label on-dark">The Access Gap</p>
-        <h2 className="mt-4 max-w-3xl font-heading text-2xl leading-[1.2] font-bold text-secondary-foreground sm:text-3xl">
+        <h2 className="mt-4 max-w-3xl font-heading text-3xl leading-[1.2] font-bold text-secondary-foreground sm:text-4xl">
           Enterprises pay a premium to embed AI-native engineers like this.
           Now small businesses can too.
         </h2>

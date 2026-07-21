@@ -51,7 +51,7 @@ export function SiteFooter() {
         </nav>
 
         <div>
-          <BookCta />
+          <BookCta label="Contact" />
         </div>
       </div>
     </footer>

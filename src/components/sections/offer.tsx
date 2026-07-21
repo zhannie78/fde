@@ -36,7 +36,7 @@ export function Offer() {
       className="offer-section mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
     >
       <p className="section-label">The Offer</p>
-      <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-foreground sm:text-[1.75rem]">
+      <h2 className="mt-2 font-heading text-3xl leading-[1.2] font-bold text-foreground sm:text-4xl">
         Transparent pricing. No enterprise markup.
       </h2>
       <ol className="mt-8 flex flex-col gap-4 md:grid md:grid-cols-[1.3fr_1fr_1fr] md:items-start">
@@ -44,7 +44,7 @@ export function Offer() {
           <li key={step.number} data-offer-card>
             <GlowBox className="h-full">
               <div className="flex h-full flex-col gap-3 p-6">
-                <p className="text-xs font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                <p className="text-xs font-bold tracking-[0.06em] text-primary uppercase">
                   {step.number} — {step.title}
                 </p>
                 <p className="font-heading text-2xl leading-none font-bold tracking-[-0.02em] text-foreground">

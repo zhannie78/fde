@@ -25,11 +25,11 @@ export function Hero() {
       <span className="status-pill w-fit">
         <span className="ping" /> Available for new engagements
       </span>
-      <p className="text-lg font-bold text-foreground">
+      <p className="text-2xl font-normal text-foreground sm:text-[1.75rem]">
         Hello, I&apos;m{" "}
         <Link
           href="/about"
-          className="font-bold text-foreground"
+          className="font-normal text-foreground"
           style={{ boxShadow: "inset 0 -2px 0 0 var(--accent)" }}
         >
           {siteConfig.founderName}

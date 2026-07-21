@@ -30,7 +30,7 @@ export function ProcessTransparency() {
       <div className="process-section relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:px-6 sm:py-20">
         <div>
           <p className="section-label on-dark">How It Works</p>
-          <h2 className="mt-2 font-heading text-2xl leading-[1.2] font-bold text-secondary-foreground sm:text-[1.75rem]">
+          <h2 className="mt-2 font-heading text-3xl leading-[1.2] font-bold text-secondary-foreground sm:text-4xl">
             Three steps. No black box.
           </h2>
         </div>

@@ -16,13 +16,13 @@ export function FinalCta() {
         className="finalcta-panel flex flex-col items-center gap-6 bg-[var(--accent-soft)] px-6 py-12 text-center text-foreground sm:px-12"
         style={{ borderRadius: "20px" }}
       >
-        <h2 className="font-heading text-2xl leading-[1.75] font-bold sm:text-[1.75rem]">
+        <h2 className="font-heading text-3xl leading-[1.75] font-bold sm:text-4xl">
           Ready to close your AI gap?
         </h2>
         <p className="max-w-md text-base leading-[1.75] text-foreground/90">
           Book a free audit. No commitment, no cost.
         </p>
-        <ElevatedCta />
+        <ElevatedCta label="Book Free Audit" />
       </div>
     </section>
   );
