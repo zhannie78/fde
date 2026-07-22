@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { ContactForm } from "@/app/contact/contact-form";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -18,7 +20,10 @@ export default function ContactPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16 sm:px-8 sm:py-24">
       <div className="flex flex-col gap-4 text-center sm:text-left">
         <h1 className="text-[1.75rem] leading-[1.2] font-heading font-bold text-foreground">
-          Get in <span className="text-primary">Touch</span>
+          Get in <span className="text-primary">Touch</span> with{" "}
+          <Link href="/about" className="text-inherit no-underline">
+            {siteConfig.founderName}
+          </Link>
         </h1>
         <p className="text-base leading-[1.6] text-foreground">
           Not ready to book a call? Send a quick note about what&apos;s
