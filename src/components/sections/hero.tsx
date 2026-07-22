@@ -44,15 +44,34 @@ export function Hero() {
           letterSpacing: "-0.035em",
         }}
       >
-        A <span className="text-primary">Forward Deployed Engineer</span>{" "}
-        &amp; AI Consultant
+        A{" "}
+        <span className="text-primary">
+          <Link href="/about" className="text-inherit no-underline">
+            Forward Deployed Engineer
+          </Link>
+        </span>{" "}
+        &amp;{" "}
+        <Link href="/about" className="text-inherit no-underline">
+          AI Consultant
+        </Link>
       </h1>
       <p className="hero-lede max-w-xl text-base leading-[1.75] text-foreground">
         95% of enterprise AI pilots fail to show measurable ROI, a failure
         rate rooted not in flawed models but in poor integration. I help
         close that gap for small businesses — workflow-first, white-glove
-        implementation to <strong className="lede-highlight">save time</strong>{" "}
-        and <strong className="lede-highlight">increase profit</strong>.
+        implementation to{" "}
+        <strong className="lede-highlight">
+          <Link href="/about" className="text-inherit no-underline">
+            save time
+          </Link>
+        </strong>{" "}
+        and{" "}
+        <strong className="lede-highlight">
+          <Link href="/about" className="text-inherit no-underline">
+            increase profit
+          </Link>
+        </strong>
+        .
       </p>
       <div className="flex flex-wrap items-center gap-4">
         <BookCta glow />
