@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/sheet";
 
 const navLinks = [
+  { href: "/about", label: "About" },
   { href: "/#fix", label: "Approach" },
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "Process" },
-  { href: "/about", label: "About" },
 ];
 
 /**

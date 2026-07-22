@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { BookingFlow } from "@/components/booking/booking-flow";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Book Your Free Audit Call",
@@ -19,7 +21,10 @@ export default function BookPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16 sm:px-8 sm:py-24">
       <div className="flex flex-col gap-4 text-center sm:text-left">
         <h1 className="text-[1.75rem] leading-[1.2] font-heading font-bold text-foreground">
-          Book Your <span className="text-primary">Free Audit Call</span>
+          Book Your <span className="text-primary">Free Audit Call</span> with{" "}
+          <Link href="/about" className="text-inherit no-underline">
+            {siteConfig.founderName}
+          </Link>
         </h1>
         <p className="text-base leading-[1.6] text-foreground">
           Thirty minutes, no slide deck — just a plain conversation about
