@@ -292,12 +292,24 @@
 /* About-page avatar framing */
 .avatar-wrap {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 128px;
+  height: 128px;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: 0 12px 32px -12px rgba(12, 12, 13, 0.18);
+}
+@media (min-width: 640px) {
+  .avatar-wrap {
+    width: 160px;
+    height: 160px;
+  }
+}
+@media (min-width: 768px) {
+  .avatar-wrap {
+    width: 180px;
+    height: 180px;
+  }
 }
 .avatar-wrap::after {
   content: "";
