@@ -2,7 +2,7 @@ const steps = [
   {
     number: "01",
     title: "Free Audit",
-    body: "We map your workflows and find the highest-leverage automation opportunities.",
+    body: "I map your workflows and find the highest-leverage automation opportunities.",
   },
   {
     number: "02",
