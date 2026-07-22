@@ -103,7 +103,7 @@ None yet.
 | 260722-70p | Unstyled /about links on hero phrases + linked "Annie" in contact/book headings; reordered About before Approach in header, mobile, and footer nav | 2026-07-22 | 878dc96 | [260722-70p-about-page-links-nav](./quick/260722-70p-about-page-links-nav/) |
 | 260722-7dm | Underline + blue hover on Annie /about links (contact, book, hero) only — other four hero links stay unstyled; contact H1 "Get in Touch" fully colored | 2026-07-22 | 06698b9 | [260722-7dm-annie-link-hover-styling](./quick/260722-7dm-annie-link-hover-styling/) |
 | 260722-fix2 | How It Works step 1 copy: "We map your workflows..." → "I map your workflows..." (first-person consistency with steps 2-3) | 2026-07-22 | 38e1121 | (no dedicated dir — direct fix, not planned via gsd-quick init) |
-| 260722-fix3 | About-page avatar photo resized responsively: 128px mobile / 160px sm / 180px md+ (was fixed 200px at all widths) | 2026-07-22 | (pending) | (no dedicated dir — direct fix, not planned via gsd-quick init) |
+| 260722-fix3 | About-page avatar photo resized responsively: 128px mobile / 160px sm / 180px md+ (was fixed 200px at all widths) | 2026-07-22 | b3b6355 | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 
 ## Deferred Items
 
