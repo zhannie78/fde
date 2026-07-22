@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 Phase: 06 (visual-redesign) — EXECUTING
 Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-07-21 - Completed quick task 260721-b89: Footer CTA, /contact page, native /book booking flow
+Last activity: 2026-07-22 - Completed quick task 260722-70p: Unstyled /about links on hero phrases + nav reorder + linked "Annie" in contact/book headings
 
 Progress: [█████████░] 92%
 
@@ -100,6 +100,7 @@ None yet.
 | 260721-bwa | Graph-paper visual polish for ROI calculator box: two-tier indigo-tinted grid + elevation shadow replacing flat grey grid/border | 2026-07-21 | 946c894 | [260721-bwa-graph-paper-visual-polish-for-roi-calcul](./quick/260721-bwa-graph-paper-visual-polish-for-roi-calcul/) |
 | 260721-c2a | How It Works: sequential (staggered) step reveal + GSAP TextPlugin typewriter effect on "Build & Deploy" title with blinking lime cursor | 2026-07-21 | 3060632 | [260721-c2a-sequential-step-reveal-typewriter-effect](./quick/260721-c2a-sequential-step-reveal-typewriter-effect/) |
 | 260721-fix1 | Header Contact link fix (/contact), calculator anchor scroll-margin, "Annie" typewriter on About, narrowed Build & Deploy typewriter to just "Deploy" | 2026-07-21 | fcd50ea | (no dedicated dir — direct fix, not planned via gsd-quick init) |
+| 260722-70p | Unstyled /about links on hero phrases + linked "Annie" in contact/book headings; reordered About before Approach in header, mobile, and footer nav | 2026-07-22 | 878dc96 | [260722-70p-about-page-links-nav](./quick/260722-70p-about-page-links-nav/) |
 
 ## Deferred Items
 
