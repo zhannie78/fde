@@ -22,7 +22,10 @@ export default function BookPage() {
       <div className="flex flex-col gap-4 text-center sm:text-left">
         <h1 className="text-[1.75rem] leading-[1.2] font-heading font-bold text-foreground">
           Book Your <span className="text-primary">Free Audit Call</span> with{" "}
-          <Link href="/about" className="text-inherit no-underline">
+          <Link
+            href="/about"
+            className="underline hover:text-primary transition-colors"
+          >
             {siteConfig.founderName}
           </Link>
         </h1>

@@ -29,8 +29,7 @@ export function Hero() {
         Hello, I&apos;m{" "}
         <Link
           href="/about"
-          className="font-normal text-foreground"
-          style={{ boxShadow: "inset 0 -2px 0 0 var(--accent)" }}
+          className="font-normal text-foreground underline hover:text-primary transition-colors"
         >
           {siteConfig.founderName}
         </Link>{" "}

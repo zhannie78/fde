@@ -20,8 +20,11 @@ export default function ContactPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16 sm:px-8 sm:py-24">
       <div className="flex flex-col gap-4 text-center sm:text-left">
         <h1 className="text-[1.75rem] leading-[1.2] font-heading font-bold text-foreground">
-          Get in <span className="text-primary">Touch</span> with{" "}
-          <Link href="/about" className="text-inherit no-underline">
+          <span className="text-primary">Get in Touch</span> with{" "}
+          <Link
+            href="/about"
+            className="underline hover:text-primary transition-colors"
+          >
             {siteConfig.founderName}
           </Link>
         </h1>

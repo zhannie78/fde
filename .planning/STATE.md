@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 Phase: 06 (visual-redesign) — EXECUTING
 Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-07-22 - Completed quick task 260722-70p: Unstyled /about links on hero phrases + nav reorder + linked "Annie" in contact/book headings
+Last activity: 2026-07-22 - Completed quick task 260722-7dm: Underline + blue hover on Annie /about links (contact, book, hero), contact H1 "Get in Touch" fully colored
 
 Progress: [█████████░] 92%
 
@@ -101,6 +101,7 @@ None yet.
 | 260721-c2a | How It Works: sequential (staggered) step reveal + GSAP TextPlugin typewriter effect on "Build & Deploy" title with blinking lime cursor | 2026-07-21 | 3060632 | [260721-c2a-sequential-step-reveal-typewriter-effect](./quick/260721-c2a-sequential-step-reveal-typewriter-effect/) |
 | 260721-fix1 | Header Contact link fix (/contact), calculator anchor scroll-margin, "Annie" typewriter on About, narrowed Build & Deploy typewriter to just "Deploy" | 2026-07-21 | fcd50ea | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 | 260722-70p | Unstyled /about links on hero phrases + linked "Annie" in contact/book headings; reordered About before Approach in header, mobile, and footer nav | 2026-07-22 | 878dc96 | [260722-70p-about-page-links-nav](./quick/260722-70p-about-page-links-nav/) |
+| 260722-7dm | Underline + blue hover on Annie /about links (contact, book, hero) only — other four hero links stay unstyled; contact H1 "Get in Touch" fully colored | 2026-07-22 | (pending) | [260722-7dm-annie-link-hover-styling](./quick/260722-7dm-annie-link-hover-styling/) |
 
 ## Deferred Items
 
