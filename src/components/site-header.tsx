@@ -16,10 +16,10 @@ import { siteConfig } from "@/config/site";
 const [brandPrefix, brandSuffix] = siteConfig.name.split(".");
 
 const navLinks = [
+  { href: "/about", label: "About" },
   { href: "/#fix", label: "Approach" },
   { href: "/#offer", label: "Pricing" },
   { href: "/#process", label: "Process" },
-  { href: "/about", label: "About" },
 ];
 
 /**
