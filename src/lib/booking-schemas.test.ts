@@ -56,7 +56,8 @@ describe("weeklyTemplateSchema", () => {
   });
 
   it("rejects a missing weekday", () => {
-    const { sun: _sun, ...incomplete } = validTemplate;
+    const { mon, tue, wed, thu, fri, sat } = validTemplate;
+    const incomplete = { mon, tue, wed, thu, fri, sat };
     expect(weeklyTemplateSchema.safeParse(incomplete).success).toBe(false);
   });
 
