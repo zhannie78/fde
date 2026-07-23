@@ -7,12 +7,12 @@
 **Revision history:**
 - **2026-07-22 (original):** Supabase-backed persistence + Resend confirmation/cancel/reschedule, single fixed daily slot unchanged.
 - **2026-07-23 (rev 1):** Storage swapped from Supabase to Netlify Blobs (free on the existing Netlify plan, no new account, no inactivity auto-pause).
-- **2026-07-23 (rev 2 — this version):** Added full **availability management** — the founder can now define a recurring weekly schedule and date-specific exceptions (block days, add one-off times) through a password-protected `/admin` page, instead of availability being a hardcoded constant. This changes the booking data model from date-only to date+time slots throughout, and simplifies the visitor-facing picker to a flat, chronologically-sorted list of the next 15 open slots.
+- **2026-07-23 (rev 2 — this version):** Added full **availability management** — the founder can now define a recurring weekly schedule and date-specific exceptions (block days, add one-off times) through a password-protected `/admin` page, instead of availability being a hardcoded constant. This changes the booking data model from date-only to date+time slots throughout, and simplifies the visitor-facing picker to a flat, chronologically-sorted list of the next 21 open slots.
 
 ## Goals
 
 1. The founder can define a recurring weekly availability template (which weekdays, which times) and per-date exceptions (block a day entirely, or override a day's times) via a simple password-protected admin page — no code edits or redeploys required to change the schedule.
-2. Visitors see a flat, date-ascending list of the next 15 open slots (not a 21-day grid) and book directly from it.
+2. Visitors see a flat, date-ascending list of the next 21 open slots (not a calendar-style day grid) and book directly from it.
 3. Persist bookings so double-booking the same date+time is impossible, including under race conditions.
 4. Give visitors a confirmation email with a secret link to reschedule or cancel their booking, with no login required.
 5. Keep the founder-facing Telegram notification exactly as it works today for every booking, cancellation, and reschedule — unchanged mechanism, best-effort so an outage never blocks a client-visible success once a booking is durably reserved.
@@ -57,10 +57,10 @@ getSlotsForDate(dateISO):
   return sorted(template[weekday])
 ```
 
-### The visitor-facing "next 15 slots" list
+### The visitor-facing "next 21 slots" list
 
 ```
-listUpcomingSlots(count = 15, maxDaysToScan = 90):
+listUpcomingSlots(count = 21, maxDaysToScan = 90):
   taken = bookingStore.listTakenSlots()  // Set of "dateISO|time"
   results = []
   for i in 0..maxDaysToScan:
@@ -71,7 +71,7 @@ listUpcomingSlots(count = 15, maxDaysToScan = 90):
   return results
 ```
 
-Days with no template entry and no override (e.g. a weekend the founder never configured) simply contribute zero slots and are skipped automatically — no special-casing needed. `maxDaysToScan` is a safety bound (not a business rule) so a mostly-empty template can't cause an unbounded scan; if fewer than 15 slots exist within 90 days, the visitor just sees fewer than 15.
+Days with no template entry and no override (e.g. a weekend the founder never configured) simply contribute zero slots and are skipped automatically — no special-casing needed. `maxDaysToScan` is a safety bound (not a business rule) so a mostly-empty template can't cause an unbounded scan; if fewer than 21 slots exist within 90 days, the visitor just sees fewer than 21.
 
 ### Admin access
 
@@ -92,9 +92,9 @@ Two sections on one page:
 
 ### Visitor-facing picker (`/book`)
 
-`app/book/page.tsx` (Server Component) calls `listUpcomingSlots(15)` and passes the array into `<BookingFlow slots={...} />`. The flow simplifies from 5 steps to **4**: `slot` (pick one of the up-to-15 flat, date-ascending options, each rendered via the new `formatSlotLabel(dateISO, time)`) → `details` → `review` → `success`. The old separate "confirm time" step is gone — picking a slot now picks date *and* time in one action.
+`app/book/page.tsx` (Server Component) calls `listUpcomingSlots(21)` and passes the array into `<BookingFlow slots={...} />`. The flow simplifies from 5 steps to **4**: `slot` (pick one of the up-to-21 flat, date-ascending options, each rendered via the new `formatSlotLabel(dateISO, time)`) → `details` → `review` → `success`. The old separate "confirm time" step is gone — picking a slot now picks date *and* time in one action.
 
-If `POST /api/book` returns `409` (another visitor took that exact slot first), the flow shows the error and re-fetches a fresh list via a new `GET /api/book/slots` endpoint (same `listUpcomingSlots(15)` under the hood) rather than forcing a full page reload.
+If `POST /api/book` returns `409` (another visitor took that exact slot first), the flow shows the error and re-fetches a fresh list via a new `GET /api/book/slots` endpoint (same `listUpcomingSlots(21)` under the hood) rather than forcing a full page reload.
 
 ### Confirming a booking (`POST /api/book`)
 
@@ -109,7 +109,7 @@ Body is now `{ name, email, note, dateISO, time }`. After validation:
 
 Unchanged shape from rev 1 (generic "no longer valid" message for not-found/cancelled/past bookings; Cancel and Reschedule actions). Reschedule now:
 - Validates the new `{ dateISO, time }` against `getSlotsForDate(dateISO)` (must actually be one of that date's configured slots — replaces the old `isCandidateDate` check, which no longer makes sense once availability is admin-configurable rather than a fixed 21-day rolling window).
-- Uses the same flat "next 15 slots" list (fetched client-side via `GET /api/book/slots` when the visitor opens the reschedule picker) instead of a per-day grid.
+- Uses the same flat "next 21 slots" list (fetched client-side via `GET /api/book/slots` when the visitor opens the reschedule picker) instead of a per-day grid.
 - Same atomic `reserveSlot`/`freeSlot` sequencing as the original booking flow, including the orphaned-lock cleanup/logging on partial failure.
 
 ## Error Handling
