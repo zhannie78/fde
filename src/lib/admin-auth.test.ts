@@ -26,6 +26,13 @@ describe("isValidPassword", () => {
     delete process.env.ADMIN_PASSWORD;
     expect(isValidPassword("anything")).toBe(false);
   });
+
+  it("rejects a same-length but different password", () => {
+    const correct = "correct-horse-battery-staple";
+    const tamperedChar = correct[0] === "a" ? "b" : "a";
+    const tampered = tamperedChar + correct.slice(1);
+    expect(isValidPassword(tampered)).toBe(false);
+  });
 });
 
 describe("getSessionCookieValue / isValidSessionCookie", () => {
@@ -46,5 +53,14 @@ describe("getSessionCookieValue / isValidSessionCookie", () => {
   it("returns null when ADMIN_SESSION_SECRET is not configured", () => {
     delete process.env.ADMIN_SESSION_SECRET;
     expect(getSessionCookieValue()).toBeNull();
+  });
+
+  it("rejects a same-length but different session value", () => {
+    const value = getSessionCookieValue();
+    expect(value).not.toBeNull();
+    const real = value as string;
+    const tamperedChar = real[0] === "a" ? "b" : "a";
+    const tampered = tamperedChar + real.slice(1);
+    expect(isValidSessionCookie(tampered)).toBe(false);
   });
 });
