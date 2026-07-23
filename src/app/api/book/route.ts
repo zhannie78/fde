@@ -1,23 +1,20 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 
 import { formatSlotLabel } from "@/lib/booking";
+import { bookingSchema } from "@/lib/booking-schemas";
+import { freeSlot, generateManageToken, reserveSlot, saveBookingRecord } from "@/lib/booking-store";
+import { sendBookingUpdateEmail } from "@/lib/email";
 
 /**
- * Server-only Route Handler for the native booking flow. This is the ONLY
- * place TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID are read — never expose them to
- * client code, mirroring CLAUDE.md's "never call the Anthropic SDK from a
- * Client Component" rule. Untrusted request body is zod-validated before
- * any use (T-b89-01); the Telegram sendMessage call omits `parse_mode`
- * entirely so user-controlled name/note can never inject Telegram
- * HTML/Markdown formatting entities (T-b89-03).
+ * Server-only Route Handler for the native booking flow. Reserves the
+ * slot atomically in Netlify Blobs before persisting the full record —
+ * this is what actually prevents two visitors from double-booking the
+ * same date+time, not just the zod validation. Telegram and the visitor
+ * confirmation email are both best-effort once the reservation succeeds:
+ * their failure is logged but never turns an already-successful booking
+ * into a client-visible error.
  */
-const bookingSchema = z.object({
-  name: z.string().trim().min(1).max(200),
-  email: z.string().trim().email(),
-  note: z.string().trim().min(1).max(2000),
-  dateISO: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-});
+const GENERIC_ERROR = "Booking is temporarily unavailable — please email instead.";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -27,47 +24,68 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid booking details." }, { status: 400 });
   }
 
-  const { name, email, note, dateISO } = parsed.data;
+  const { name, email, note, dateISO, time } = parsed.data;
+  const manageToken = generateManageToken();
+
+  const reserved = await reserveSlot(dateISO, time, manageToken);
+
+  if (!reserved) {
+    return NextResponse.json(
+      { error: "That slot was just taken — please pick another one." },
+      { status: 409 }
+    );
+  }
+
+  try {
+    await saveBookingRecord(manageToken, {
+      dateISO,
+      time,
+      name,
+      email,
+      note,
+      status: "confirmed",
+      createdAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Booking failed: could not save booking record.", error);
+    try {
+      await freeSlot(dateISO, time);
+    } catch (cleanupError) {
+      console.error("Booking failed: could not free orphaned slot lock.", dateISO, time, cleanupError);
+    }
+    return NextResponse.json({ error: GENERIC_ERROR }, { status: 500 });
+  }
 
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!botToken || !chatId) {
-    console.error("Booking failed: TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID not configured.");
-    return NextResponse.json(
-      { error: "Booking is temporarily unavailable — please email instead." },
-      { status: 500 }
-    );
-  }
+    console.error("Booking notification skipped: TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID not configured.");
+  } else {
+    const message = [
+      "New booking request",
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `When: ${formatSlotLabel(dateISO, time)}`,
+      `Note: ${note}`,
+    ].join("\n");
 
-  const message = [
-    "New booking request",
-    `Name: ${name}`,
-    `Email: ${email}`,
-    `When: ${formatSlotLabel(dateISO)}`,
-    `Note: ${note}`,
-  ].join("\n");
+    try {
+      const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: message }),
+      });
 
-  try {
-    const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: message }),
-    });
-
-    if (!telegramRes.ok) {
-      return NextResponse.json(
-        { error: "Couldn't send your booking — please try again." },
-        { status: 502 }
-      );
+      if (!telegramRes.ok) {
+        console.error("Booking notification failed: Telegram responded with", telegramRes.status);
+      }
+    } catch (error) {
+      console.error("Booking notification failed: Telegram request threw.", error);
     }
-
-    return NextResponse.json({ ok: true }, { status: 200 });
-  } catch (error) {
-    console.error("Booking failed: Telegram request threw.", error);
-    return NextResponse.json(
-      { error: "Couldn't send your booking — please try again." },
-      { status: 500 }
-    );
   }
+
+  await sendBookingUpdateEmail({ state: "confirmed", to: email, name, dateISO, time, manageToken });
+
+  return NextResponse.json({ ok: true }, { status: 200 });
 }

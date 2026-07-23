@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { BookingFlow } from "@/components/booking/booking-flow";
 import { siteConfig } from "@/config/site";
+import { listUpcomingSlots } from "@/lib/slots";
 
 export const metadata: Metadata = {
   title: "Book Your Free Audit Call",
@@ -16,7 +17,9 @@ export const metadata: Metadata = {
  * Client Component; this page itself stays a Server Component so the
  * surrounding copy ships with zero extra client JS.
  */
-export default function BookPage() {
+export default async function BookPage() {
+  const slots = await listUpcomingSlots(21);
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16 sm:px-8 sm:py-24">
       <div className="flex flex-col gap-4 text-center sm:text-left">
@@ -38,7 +41,7 @@ export default function BookPage() {
         </p>
       </div>
       <div className="w-full">
-        <BookingFlow />
+        <BookingFlow slots={slots} />
       </div>
     </div>
   );
