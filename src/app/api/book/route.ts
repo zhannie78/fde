@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { formatSlotLabel } from "@/lib/booking";
+import { formatSlotLabel, getTodayISO } from "@/lib/booking";
+import { getSlotsForDate } from "@/lib/availability-store";
 import { bookingSchema } from "@/lib/booking-schemas";
 import { freeSlot, generateManageToken, reserveSlot, saveBookingRecord } from "@/lib/booking-store";
 import { sendBookingUpdateEmail } from "@/lib/email";
@@ -25,6 +26,17 @@ export async function POST(request: Request) {
   }
 
   const { name, email, note, dateISO, time } = parsed.data;
+
+  if (dateISO < getTodayISO()) {
+    return NextResponse.json({ error: "That date has already passed." }, { status: 400 });
+  }
+
+  const offeredTimes = await getSlotsForDate(dateISO);
+
+  if (!offeredTimes.includes(time)) {
+    return NextResponse.json({ error: "That time isn't available." }, { status: 400 });
+  }
+
   const manageToken = generateManageToken();
 
   const reserved = await reserveSlot(dateISO, time, manageToken);

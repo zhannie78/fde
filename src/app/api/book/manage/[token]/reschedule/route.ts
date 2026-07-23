@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getTodayISO } from "@/lib/booking";
 import { getSlotsForDate } from "@/lib/availability-store";
 import { rescheduleSchema } from "@/lib/booking-schemas";
 import { freeSlot, getBookingByToken, isManageable, reserveSlot, saveBookingRecord } from "@/lib/booking-store";
@@ -20,6 +21,11 @@ export async function POST(request: Request, { params }: RouteParams) {
   }
 
   const { dateISO: newDateISO, time: newTime } = parsed.data;
+
+  if (newDateISO < getTodayISO()) {
+    return NextResponse.json({ error: "That date has already passed." }, { status: 400 });
+  }
+
   const offeredTimes = await getSlotsForDate(newDateISO);
 
   if (!offeredTimes.includes(newTime)) {

@@ -17,6 +17,7 @@ import {
   getWeeklyTemplate,
   listOverrides,
   removeOverrideForDate,
+  resolveSlotsForWeekday,
   saveWeeklyTemplate,
   setOverrideForDate,
   type WeeklyTemplate,
@@ -119,5 +120,29 @@ describe("getSlotsForDate", () => {
       return Promise.resolve(null);
     });
     expect(await getSlotsForDate("2026-07-27")).toEqual(["09:00"]);
+  });
+});
+
+describe("resolveSlotsForWeekday", () => {
+  const template: WeeklyTemplate = {
+    sun: [],
+    mon: ["09:00"],
+    tue: [],
+    wed: ["14:00", "09:00"],
+    thu: [],
+    fri: [],
+    sat: [],
+  };
+
+  it("uses the override when present, sorted", () => {
+    expect(resolveSlotsForWeekday(template, ["14:00", "09:00"], "mon")).toEqual(["09:00", "14:00"]);
+  });
+
+  it("blocks the day when the override is an empty array", () => {
+    expect(resolveSlotsForWeekday(template, [], "mon")).toEqual([]);
+  });
+
+  it("falls back to the template for the given weekday when no override", () => {
+    expect(resolveSlotsForWeekday(template, null, "wed")).toEqual(["09:00", "14:00"]);
   });
 });

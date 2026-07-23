@@ -61,6 +61,15 @@ export async function listOverrides(): Promise<{ dateISO: string; times: string[
   return results.sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 }
 
+export function resolveSlotsForWeekday(
+  template: WeeklyTemplate,
+  override: string[] | null,
+  weekday: Weekday
+): string[] {
+  if (override !== null) return [...override].sort();
+  return [...template[weekday]].sort();
+}
+
 export async function getSlotsForDate(dateISO: string): Promise<string[]> {
   const override = await getOverrideForDate(dateISO);
   if (override !== null) return [...override].sort();
