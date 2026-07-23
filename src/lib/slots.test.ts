@@ -14,6 +14,7 @@ vi.mock("@/lib/availability-store", () => ({
 }));
 
 import { listUpcomingSlots } from "./slots";
+import { getTodayISO } from "@/lib/booking";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -22,8 +23,7 @@ beforeEach(() => {
 
 describe("listUpcomingSlots", () => {
   it("collects slots across days in chronological order until it reaches count", async () => {
-    mockGetSlotsForDate.mockImplementation((dateISO: string) => {
-      const day1 = { day1: ["09:00", "14:00"] }; // placeholder, overwritten below
+    mockGetSlotsForDate.mockImplementation(() => {
       return Promise.resolve(["09:00", "14:00"]);
     });
 
@@ -52,13 +52,13 @@ describe("listUpcomingSlots", () => {
 
   it("excludes already-taken slots", async () => {
     mockGetSlotsForDate.mockResolvedValue(["09:00"]);
-    mockListTakenSlots.mockResolvedValue([{ dateISO: "will-not-match-anything", time: "09:00" }]);
+    const today = getTodayISO();
+    mockListTakenSlots.mockResolvedValue([{ dateISO: today, time: "09:00" }]);
 
-    const result = await listUpcomingSlots(1, 2);
+    const result = await listUpcomingSlots(1, 5);
 
-    // The taken fixture's dateISO never matches a real scanned date, so
-    // every day's 09:00 should still be free and returned.
     expect(result).toHaveLength(1);
+    expect(result[0].dateISO).not.toBe(today);
   });
 
   it("gives up after maxDaysToScan and returns fewer than count", async () => {
