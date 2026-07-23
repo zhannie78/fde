@@ -40,6 +40,9 @@ yarn-error.log*
 # git worktrees (local scratch, never tracked)
 .worktrees/
 
+# subagent-driven-development scratch (briefs, reports, review packages)
+.superpowers/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
