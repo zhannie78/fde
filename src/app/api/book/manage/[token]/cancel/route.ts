@@ -16,7 +16,12 @@ export async function POST(_request: Request, { params }: RouteParams) {
   }
 
   await saveBookingRecord(token, { ...booking, status: "cancelled" });
-  await freeSlot(booking.dateISO, booking.time);
+
+  try {
+    await freeSlot(booking.dateISO, booking.time);
+  } catch (error) {
+    console.error("Cancellation warning: could not free slot lock.", booking.dateISO, booking.time, error);
+  }
 
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;

@@ -117,4 +117,43 @@ describe("POST /api/book/manage/[token]/reschedule", () => {
       manageToken: "real-token",
     });
   });
+
+  it("returns 500 and frees the newly-reserved slot (not the old one) if saving the record fails", async () => {
+    mockGetBookingByToken.mockResolvedValue(booking);
+    mockReserveSlot.mockResolvedValue(true);
+    mockSaveBookingRecord.mockRejectedValue(new Error("blobs down"));
+
+    const res = await POST(buildRequest({ dateISO: "2026-08-15", time: "14:00" }), buildParams("real-token"));
+
+    expect(res.status).toBe(500);
+    expect(mockFreeSlot).toHaveBeenCalledWith("2026-08-15", "14:00");
+    expect(mockFreeSlot).not.toHaveBeenCalledWith("2000-01-01", "09:00");
+  });
+
+  it("returns the same response for an already-cancelled booking as for an unknown token", async () => {
+    mockGetBookingByToken.mockResolvedValue({ ...booking, status: "cancelled" as const });
+    const res = await POST(buildRequest({ dateISO: "2026-08-15", time: "14:00" }), buildParams("real-token"));
+    const body = await res.json();
+    expect(res.status).toBe(404);
+    expect(body).toEqual({ error: "This booking link is no longer valid." });
+  });
+
+  it("returns the same response for a past-date booking as for an unknown token", async () => {
+    mockGetBookingByToken.mockResolvedValue({ ...booking, dateISO: "1999-01-01" });
+    const res = await POST(buildRequest({ dateISO: "2026-08-15", time: "14:00" }), buildParams("real-token"));
+    const body = await res.json();
+    expect(res.status).toBe(404);
+    expect(body).toEqual({ error: "This booking link is no longer valid." });
+  });
+
+  it("still succeeds even if the Telegram notification fails", async () => {
+    mockGetBookingByToken.mockResolvedValue(booking);
+    mockReserveSlot.mockResolvedValue(true);
+    mockSaveBookingRecord.mockResolvedValue(undefined);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500 }));
+
+    const res = await POST(buildRequest({ dateISO: "2026-08-15", time: "14:00" }), buildParams("real-token"));
+
+    expect(res.status).toBe(200);
+  });
 });
