@@ -123,8 +123,25 @@ export function AdminDashboard({ initialTemplate, initialOverrides }: AdminDashb
   }
 
   async function handleRemoveOverride(dateISO: string) {
-    await fetch(`/api/admin/override?dateISO=${dateISO}`, { method: "DELETE" });
-    setOverrides((current) => current.filter((item) => item.dateISO !== dateISO));
+    setOverrideSaving(true);
+    setOverrideStatus(null);
+
+    try {
+      const res = await fetch(`/api/admin/override?dateISO=${dateISO}`, { method: "DELETE" });
+
+      if (!res.ok) {
+        setOverrideSaving(false);
+        setOverrideStatus("Couldn't remove — please try again.");
+        return;
+      }
+
+      setOverrides((current) => current.filter((item) => item.dateISO !== dateISO));
+      setOverrideSaving(false);
+      setOverrideStatus("Removed.");
+    } catch {
+      setOverrideSaving(false);
+      setOverrideStatus("Couldn't remove — please try again.");
+    }
   }
 
   return (
@@ -220,7 +237,7 @@ export function AdminDashboard({ initialTemplate, initialOverrides }: AdminDashb
               <span>
                 {override.dateISO} — {override.times.length === 0 ? "Blocked" : override.times.join(", ")}
               </span>
-              <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveOverride(override.dateISO)}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveOverride(override.dateISO)} disabled={overrideSaving}>
                 Remove
               </Button>
             </div>
