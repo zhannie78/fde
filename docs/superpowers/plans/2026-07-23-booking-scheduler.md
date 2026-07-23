@@ -382,7 +382,7 @@ export const overrideSchema = z.object({
 - [ ] **Step 10: Run the tests to verify they pass, then run the full suite and commit**
 
 Run: `npm test`
-Expected: PASS (24 tests total)
+Expected: PASS (25 tests total)
 
 ```bash
 git add package.json package-lock.json vitest.config.ts src/lib/booking.ts src/lib/booking.test.ts src/lib/booking-schemas.ts src/lib/booking-schemas.test.ts
@@ -659,7 +659,7 @@ Modify `.env.local.example` — append at the end of the file:
 - [ ] **Step 7: Run the full suite and commit**
 
 Run: `npm test`
-Expected: PASS (35 tests total)
+Expected: PASS (36 tests total)
 
 ```bash
 git add package.json package-lock.json src/lib/booking-store.ts src/lib/booking-store.test.ts .env.local.example
