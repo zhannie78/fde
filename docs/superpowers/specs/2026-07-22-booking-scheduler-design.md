@@ -1,103 +1,136 @@
-# Booking Scheduler: Persistence, Conflict Prevention, Manage Flow
+# Booking Scheduler: Availability Management, Persistence, Conflict Prevention, Manage Flow
 
 ## Context
 
-`/book` currently renders a native 5-step flow (date → time confirm → details → review → success) built in quick task `260721-b89`. It has no persistence: confirming a booking only sends a Telegram message to the founder via `/api/book`. This means:
+`/book` currently renders a native 5-step flow (date → time confirm → details → review → success) built in quick task `260721-b89`. Availability is a single hardcoded constant (`BOOKING_SLOT_LABEL = "4:00 – 4:30 PM ET"`) applied to every day, and nothing is persisted — confirming a booking only sends a Telegram message to the founder via `/api/book`.
 
-- Two visitors can pick the same date and both get "confirmed" — no conflict prevention.
-- The visitor gets no email record and no way to reschedule or cancel afterward.
-
-This spec covers closing both gaps. The single-hardcoded-daily-slot availability model (`BOOKING_SLOT_LABEL`, one slot per calendar day) is unchanged — real multi-slot availability was explicitly out of scope for this round.
-
-**Revision note (2026-07-23):** the original draft of this spec used Supabase for storage. Swapped to **Netlify Blobs** instead — it ships free on every Netlify plan (including the Free plan this site already runs on), requires no new account/signup, and has no inactivity auto-pause risk the way Supabase's free tier does. Resend remains the email provider (its free tier — 100/day, 3,000/month — comfortably and permanently covers this site's booking volume with no expiry).
+**Revision history:**
+- **2026-07-22 (original):** Supabase-backed persistence + Resend confirmation/cancel/reschedule, single fixed daily slot unchanged.
+- **2026-07-23 (rev 1):** Storage swapped from Supabase to Netlify Blobs (free on the existing Netlify plan, no new account, no inactivity auto-pause).
+- **2026-07-23 (rev 2 — this version):** Added full **availability management** — the founder can now define a recurring weekly schedule and date-specific exceptions (block days, add one-off times) through a password-protected `/admin` page, instead of availability being a hardcoded constant. This changes the booking data model from date-only to date+time slots throughout, and simplifies the visitor-facing picker to a flat, chronologically-sorted list of the next 15 open slots.
 
 ## Goals
 
-1. Persist bookings so double-booking the same date is impossible, including under race conditions (two submissions within milliseconds).
-2. Give visitors a confirmation email with a secret link to reschedule or cancel their booking, with no login required.
-3. Keep the founder-facing Telegram notification as the reliable side channel; treat visitor email as best-effort.
-4. Add no new paid or account-requiring dependency beyond Resend (the one piece that's structurally unavoidable — no email can be sent to a visitor without some email-sending service).
+1. The founder can define a recurring weekly availability template (which weekdays, which times) and per-date exceptions (block a day entirely, or override a day's times) via a simple password-protected admin page — no code edits or redeploys required to change the schedule.
+2. Visitors see a flat, date-ascending list of the next 15 open slots (not a 21-day grid) and book directly from it.
+3. Persist bookings so double-booking the same date+time is impossible, including under race conditions.
+4. Give visitors a confirmation email with a secret link to reschedule or cancel their booking, with no login required.
+5. Keep the founder-facing Telegram notification exactly as it works today for every booking, cancellation, and reschedule — unchanged mechanism, best-effort so an outage never blocks a client-visible success once a booking is durably reserved.
+6. Add no new paid or account-requiring dependency beyond Resend (email) — Netlify Blobs and the admin auth need no new accounts.
 
 ## Non-goals
 
-- Real multi-slot/multi-day availability (still one 30-minute slot per day).
-- Calendar sync (Google/Outlook busy-time lookups).
-- An admin UI — for a single-founder operation, inspecting the handful of active bookings via a small authenticated debug endpoint or the Netlify Blobs CLI (`netlify blobs:list` / `netlify blobs:get`) is enough; no dashboard is built (mirrors CLAUDE.md's "no full auth provider for a one-user admin screen" guidance).
+- Calendar sync (Google/Outlook busy-time lookups) — availability is entirely self-declared by the founder through `/admin`.
+- Multiple meeting lengths — every slot is still a fixed 30 minutes (matches the site's existing "Thirty minutes, no slide deck" copy); only which days/times are offered is configurable, not the duration.
+- Multi-user admin accounts, invites, or roles — one shared password for the one founder, per CLAUDE.md's documented "no full auth provider for a one-user admin screen" guidance.
+- Per-slot editing within an otherwise-templated day (e.g. "remove just the 2pm slot on this one Tuesday, keep the rest") — an exception always replaces *all* of that date's slots; if the founder wants "everything except 2pm" on one date, they re-enter that date's full custom time list as an override. Keeps the override model to one simple rule instead of a merge/diff UI.
 
-## Data Model (Netlify Blobs)
+## Data Model
 
-One Netlify Blobs store, `bookings`, holding two logical key namespaces distinguished by prefix:
+Two Netlify Blobs stores.
 
-| key pattern | value | purpose |
+### `availability` store
+
+| key | value | purpose |
 |---|---|---|
-| `date:<YYYY-MM-DD>` | the booking's `manage_token` (string) | existence of this key = that date is taken. This is both the conflict-prevention lock **and** the source of truth for "which dates are taken" (no separate status field needed — a cancelled booking simply has its `date:*` key deleted, freeing the date). |
-| `token:<manage_token>` | JSON: `{ dateISO, name, email, note, status, createdAt }` | the actual booking record, looked up directly by the visitor's manage link. `status` is `'confirmed'` or `'cancelled'`, kept here for the manage page's "already cancelled" check and for audit purposes even after the date is freed. |
+| `template` | JSON: `{ mon: string[], tue: string[], wed: string[], thu: string[], fri: string[], sat: string[], sun: string[] }` | The recurring weekly default. Each string is a 24-hour `"HH:mm"` start time (e.g. `"10:00"`, `"14:30"`), matching the native `<input type="time">` format the admin UI uses directly — no parsing/reformatting needed between form and storage. |
+| `override:<YYYY-MM-DD>` | JSON: `{ times: string[] }` | A date-specific override that **replaces** the template's times for that date entirely. `times: []` blocks the day completely (e.g. vacation). Absence of this key means "use the weekly template's default for that weekday." |
 
-**Conflict prevention is enforced atomically at write time**, not via a separate check-then-write in application code: creating a `date:<iso>` key uses Netlify Blobs' conditional write ("only set if this key does not already exist" — the current `@netlify/blobs` SDK exposes this as a `set(..., { onlyIfNew: true })` option; **confirm the exact option name against the `@netlify/blobs` docs at implementation time**, since SDK surface can shift between versions). If the conditional write reports the key already existed, that date was just taken by someone else — this is the equivalent of Postgres's unique-index rejection in the original draft, just expressed through Blobs' primitive instead of a DB constraint.
+### `bookings` store (unchanged store name, revised key shape)
 
-Listing all `date:*` keys (via the store's `list({ prefix: "date:" })`) gives the full set of currently-taken dates for greying out the picker — this listing is only a UX nicety (may be very-briefly eventually-consistent); the conditional write above is what actually prevents a double-booking from being created.
+| key | value | purpose |
+|---|---|---|
+| `slot:<YYYY-MM-DD>:<HH:mm>` | the booking's `manage_token` (string) | existence of this key = that specific date+time is taken. Written with Netlify Blobs' "only if new" conditional — this is the atomic conflict-prevention guard, not a check-then-write in application code. |
+| `token:<manage_token>` | JSON: `{ dateISO, time, name, email, note, status, createdAt }` | the full booking record, looked up directly by the visitor's manage link. `status` is `'confirmed'` or `'cancelled'`. |
 
-## Request Flow Changes
+Conflict prevention: creating a `slot:<iso>:<time>` key uses `store.set(key, token, { onlyIfNew: true })` (confirmed against current Netlify Blobs docs — the SDK's own return shape is `{ modified: boolean, etag? }`; `modified: false` means the slot was already taken). This is the same mechanism as the prior date-only design, just keyed one level deeper (date **and** time) now that a day can offer more than one slot.
 
-### Availability display (`/book`)
+## New Subsystem: Availability Management
 
-`app/book/page.tsx` (already a Server Component) lists `date:*` keys from the `bookings` store server-side and passes the taken-dates array into `<BookingFlow taken={...} />` as a prop. The client component disables those dates in the picker grid. `lib/booking.ts`'s `getAvailableDates()` stays untouched — it remains a pure, framework-free candidate-date generator (per its existing isomorphic-module contract); the "which of these are taken" cross-reference lives in the page, not the lib.
+### Computing a date's slots
+
+```
+getSlotsForDate(dateISO):
+  override = availability-store.getOverrideForDate(dateISO)
+  if override is not null: return sorted(override.times)
+  weekday = booking.getWeekday(dateISO)   // "mon".."sun", UTC-anchored, DST-safe
+  return sorted(template[weekday])
+```
+
+### The visitor-facing "next 15 slots" list
+
+```
+listUpcomingSlots(count = 15, maxDaysToScan = 90):
+  taken = bookingStore.listTakenSlots()  // Set of "dateISO|time"
+  results = []
+  for i in 0..maxDaysToScan:
+    dateISO = addDaysISO(getTodayISO(), i)
+    for time in getSlotsForDate(dateISO):
+      if results.length >= count: break outer loop
+      if "dateISO|time" not in taken: results.push({ dateISO, time })
+  return results
+```
+
+Days with no template entry and no override (e.g. a weekend the founder never configured) simply contribute zero slots and are skipped automatically — no special-casing needed. `maxDaysToScan` is a safety bound (not a business rule) so a mostly-empty template can't cause an unbounded scan; if fewer than 15 slots exist within 90 days, the visitor just sees fewer than 15.
+
+### Admin access
+
+- New env vars: `ADMIN_PASSWORD` (the password typed into `/admin/login`) and `ADMIN_SESSION_SECRET` (a random string used to HMAC-sign the session cookie, so the cookie itself never contains the plaintext password).
+- `src/middleware.ts` matches `/admin` and `/admin/:path*` (excluding `/admin/login`): checks a cookie against the expected HMAC value (timing-safe comparison via `crypto.timingSafeEqual`); redirects to `/admin/login` if missing or invalid.
+- `/admin/login` — a simple password form POSTing to `/api/admin/login`, which compares the submitted password to `ADMIN_PASSWORD` (timing-safe) and, on success, sets an `httpOnly`, `Secure`, `SameSite=Lax` cookie holding `HMAC-SHA256(ADMIN_SESSION_SECRET, "admin-session")`.
+- `/api/admin/logout` clears the cookie.
+- No rate-limiting or lockout on login attempts — this is a single-founder internal tool behind a password only the founder knows, not a public attack surface; over-building this would contradict CLAUDE.md's explicit "don't overinvest in a one-user admin screen" guidance.
+
+### Admin page (`/admin`)
+
+Two sections on one page:
+
+1. **Weekly Template** — 7 rows (Mon–Sun), each showing its current list of `<input type="time">` fields with add/remove buttons. A single "Save Template" button submits the full 7-day object to `POST /api/admin/template` (zod-validated, writes the whole `template` blob at once — simpler than per-day patch endpoints).
+2. **Exceptions** — an `<input type="date">` plus the same add/remove time-list UI (or a "Block this day" toggle that submits `times: []`), submitting to `POST /api/admin/override`. Below it, a list of existing upcoming overrides (from `listOverrides()`, filtered to today-forward, sorted ascending) each with a "Remove" button hitting `DELETE /api/admin/override` to revert that date back to the template default.
+
+## Revised Booking Flow
+
+### Visitor-facing picker (`/book`)
+
+`app/book/page.tsx` (Server Component) calls `listUpcomingSlots(15)` and passes the array into `<BookingFlow slots={...} />`. The flow simplifies from 5 steps to **4**: `slot` (pick one of the up-to-15 flat, date-ascending options, each rendered via the new `formatSlotLabel(dateISO, time)`) → `details` → `review` → `success`. The old separate "confirm time" step is gone — picking a slot now picks date *and* time in one action.
+
+If `POST /api/book` returns `409` (another visitor took that exact slot first), the flow shows the error and re-fetches a fresh list via a new `GET /api/book/slots` endpoint (same `listUpcomingSlots(15)` under the hood) rather than forcing a full page reload.
 
 ### Confirming a booking (`POST /api/book`)
 
-After the existing zod validation:
-
-1. Generate a `manage_token` (random, e.g. 24 random bytes, base64url-encoded).
-2. Conditionally write `date:<dateISO>` → `manage_token` ("only if new"). If this reports the key already exists, return `409` with `"That slot was just taken — please pick another date."` — no further writes happen.
-3. If the conditional write succeeds, write `token:<manage_token>` → the full booking JSON (`status: "confirmed"`).
-4. Send the existing Telegram message (unchanged), then attempt a Resend confirmation email containing the booking details and the `/book/manage/[token]` link. Email failure is logged server-side and does **not** fail the request — the booking is already committed to Blobs and Telegram-notified by this point.
+Body is now `{ name, email, note, dateISO, time }`. After validation:
+1. Generate a `manage_token`.
+2. `reserveSlot(dateISO, time, token)` — conditional "only if new" write to `slot:<dateISO>:<time>`. `409` on failure, no further writes.
+3. `saveBookingRecord(token, { dateISO, time, name, email, note, status: "confirmed", createdAt })`. On failure, free the slot lock (`freeSlot`) and return `500` — a booking record must never be missing while its slot lock still exists (that would silently block the slot forever with no way to look it up).
+4. Send the existing Telegram message (unchanged mechanism; now includes the specific time), best-effort.
+5. Send the Resend confirmation email (unchanged from rev 1 of this spec) with a manage link, best-effort.
 
 ### Managing a booking (`/book/manage/[token]`)
 
-New Server Component route. Reads `token:<token>` from the store.
-
-- Not found, or `status = 'cancelled'`, or `dateISO` in the past: render a generic **"This booking link is no longer valid."** message. Same message for all three cases — never reveal which one it was (avoids leaking whether a token ever existed).
-- Otherwise: render booking details plus a `ManageBooking` Client Component (new, under `components/booking/`, reusing `BookingFlow`'s existing Button/date-picker primitives) offering **Cancel** and **Reschedule**.
-
-Two new Route Handlers:
-
-- `POST /api/book/manage/[token]/cancel` — sets `status: "cancelled"` on the `token:<token>` record, deletes the `date:<dateISO>` key (freeing the date). Sends a cancellation email to the visitor and a short Telegram note to the founder.
-- `POST /api/book/manage/[token]/reschedule` — zod-validates a new `dateISO` (must be a valid candidate date per `getAvailableDates()`, i.e. today or later within the visible range). Conditionally writes `date:<newDateISO>` → the same token ("only if new"); if that fails (409, same message as the initial booking flow), nothing else changes. If it succeeds, deletes the old `date:<oldDateISO>` key and updates `dateISO` on the `token:<token>` record. Sends an updated-confirmation email + Telegram note.
-  - Edge case: if the new-date write succeeds but the subsequent delete of the old key fails (rare — a transient Blobs error), the old date is left spuriously "taken." This is logged server-side as an error for manual cleanup; it fails toward *fewer* available slots, never toward a silent double-booking.
-
-## Components / Files
-
-**New:**
-- `src/lib/booking-store.ts` — server-only helper wrapping `@netlify/blobs`' `getStore("bookings")`: `reserveDate(dateISO, token)`, `freeDate(dateISO)`, `getBookingByToken(token)`, `saveBooking(token, record)`, `listTakenDates()`. Keeps all Blobs-specific code in one place, same isolation principle as the existing Telegram-only `api/book/route.ts`.
-- `src/app/book/manage/[token]/page.tsx` — Server Component lookup + invalid/valid states.
-- `src/app/api/book/manage/[token]/cancel/route.ts`
-- `src/app/api/book/manage/[token]/reschedule/route.ts`
-- `src/components/booking/manage-booking.tsx` — Client Component (cancel/reschedule interactivity).
-- `src/emails/booking-update-email.tsx` — one parameterized React Email template (state: `confirmed` | `cancelled` | `rescheduled`) rather than three near-duplicate templates.
-
-**Modified:**
-- `src/app/book/page.tsx` — fetch taken dates server-side, pass to `BookingFlow`.
-- `src/components/booking/booking-flow.tsx` — accept a `taken: string[]` prop, disable those dates, handle the 409 response from `/api/book` by returning to the date step with an error message.
-- `src/app/api/book/route.ts` — add the reserve-then-record Blobs writes, manage-token generation, Resend email send, 409 handling.
-- `.env.local.example` — document `RESEND_API_KEY` and the one-time step of verifying `aideployed.dev` in Resend (or using Resend's shared sandbox domain to defer DNS setup). No new Blobs-specific env vars are needed for production (Netlify injects Blobs access automatically for deployed sites); local development needs `netlify dev` (rather than plain `next dev`) so the Blobs client has a context to connect to — document this requirement here too.
+Unchanged shape from rev 1 (generic "no longer valid" message for not-found/cancelled/past bookings; Cancel and Reschedule actions). Reschedule now:
+- Validates the new `{ dateISO, time }` against `getSlotsForDate(dateISO)` (must actually be one of that date's configured slots — replaces the old `isCandidateDate` check, which no longer makes sense once availability is admin-configurable rather than a fixed 21-day rolling window).
+- Uses the same flat "next 15 slots" list (fetched client-side via `GET /api/book/slots` when the visitor opens the reschedule picker) instead of a per-day grid.
+- Same atomic `reserveSlot`/`freeSlot` sequencing as the original booking flow, including the orphaned-lock cleanup/logging on partial failure.
 
 ## Error Handling
 
-- **Race-condition-safe conflict prevention**: enforced by Blobs' conditional ("only if new") write, surfaced as an explicit 409 with a user-facing retry message — not just an app-level pre-check that could still race.
-- **Invalid manage tokens**: uniform "no longer valid" message regardless of the underlying reason (not found / cancelled / past).
-- **Email delivery failures**: logged server-side via `console.error` (matching the existing Telegram failure-logging convention), never block or roll back a booking/cancel/reschedule that already succeeded against Blobs + Telegram.
-- **Reschedule to an invalid date**: zod rejects malformed input; a date outside the valid candidate range is rejected with `400` before any store write is attempted.
-- **Partial-failure cleanup (reschedule)**: if freeing the old date fails after the new date is successfully reserved, log it distinctly (e.g. `"orphaned date lock"`) so it's easy to grep for and manually free via the Netlify Blobs CLI if it ever happens.
+- **Race-condition-safe conflict prevention**: enforced by Blobs' conditional write on `slot:<iso>:<time>`, surfaced as an explicit `409`.
+- **Invalid manage tokens**: uniform "no longer valid" message regardless of reason (not found / cancelled / past).
+- **Email delivery failures**: logged, never block or roll back an already-successful booking/cancel/reschedule.
+- **Telegram failures**: logged, never block or roll back an already-successful booking/cancel/reschedule (this is unchanged in spirit from rev 1 — the reservation in Blobs is the real source of truth, Telegram is a best-effort side channel).
+- **Admin auth failures**: wrong password → generic "Incorrect password" on the login form; missing/invalid session cookie on any `/admin/*` route → redirect to `/admin/login`, no partial page render.
+- **Reschedule/override validation**: a `{ dateISO, time }` combination not present in `getSlotsForDate(dateISO)` is rejected with `400` before any store write.
 
 ## Testing
 
-- Vitest: the new/extended zod schemas (reschedule payload validation), and the "is this a valid candidate date" check used by reschedule.
-- Manual/UAT: submit the same date from two browser tabs to confirm the second one gets the 409 path (an actual concurrency check, not just a code read) per this project's targeted-testing convention (CLAUDE.md: tests where a silent bug costs real money — this is exactly that kind of spot). Also manually verify local dev via `netlify dev` can read/write Blobs before assuming this works the same as production.
+- Vitest: zod schemas (booking, reschedule, admin template, admin override payloads); `getSlotsForDate` (template vs. override precedence, blocked-day case); `listUpcomingSlots` (skips fully-booked/unconfigured days, stops at `count`, respects `maxDaysToScan`); the Blobs-touching store functions via a mocked `@netlify/blobs`.
+- Manual/UAT: submit the same slot from two browser tabs to confirm the second gets the `409` path; set a weekly template and a date override in `/admin` and confirm `/book` reflects both correctly; confirm an unauthenticated `/admin` request redirects to `/admin/login`.
 
 ## Setup Required (Founder)
 
-Before this ships to production:
-1. Create a Resend account, verify `aideployed.dev` (or defer via Resend's sandbox sending domain), set `RESEND_API_KEY` in both `.env.local` and Netlify's site environment variables.
-2. No Blobs-specific account setup is needed — it's automatically available on this site's existing Netlify deployment. For local development, use `netlify dev` instead of `next dev` so Blobs calls have a store to connect to (confirm this workflow during implementation).
+1. Resend account + `aideployed.dev` domain verification (or sandbox sender as a stopgap), `RESEND_API_KEY` — unchanged from rev 1.
+2. Set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` (any long random string — e.g. generated via `openssl rand -hex 32`) in `.env.local` and Netlify's site environment variables.
+3. No Netlify Blobs account setup needed (automatic on the existing Netlify deployment). Local development requires `netlify dev` instead of plain `next dev`.
+4. After first deploy, visit `/admin/login`, log in, and set an initial weekly template — until one is set, every day has zero slots and `/book` shows an empty list (fails toward "no bookings possible" rather than a wrong/misleading default schedule).
 
-Documented in `.env.local.example`, following the same pattern as the existing `TELEGRAM_BOT_TOKEN` setup section.
+All documented in `.env.local.example`, following the existing `TELEGRAM_BOT_TOKEN` setup section's pattern.
