@@ -6,6 +6,11 @@ import { getBookingByToken, isManageable } from "@/lib/booking-store";
 
 export const metadata: Metadata = { title: "Manage Your Booking" };
 
+// Looks up a specific booking from Netlify Blobs on every request — Blobs
+// has no build-time context, so this page must never be statically
+// prerendered (and every token's page must reflect the current record).
+export const dynamic = "force-dynamic";
+
 type ManageBookingPageProps = {
   params: Promise<{ token: string }>;
 };

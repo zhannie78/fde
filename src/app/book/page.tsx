@@ -11,6 +11,10 @@ export const metadata: Metadata = {
     "Grab 30 minutes for a plain conversation about where your business is losing time and money to manual work — no pitch.",
 };
 
+// Reads live availability from Netlify Blobs on every request — Blobs has
+// no build-time context, so this page must never be statically prerendered.
+export const dynamic = "force-dynamic";
+
 /**
  * /book — the single place the site's persistent CTA points (D-02).
  * Native, Cal.com-free multi-step booking flow: only <BookingFlow /> is a
