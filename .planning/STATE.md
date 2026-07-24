@@ -106,6 +106,7 @@ None yet.
 | 260722-fix3 | About-page avatar photo resized responsively: 128px mobile / 160px sm / 180px md+ (was fixed 200px at all widths) | 2026-07-22 | b3b6355 | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 | 260724-c67 | Added file-based /blog + /blog/[slug] section: typed TSX content model (no CMS/DB), per-post OpenGraph metadata + BlogPosting JSON-LD, sitemap coverage, two ~1200-1800 word posts (FDE model, AI-automation urgency for SMBs) | 2026-07-24 | 9803f62 | [260724-c67-add-a-blog-section-for-seo-and-aeo-with-](./quick/260724-c67-add-a-blog-section-for-seo-and-aeo-with-/) |
 | 260724-cq6 | Added "Blog" link to header nav, mobile hamburger nav, and footer nav (appended to existing navLinks/footerLinks arrays, no styling/reorder changes) | 2026-07-24 | a39f3b6 | [260724-cq6-add-blog-link-to-header-and-footer-navig](./quick/260724-cq6-add-blog-link-to-header-and-footer-navig/) |
+| 260724-fix4 | Post 1 ("What is a Forward-Deployed Engineer") published date changed 2026-07-24 → 2026-07-06 | 2026-07-24 | (pending) | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 
 ## Deferred Items
 

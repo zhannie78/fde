@@ -10,7 +10,7 @@ export const meta: BlogPostMeta = {
     "Forward-deployed engineering embeds an engineer inside your business's real workflows instead of shipping you generic software — and Claude just made that model affordable for small businesses, not just enterprises.",
   description:
     "What a forward-deployed engineer actually does, why off-the-shelf SaaS fails messy SMB workflows, and why AI makes the FDE model newly affordable for small businesses.",
-  date: "2026-07-24",
+  date: "2026-07-06",
 };
 
 export default function WhatIsAForwardDeployedEngineer() {
