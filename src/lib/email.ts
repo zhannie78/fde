@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { render } from "@react-email/render";
 import { Resend } from "resend";
 
@@ -14,6 +15,22 @@ const SUBJECT: Record<BookingEmailState, string> = {
   cancelled: "Your AI Deployed booking was cancelled",
   rescheduled: "Your AI Deployed booking was rescheduled",
 };
+
+/**
+ * Derives the manage-link base URL from the actual incoming request's Host
+ * header rather than a hardcoded production domain — so the link correctly
+ * points at localhost during local dev, a preview deploy, or the real
+ * production domain, with no manual config to remember or forget.
+ */
+export function resolveBaseUrl(
+  host: string | null | undefined,
+  forwardedProto: string | null | undefined
+): string {
+  if (!host) return `https://${siteConfig.domain}`;
+  const isLocalhost = host.startsWith("localhost") || host.startsWith("127.");
+  const protocol = forwardedProto ?? (isLocalhost ? "http" : "https");
+  return `${protocol}://${host}`;
+}
 
 /**
  * Best-effort visitor-facing email. Never throws — a Resend outage must
@@ -35,7 +52,9 @@ export async function sendBookingUpdateEmail(params: {
     return;
   }
 
-  const manageUrl = `https://${siteConfig.domain}/book/manage/${params.manageToken}`;
+  const headersList = await headers();
+  const baseUrl = resolveBaseUrl(headersList.get("host"), headersList.get("x-forwarded-proto"));
+  const manageUrl = `${baseUrl}/book/manage/${params.manageToken}`;
 
   try {
     const html = await render(

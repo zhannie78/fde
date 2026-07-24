@@ -8,7 +8,14 @@ vi.mock("resend", () => ({
   },
 }));
 
-import { sendBookingUpdateEmail } from "./email";
+const { mockHeaders } = vi.hoisted(() => ({
+  mockHeaders: vi.fn(),
+}));
+vi.mock("next/headers", () => ({
+  headers: mockHeaders,
+}));
+
+import { resolveBaseUrl, sendBookingUpdateEmail } from "./email";
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -24,6 +31,7 @@ const baseParams = {
 beforeEach(() => {
   vi.clearAllMocks();
   process.env.RESEND_API_KEY = "test-api-key";
+  mockHeaders.mockResolvedValue(new Map([["host", "aideployed.dev"]]));
 });
 
 afterEach(() => {
@@ -50,6 +58,16 @@ describe("sendBookingUpdateEmail", () => {
     expect(typeof call.from).toBe("string");
   });
 
+  it("builds the manage link from the actual request host, not a hardcoded domain", async () => {
+    mockHeaders.mockResolvedValue(new Map([["host", "localhost:8888"]]));
+    mockSend.mockResolvedValue({ data: { id: "email-1" }, error: null });
+
+    await sendBookingUpdateEmail(baseParams);
+
+    const call = mockSend.mock.calls[0][0];
+    expect(call.html).toContain("http://localhost:8888/book/manage/abc123");
+  });
+
   it("does not throw when Resend resolves with an error field", async () => {
     mockSend.mockResolvedValue({ data: null, error: { message: "bad request" } });
     await expect(sendBookingUpdateEmail(baseParams)).resolves.toBeUndefined();
@@ -58,5 +76,27 @@ describe("sendBookingUpdateEmail", () => {
   it("does not throw when the Resend call rejects", async () => {
     mockSend.mockRejectedValue(new Error("network down"));
     await expect(sendBookingUpdateEmail(baseParams)).resolves.toBeUndefined();
+  });
+});
+
+describe("resolveBaseUrl", () => {
+  it("uses http for localhost", () => {
+    expect(resolveBaseUrl("localhost:8888", null)).toBe("http://localhost:8888");
+  });
+
+  it("uses http for a 127.x loopback address", () => {
+    expect(resolveBaseUrl("127.0.0.1:3000", null)).toBe("http://127.0.0.1:3000");
+  });
+
+  it("uses https for a real host", () => {
+    expect(resolveBaseUrl("aideployed.dev", null)).toBe("https://aideployed.dev");
+  });
+
+  it("prefers x-forwarded-proto when present", () => {
+    expect(resolveBaseUrl("localhost:8888", "https")).toBe("https://localhost:8888");
+  });
+
+  it("falls back to the configured domain when the host header is missing", () => {
+    expect(resolveBaseUrl(null, null)).toBe("https://aideployed.dev");
   });
 });

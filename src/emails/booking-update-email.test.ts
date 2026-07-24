@@ -28,4 +28,16 @@ describe("BookingUpdateEmail", () => {
     expect(html).toContain("cancelled");
     expect(html).not.toContain(baseProps.manageUrl);
   });
+
+  it("renders the brand wordmark in every state", async () => {
+    const html = await render(BookingUpdateEmail({ state: "confirmed", ...baseProps }));
+    expect(html).toContain("aideployed");
+    expect(html).toContain("dev");
+  });
+
+  it("renders the contact footer in every state", async () => {
+    const html = await render(BookingUpdateEmail({ state: "cancelled", ...baseProps }));
+    expect(html).toContain("annie@aideployed.dev");
+    expect(html).toContain("mailto:annie@aideployed.dev");
+  });
 });
