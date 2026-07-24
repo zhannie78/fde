@@ -30,6 +30,14 @@ vi.mock("@/lib/email", () => ({
   sendBookingUpdateEmail: mockSendBookingUpdateEmail,
 }));
 
+const { mockCheckBookingRateLimit } = vi.hoisted(() => ({
+  mockCheckBookingRateLimit: vi.fn(),
+}));
+vi.mock("@/lib/rate-limit", () => ({
+  checkBookingRateLimit: mockCheckBookingRateLimit,
+  getClientIp: vi.fn(() => "1.2.3.4"),
+}));
+
 import { POST } from "./route";
 
 const futureDateISO = addDaysISO(getTodayISO(), 5);
@@ -56,9 +64,17 @@ beforeEach(() => {
   process.env.TELEGRAM_BOT_TOKEN = "test-bot-token";
   process.env.TELEGRAM_CHAT_ID = "12345";
   mockGetSlotsForDate.mockResolvedValue(["09:00"]);
+  mockCheckBookingRateLimit.mockResolvedValue(true);
 });
 
 describe("POST /api/book", () => {
+  it("returns 429 when the rate limit is exceeded, without touching anything else", async () => {
+    mockCheckBookingRateLimit.mockResolvedValue(false);
+    const res = await POST(buildRequest(validBody));
+    expect(res.status).toBe(429);
+    expect(mockReserveSlot).not.toHaveBeenCalled();
+  });
+
   it("returns 400 for invalid input", async () => {
     const res = await POST(buildRequest({ name: "" }));
     expect(res.status).toBe(400);

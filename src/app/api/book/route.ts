@@ -5,6 +5,7 @@ import { getSlotsForDate } from "@/lib/availability-store";
 import { bookingSchema } from "@/lib/booking-schemas";
 import { freeSlot, generateManageToken, reserveSlot, saveBookingRecord } from "@/lib/booking-store";
 import { sendBookingUpdateEmail } from "@/lib/email";
+import { checkBookingRateLimit, getClientIp } from "@/lib/rate-limit";
 
 /**
  * Server-only Route Handler for the native booking flow. Reserves the
@@ -18,6 +19,15 @@ import { sendBookingUpdateEmail } from "@/lib/email";
 const GENERIC_ERROR = "Booking is temporarily unavailable — please email instead.";
 
 export async function POST(request: Request) {
+  const allowed = await checkBookingRateLimit(getClientIp(request));
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many booking attempts — please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = bookingSchema.safeParse(body);
 
