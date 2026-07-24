@@ -35,6 +35,13 @@ export default function ContactPage() {
         </p>
       </div>
       <ContactForm />
+      <p className="text-sm text-muted-foreground">
+        Prefer your own mail app? Write to me directly at{" "}
+        <a href="mailto:annie@aideployed.dev" className="text-primary underline hover:text-primary/80">
+          annie@aideployed.dev
+        </a>
+        .
+      </p>
     </div>
   );
 }
