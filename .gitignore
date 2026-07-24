@@ -46,3 +46,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local Netlify folder
+.netlify
+
+# Netlify CLI Edge Functions bootstrap lockfile (Deno, auto-generated)
+deno.lock
