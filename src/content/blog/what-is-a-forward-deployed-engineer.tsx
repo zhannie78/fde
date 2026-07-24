@@ -124,6 +124,43 @@ export default function WhatIsAForwardDeployedEngineer() {
         understands the business, not a black-box SaaS dashboard.
       </p>
 
+      <h2>Common questions about forward-deployed engineering</h2>
+      <h3>Is a forward-deployed engineer the same as a freelance developer?</h3>
+      <p>
+        Not quite. A freelance developer typically works from a spec you hand them — you
+        define the feature, they build it. A forward-deployed engineer starts earlier in
+        the process: they observe the actual workflow first, help identify which gap is
+        worth closing, and then build and own the fix. The scope isn&apos;t &ldquo;build
+        what I asked for&rdquo; — it&apos;s &ldquo;make this specific business problem go
+        away,&rdquo; which sometimes means the first proposed fix isn&apos;t the right one,
+        and the engagement adapts.
+      </p>
+      <h3>Do I need to replace my existing software to work with an FDE?</h3>
+      <p>
+        No. Part of the value of embedded, custom engineering is that it&apos;s built to
+        work with the tools you already use — your phone system, your calendar, your
+        existing CRM or spreadsheet — instead of requiring a platform migration. Ripping
+        out and replacing your whole stack is exactly the kind of high-risk, high-cost
+        project this model is designed to avoid.
+      </p>
+      <h3>How is this different from just using more AI tools myself?</h3>
+      <p>
+        Off-the-shelf AI tools have the same structural limitation as any other SaaS
+        product: they&apos;re built for the median use case, and you still have to do the
+        work of figuring out how to wire them into your specific workflow, then maintain
+        that wiring yourself. An FDE does that integration work for you, scoped to your
+        business, and stays accountable for whether it actually solves the problem — not
+        just whether the tool technically works.
+      </p>
+      <h3>What does an engagement actually start with?</h3>
+      <p>
+        It starts with observation, not a sales pitch. A free workflow audit is the entry
+        point: a real look at how work currently moves through your business, where the
+        friction is, and a specific, scoped recommendation for what to fix first — not a
+        generic checklist. From there, an engagement is scoped around the highest-leverage
+        fix, built quickly, and refined against how the business actually uses it.
+      </p>
+
       <h2>Why this matters right now</h2>
       <p>
         Every quarter that a small business runs on manual workarounds and generic tools is

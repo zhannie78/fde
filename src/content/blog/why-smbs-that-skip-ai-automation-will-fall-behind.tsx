@@ -82,6 +82,28 @@ export default function WhySmbsFallBehind() {
         is designed to surface.
       </p>
 
+      <h2>Why this used to be out of reach — and isn&apos;t anymore</h2>
+      <p>
+        If any of those five pain points sound familiar, you&apos;ve probably already
+        looked into fixing them and backed away — either because the enterprise software
+        that claimed to solve it was overkill and expensive, or because building something
+        custom meant hiring a developer or a small dev shop for weeks of work you
+        couldn&apos;t justify for one workflow fix. That calculus has changed. Large
+        language models like Claude can now do the judgment-heavy parts of these fixes —
+        drafting a context-aware follow-up text, parsing a messy intake form into a
+        structured quote, deciding how to route an inbound call based on what the caller
+        actually said — work that used to require either a human doing it manually or a
+        developer writing bespoke logic for every edge case.
+      </p>
+      <p>
+        That shift is what makes a forward-deployed engineer&apos;s model work at SMB
+        scale: one engineer, working with Claude, can now build and ship the kind of
+        targeted automation that used to take a small team months, in a matter of days.
+        You&apos;re not buying a generic subscription and hoping it fits — you&apos;re
+        getting something built specifically around how your business actually takes
+        calls, quotes jobs, and follows up on leads.
+      </p>
+
       <h2>Why the cost structure now favors whoever moves first</h2>
       <p>
         Larger, better-capitalized competitors are already investing in automation — not
@@ -102,6 +124,40 @@ export default function WhySmbsFallBehind() {
         genuinely dropped: this isn&apos;t a six-figure enterprise software project
         anymore. It&apos;s a scoped engagement with a single accountable engineer, built
         around your actual business.
+      </p>
+
+      <h2>Common questions about AI automation for small businesses</h2>
+      <h3>Isn&apos;t AI automation expensive to set up?</h3>
+      <p>
+        The upfront cost has dropped sharply because the engineering time required has
+        dropped sharply — the AI does the heavy lifting on the judgment-heavy parts of the
+        build, not just the boilerplate. A scoped fix targeting one or two of your biggest
+        workflow leaks (missed calls, slow quoting, delayed follow-up) is a fraction of
+        what a full software project used to cost, and it starts with a free workflow
+        audit, not a paid discovery phase.
+      </p>
+      <h3>What if my workflow is too messy or non-standard for automation?</h3>
+      <p>
+        Messy and non-standard is exactly the case forward-deployed engineering is built
+        for. Off-the-shelf software struggles with your exceptions and workarounds — an
+        embedded engineer builds around them instead of forcing you to conform to a
+        template. The audit exists specifically to map your actual process, exceptions
+        included, before proposing a fix.
+      </p>
+      <h3>Do I have to automate everything at once?</h3>
+      <p>
+        No — and you shouldn&apos;t. The businesses that get the most value start with the
+        single biggest leak (usually missed calls or slow lead response) and prove it out
+        before expanding. That&apos;s a deliberately lower-risk path than a big-bang
+        software rollout, and it&apos;s the same iterative approach a forward-deployed
+        engineer uses on every engagement.
+      </p>
+      <h3>How fast could this actually be running?</h3>
+      <p>
+        Because the build time for a scoped automation has collapsed from months to days,
+        a single high-leverage fix — like instant text-back on missed calls, or automated
+        intake-to-quote — can often go from audit to live in your business within one to
+        two weeks, not a quarter-long software rollout.
       </p>
 
       <h2>Starting is lower-risk than it sounds</h2>
