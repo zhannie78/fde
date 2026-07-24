@@ -4,7 +4,7 @@ milestone: v2.0
 milestone_name: FDE Pivot
 status: executing
 stopped_at: Phase 6 complete (7/7 plans) — DSGN-04 CWV spot-check optional follow-up
-last_updated: "2026-07-24T06:59:00.000Z"
+last_updated: "2026-07-24T07:15:00.000Z"
 last_activity: 2026-07-24
 progress:
   total_phases: 4
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 Phase: 06 (visual-redesign) — EXECUTING
 Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-07-24 - Quick task 260724-c67: added file-based /blog + /blog/[slug] section (SEO/AEO metadata, JSON-LD, sitemap, two posts)
+Last activity: 2026-07-24 - Quick task 260724-cq6: added "Blog" link to header, mobile, and footer navigation
 
 Progress: [█████████░] 92%
 
@@ -105,6 +105,7 @@ None yet.
 | 260722-fix2 | How It Works step 1 copy: "We map your workflows..." → "I map your workflows..." (first-person consistency with steps 2-3) | 2026-07-22 | 38e1121 | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 | 260722-fix3 | About-page avatar photo resized responsively: 128px mobile / 160px sm / 180px md+ (was fixed 200px at all widths) | 2026-07-22 | b3b6355 | (no dedicated dir — direct fix, not planned via gsd-quick init) |
 | 260724-c67 | Added file-based /blog + /blog/[slug] section: typed TSX content model (no CMS/DB), per-post OpenGraph metadata + BlogPosting JSON-LD, sitemap coverage, two ~1200-1800 word posts (FDE model, AI-automation urgency for SMBs) | 2026-07-24 | 9803f62 | [260724-c67-add-a-blog-section-for-seo-and-aeo-with-](./quick/260724-c67-add-a-blog-section-for-seo-and-aeo-with-/) |
+| 260724-cq6 | Added "Blog" link to header nav, mobile hamburger nav, and footer nav (appended to existing navLinks/footerLinks arrays, no styling/reorder changes) | 2026-07-24 | a39f3b6 | [260724-cq6-add-blog-link-to-header-and-footer-navig](./quick/260724-cq6-add-blog-link-to-header-and-footer-navig/) |
 
 ## Deferred Items
 
@@ -116,7 +117,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T06:59:00Z
-Stopped at: Completed quick task 260724-c67 (blog section for SEO/AEO); Phase 6 still complete (7/7 plans) — DSGN-04 CWV spot-check optional follow-up
-Resume file: .planning/quick/260724-c67-add-a-blog-section-for-seo-and-aeo-with-/260724-c67-SUMMARY.md
+Last session: 2026-07-24T07:15:00Z
+Stopped at: Completed quick task 260724-cq6 (Blog nav links); Phase 6 still complete (7/7 plans) — DSGN-04 CWV spot-check optional follow-up
+Resume file: .planning/quick/260724-cq6-add-blog-link-to-header-and-footer-navig/260724-cq6-SUMMARY.md
 </content>
