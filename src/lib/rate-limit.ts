@@ -1,73 +1,72 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { getStore } from "@netlify/blobs";
 
 /**
  * Per-IP rate limiting for the site's only two public write/auth
  * endpoints (POST /api/book, POST /api/admin/login) — Netlify Function
- * invocations, Netlify Blobs operations, and Resend email volume are all
- * uncapped otherwise, and this project's own stack guidance already flags
- * "public route + paid/limited upstream service, no per-visitor throttle"
- * as a required-not-optional risk.
+ * invocations and Blobs operations are otherwise uncapped, and this is
+ * the site's only defense against casual scripted abuse.
  *
- * Fails OPEN (allows the request) whenever Upstash isn't configured or a
- * check throws — this is cost/abuse protection, not an auth boundary, so
- * a transient Upstash outage must never block a real visitor from booking.
+ * Backed by Netlify Blobs (no new external service — reuses the storage
+ * already used for bookings/availability) rather than a dedicated rate-
+ * limiting service. This is a deliberate simplicity tradeoff: Blobs has
+ * no native atomic increment or key expiry, so this is a fixed-window
+ * (not sliding-window) counter using optimistic concurrency (etag
+ * compare-and-swap) to increment correctly under concurrent requests,
+ * with a small bounded retry count. Less precise than a dedicated
+ * rate-limiting service, but sufficient to stop casual abuse at this
+ * site's traffic level, with zero new accounts to manage.
+ *
+ * Fails OPEN (allows the request) on any Blobs error or after exhausting
+ * retries under contention — this is abuse/cost protection, not an auth
+ * boundary, so an infra hiccup must never block a real visitor's booking.
  */
-function getRedis(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
+function getRateLimitStore() {
+  return getStore({ name: "rate-limits", consistency: "strong" });
 }
 
-async function checkLimit(
-  name: string,
-  identifier: string,
-  build: (redis: Redis) => Ratelimit
-): Promise<boolean> {
-  const redis = getRedis();
+/** Truncates to the current hour, e.g. "2026-07-24T04" — a natural fixed window that needs no explicit expiry. */
+function currentHourBucket(): string {
+  return new Date().toISOString().slice(0, 13);
+}
 
-  if (!redis) {
-    console.error(
-      `Rate limiting skipped (${name}): UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN not configured.`
-    );
-    return true;
-  }
+const MAX_RETRIES = 3;
+
+async function checkLimit(prefix: string, identifier: string, limit: number): Promise<boolean> {
+  const store = getRateLimitStore();
+  const key = `${prefix}:${identifier}:${currentHourBucket()}`;
 
   try {
-    const ratelimit = build(redis);
-    const { success } = await ratelimit.limit(identifier);
-    return success;
+    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      const existing = await store.getWithMetadata(key, { type: "text" });
+
+      if (!existing) {
+        const result = await store.set(key, "1", { onlyIfNew: true });
+        if (result.modified) return true;
+        continue;
+      }
+
+      const count = Number(existing.data) || 0;
+
+      if (count >= limit) return false;
+
+      const result = await store.set(key, String(count + 1), { onlyIfMatch: existing.etag });
+      if (result.modified) return true;
+    }
+
+    console.error(`Rate limit check exhausted retries under contention (${prefix}), failing open.`);
+    return true;
   } catch (error) {
-    console.error(`Rate limit check threw (${name}), failing open.`, error);
+    console.error(`Rate limit check threw (${prefix}), failing open.`, error);
     return true;
   }
 }
 
 export async function checkBookingRateLimit(identifier: string): Promise<boolean> {
-  return checkLimit(
-    "book",
-    identifier,
-    (redis) =>
-      new Ratelimit({
-        redis,
-        limiter: Ratelimit.slidingWindow(5, "1 h"),
-        prefix: "ratelimit:book",
-      })
-  );
+  return checkLimit("book", identifier, 5);
 }
 
 export async function checkAdminLoginRateLimit(identifier: string): Promise<boolean> {
-  return checkLimit(
-    "admin-login",
-    identifier,
-    (redis) =>
-      new Ratelimit({
-        redis,
-        limiter: Ratelimit.slidingWindow(10, "1 h"),
-        prefix: "ratelimit:admin-login",
-      })
-  );
+  return checkLimit("admin-login", identifier, 10);
 }
 
 /**

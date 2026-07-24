@@ -1,83 +1,105 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockLimit, MockRatelimit } = vi.hoisted(() => {
-  const mockLimit = vi.fn();
-  class MockRatelimitClass {
-    limit = mockLimit;
-    static slidingWindow = vi.fn((tokens: number, window: string) => ({ tokens, window }));
-  }
-  return { mockLimit, MockRatelimit: MockRatelimitClass };
-});
+const mockStore = {
+  getWithMetadata: vi.fn(),
+  set: vi.fn(),
+};
 
-vi.mock("@upstash/ratelimit", () => ({
-  Ratelimit: MockRatelimit,
-}));
-
-vi.mock("@upstash/redis", () => ({
-  Redis: class {},
+vi.mock("@netlify/blobs", () => ({
+  getStore: vi.fn(() => mockStore),
 }));
 
 import { checkAdminLoginRateLimit, checkBookingRateLimit, getClientIp } from "./rate-limit";
 
-const ORIGINAL_ENV = { ...process.env };
-
 beforeEach(() => {
   vi.clearAllMocks();
-  process.env.UPSTASH_REDIS_REST_URL = "https://example.upstash.io";
-  process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
-});
-
-afterEach(() => {
-  process.env = { ...ORIGINAL_ENV };
 });
 
 describe("checkBookingRateLimit", () => {
-  it("allows the request when under the limit", async () => {
-    mockLimit.mockResolvedValue({ success: true });
+  it("allows the first request for a new window (no existing entry)", async () => {
+    mockStore.getWithMetadata.mockResolvedValue(null);
+    mockStore.set.mockResolvedValue({ modified: true, etag: "etag-1" });
+
     const allowed = await checkBookingRateLimit("1.2.3.4");
+
     expect(allowed).toBe(true);
-    expect(mockLimit).toHaveBeenCalledWith("1.2.3.4");
+    expect(mockStore.set).toHaveBeenCalledWith(expect.stringContaining("book:1.2.3.4:"), "1", {
+      onlyIfNew: true,
+    });
   });
 
-  it("denies the request when over the limit", async () => {
-    mockLimit.mockResolvedValue({ success: false });
+  it("allows and increments when under the limit", async () => {
+    mockStore.getWithMetadata.mockResolvedValue({ data: "2", etag: "etag-2" });
+    mockStore.set.mockResolvedValue({ modified: true, etag: "etag-3" });
+
     const allowed = await checkBookingRateLimit("1.2.3.4");
+
+    expect(allowed).toBe(true);
+    expect(mockStore.set).toHaveBeenCalledWith(expect.stringContaining("book:1.2.3.4:"), "3", {
+      onlyIfMatch: "etag-2",
+    });
+  });
+
+  it("denies once the count reaches the limit (5), without writing", async () => {
+    mockStore.getWithMetadata.mockResolvedValue({ data: "5", etag: "etag-5" });
+
+    const allowed = await checkBookingRateLimit("1.2.3.4");
+
     expect(allowed).toBe(false);
+    expect(mockStore.set).not.toHaveBeenCalled();
   });
 
-  it("fails open (allows) when Upstash env vars are not configured", async () => {
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  it("retries on a concurrent write conflict and succeeds", async () => {
+    mockStore.getWithMetadata
+      .mockResolvedValueOnce({ data: "1", etag: "stale-etag" })
+      .mockResolvedValueOnce({ data: "2", etag: "fresh-etag" });
+    mockStore.set
+      .mockResolvedValueOnce({ modified: false }) // first attempt: someone else won the race
+      .mockResolvedValueOnce({ modified: true, etag: "etag-final" }); // retry succeeds
+
     const allowed = await checkBookingRateLimit("1.2.3.4");
+
     expect(allowed).toBe(true);
-    expect(mockLimit).not.toHaveBeenCalled();
+    expect(mockStore.getWithMetadata).toHaveBeenCalledTimes(2);
   });
 
-  it("fails open (allows) when the Upstash call throws", async () => {
-    mockLimit.mockRejectedValue(new Error("network down"));
+  it("fails open (allows) after exhausting retries under sustained contention", async () => {
+    mockStore.getWithMetadata.mockResolvedValue({ data: "1", etag: "always-stale" });
+    mockStore.set.mockResolvedValue({ modified: false });
+
     const allowed = await checkBookingRateLimit("1.2.3.4");
+
+    expect(allowed).toBe(true);
+  });
+
+  it("fails open (allows) when a Blobs call throws", async () => {
+    mockStore.getWithMetadata.mockRejectedValue(new Error("blobs down"));
+
+    const allowed = await checkBookingRateLimit("1.2.3.4");
+
     expect(allowed).toBe(true);
   });
 });
 
 describe("checkAdminLoginRateLimit", () => {
-  it("allows the request when under the limit", async () => {
-    mockLimit.mockResolvedValue({ success: true });
+  it("uses a limit of 10 and a distinct key prefix from booking", async () => {
+    mockStore.getWithMetadata.mockResolvedValue({ data: "9", etag: "etag-9" });
+    mockStore.set.mockResolvedValue({ modified: true, etag: "etag-10" });
+
     const allowed = await checkAdminLoginRateLimit("1.2.3.4");
+
     expect(allowed).toBe(true);
+    expect(mockStore.set).toHaveBeenCalledWith(expect.stringContaining("admin-login:1.2.3.4:"), "10", {
+      onlyIfMatch: "etag-9",
+    });
   });
 
-  it("denies the request when over the limit", async () => {
-    mockLimit.mockResolvedValue({ success: false });
+  it("denies once the count reaches the limit (10)", async () => {
+    mockStore.getWithMetadata.mockResolvedValue({ data: "10", etag: "etag-10" });
+
     const allowed = await checkAdminLoginRateLimit("1.2.3.4");
+
     expect(allowed).toBe(false);
-  });
-
-  it("fails open when Upstash env vars are not configured", async () => {
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
-    const allowed = await checkAdminLoginRateLimit("1.2.3.4");
-    expect(allowed).toBe(true);
   });
 });
 
