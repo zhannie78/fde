@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 
 import * as whatIsAnFde from "@/content/blog/what-is-a-forward-deployed-engineer";
+import * as whySmbsFallBehind from "@/content/blog/why-smbs-that-skip-ai-automation-will-fall-behind";
 
 /**
  * Typed content model for the blog. Each post lives as its own TSX module
@@ -28,7 +29,7 @@ function toPost(mod: { meta: BlogPostMeta; default: ComponentType }): BlogPost {
   return { ...mod.meta, Body: mod.default };
 }
 
-const posts: BlogPost[] = [toPost(whatIsAnFde)];
+const posts: BlogPost[] = [toPost(whatIsAnFde), toPost(whySmbsFallBehind)];
 
 /** All posts, sorted newest-first by `date`. */
 export function getAllPosts(): BlogPost[] {
